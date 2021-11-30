@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/BlueDarker"
+    android:gravity="bottom"
+    android:padding="16dp"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/nazwaApki"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="@dimen/marginesPlus"
+        android:text="@string/finanso"
+        android:textColor="@color/white"
+        android:layout_marginTop="16dp"
+        android:textSize="22sp"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/buttonMenu"
+        android:layout_height="wrap_content"
+        />
+
+</LinearLayout>

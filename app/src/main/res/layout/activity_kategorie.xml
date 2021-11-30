@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    app:itemTextColor="@color/black"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    tools:context=".KategorieActivity"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/Blue"
+        tools:context=".ListActivity">
+        <GridLayout
+            android:id="@+id/menuListPas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:columnCount="1"
+            android:foregroundGravity="top"
+            android:rowCount="2">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar1"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/Blue"
+                android:elevation="4dp"
+                android:textAlignment="gravity"
+                app:itemTextColor="@color/black"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey" />
+
+        </GridLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/menuListPas"
+            android:layout_marginTop="0dp"
+            android:background="@color/white"
+            android:backgroundTint="@color/white"
+            android:padding="2dp"
+            android:scrollbars="vertical" />
+
+        <!--
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/plusL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="@dimen/marginesPlus"
+            android:layout_marginTop="@dimen/marginesPlus"
+            android:layout_marginEnd="@dimen/marginesPlus"
+            android:layout_marginBottom="@dimen/marginesPlus"
+            android:backgroundTint="@color/PastelBlue"
+            android:src="@drawable/plus"
+            app:borderWidth="0dp"
+            app:tint="@color/black"
+            />
+    -->
+
+    </RelativeLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:menu="@menu/lista_menu"
+        app:headerLayout="@layout/nav_header" />
+
+
+</androidx.drawerlayout.widget.DrawerLayout>
