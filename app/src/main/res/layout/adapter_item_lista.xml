@@ -7,7 +7,7 @@
         android:id="@+id/pozycjaLinia"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/Blue"
+        android:background="@color/white"
         android:padding="10dp"
         >
 
@@ -27,8 +27,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
-            android:paddingTop="5dp"
             android:layout_toRightOf="@id/textViewCenaRekord"
+            android:paddingTop="5dp"
             android:text="zł"
             android:textColor="@color/black"
             android:textSize="20sp" />
@@ -62,8 +62,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/textViewOpisRekord"
             android:layout_alignParentRight="true"
-            android:text="Line 2"
             android:layout_marginRight="15dp"
+            android:text="Line 2"
             android:textColor="@color/grey"
             android:textSize="15sp" />
     </RelativeLayout>

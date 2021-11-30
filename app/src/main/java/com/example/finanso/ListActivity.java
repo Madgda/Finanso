@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -48,6 +49,9 @@ public class ListActivity extends AppCompatActivity {
     public ArrayList<ExampleItem> exampleList = new ArrayList<>();
     private MenuItem dodajLista;
     public int czyPopupDodaj;
+    SqLiteManager myDB;
+    ArrayList<String> lista_id,lista_kwota,lista_opis,lista_szczegol,lista_data,lista_kategoria;
+
     private String kategorieA[]={"Wybierz kategorię","Rachunki","Spożywcze","Prezenty","Chemia","Remont"};
    // DBHelper DB;
 
@@ -58,7 +62,12 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lista);
 
         //DB= new DBHelper(this);
+        mRecyclerView =findViewById(R.id.recycler_view);
 
+        zapiszListeDoArray();
+        mAdapter = new ExampleAdapter(ListActivity.this,lista_id,lista_kwota,lista_opis,lista_szczegol,lista_data,lista_kategoria,1);
+
+        wczytajZBazy();
 
         Intent intent = getIntent();
         czyPopupDodaj=intent.getIntExtra(MainActivity.CZY_POPUP_LISTA,0);
@@ -85,7 +94,6 @@ public class ListActivity extends AppCompatActivity {
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -99,21 +107,23 @@ public class ListActivity extends AppCompatActivity {
             }
         });
 
-        exampleList.add(new ExampleItem("#6C4D70","Zakupy spożywcze","2021.12.13","-144.32"));
-        exampleList.add(new ExampleItem("#ff9d9c","Prezenty świąteczne","2021.12.05","-6566.77"));
-        exampleList.add(new ExampleItem("#a3bce1","Wypłata","2021.12.01","6776.99"));
-        exampleList.add(new ExampleItem("#6C4D70","Zakupy spożywcze","2021.11.13","-144.32"));
+        //exampleList.add(lista_id,lista_kwota,lista_opis,lista_szczegol,lista_data,lista_kategoria);
+       // exampleList.add(new ExampleItem("#ff9d9c","Prezenty świąteczne","2021.12.05","-6566.77"));
+        //exampleList.add(new ExampleItem("#a3bce1","Wypłata","2021.12.01","6776.99"));
+        /*exampleList.add(new ExampleItem("#6C4D70","Zakupy spożywcze","2021.11.13","-144.32"));
         exampleList.add(new ExampleItem("#ff9d9c","Prezenty świąteczne","2021.11.05","-6566.77"));
         exampleList.add(new ExampleItem("#a3bce1","Wypłata","2021.11.01","6776.99"));
+*/
+     /*        mRecyclerView =findViewById(R.id.recycler_view);
 
-        mRecyclerView =findViewById(R.id.recycler_view);
-        mRecyclerView.setHasFixedSize(true);
+       mRecyclerView.setHasFixedSize(true);
+
         mLayoutManager=new LinearLayoutManager(this);
         mAdapter=new ExampleAdapter(exampleList, this,1);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-
+*/
         drawer = findViewById(R.id.drawer_layout_list);
       //  plus =findViewById(R.id.plus);
     //    plus.setOnClickListener(new View.OnClickListener(){
@@ -144,9 +154,9 @@ private void filter(String text){
 }
 
 
-    public void dashGo(View view) {
-        setContentView(R.layout.activity_main);
-    }
+   // public void dashGo(View view) {
+    //    setContentView(R.layout.activity_main);
+    //}
 
 
     @Override
@@ -237,6 +247,11 @@ private void filter(String text){
                 if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
                     myDB.addWpis(liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), 1);
                     dialog.dismiss();
+                    zapiszListeDoArray();
+                    abc();
+                    wczytajZBazy();
+                  //  Intent intent = new Intent(ListActivity.this, ListActivity.class);
+                //    startActivity(intent);
                 }
                 else{
                     Toast.makeText(ListActivity.this,"BŁĄD",Toast.LENGTH_SHORT).show();
@@ -245,6 +260,40 @@ private void filter(String text){
         });
 
     }
+    void zapiszListeDoArray()
+    {
+
+        myDB =new SqLiteManager(ListActivity.this);
+        lista_id = new ArrayList<>();
+        lista_kwota = new ArrayList<>();
+        lista_opis = new ArrayList<>();
+        lista_szczegol = new ArrayList<>();
+        lista_data = new ArrayList<>();
+        lista_kategoria = new ArrayList<>();
+
+        Cursor cursor = myDB.readAllHistoria();
+        if(cursor.getCount()==0){
+            Toast.makeText(this,"Brak danych.",Toast.LENGTH_SHORT).show();
+        }else{
+            while(cursor.moveToNext()){
+                lista_id.add(cursor.getString(0));
+                lista_kwota.add(cursor.getString(1));
+                lista_opis.add(cursor.getString(2));
+                lista_szczegol.add(cursor.getString(3));
+                lista_data.add(cursor.getString(4));
+                lista_kategoria.add(cursor.getString(5));
+            }
+        }
+    }
+     void wczytajZBazy(){
+         mRecyclerView.setAdapter(mAdapter);
+         mRecyclerView.setLayoutManager(new LinearLayoutManager(ListActivity.this));
+     }
+     void abc(){
+         mAdapter = new ExampleAdapter(ListActivity.this,lista_id,lista_kwota,lista_opis,lista_szczegol,lista_data,lista_kategoria,1);
+
+     }
+
 }
 
 

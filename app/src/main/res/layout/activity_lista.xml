@@ -22,6 +22,8 @@
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
     android:columnCount="1"
+    android:focusableInTouchMode="true"
+    android:focusable="true"
     android:foregroundGravity="top"
     android:rowCount="2">
 
@@ -41,6 +43,8 @@
            android:layout_height="40dp"
            android:background="@color/white"
            android:inputType="textNoSuggestions"
+           android:defaultFocusHighlightEnabled="false"
+           android:focusedByDefault="false"
            android:padding="10dp"
            android:hint="Szukaj..."
            android:textColor="@color/grey"></EditText>
