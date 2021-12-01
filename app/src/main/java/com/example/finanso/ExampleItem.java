@@ -36,10 +36,10 @@ public class ExampleItem {
         //colors1= getResources().getColorStateList(mColor1);
         return  mColor1;//.getColor(context, mColor1);
     }    */
-    public Boolean checkIfMoreThanZero()
-    {
-        return Double.parseDouble(mText3)>=0;
-    }
+  //  public Boolean checkIfMoreThanZero()
+   // {
+      //  return Double.parseDouble(mText3)>=0;
+   // }
     /*
     public int getPriceColor()
     {

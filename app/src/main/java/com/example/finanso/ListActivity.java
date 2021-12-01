@@ -7,6 +7,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -27,7 +28,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -197,7 +197,7 @@ private void filter(String text){
     public void createNewDialog(){
         //pop up dodawanie rekordu
         dialogBuild = new AlertDialog.Builder(this);
-        final View listaPopupView=getLayoutInflater().inflate(R.layout.popup,null);
+        final View listaPopupView=getLayoutInflater().inflate(R.layout.popup_lista,null);
         liczbaE = (EditText) listaPopupView.findViewById(R.id.kwotaE);
         opisE = (EditText) listaPopupView.findViewById(R.id.opisE);
         opisSzczegolE = (EditText) listaPopupView.findViewById(R.id.opisDlugiE);
@@ -240,6 +240,7 @@ private void filter(String text){
         });
 
         dodajB.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View view) {
                 SqLiteManager myDB=new SqLiteManager(ListActivity.this);
@@ -247,7 +248,7 @@ private void filter(String text){
                 if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
                     myDB.addWpis(liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), 1);
                     dialog.dismiss();
-                    zapiszListeDoArray();
+                       zapiszListeDoArray();
                     abc();
                     wczytajZBazy();
                   //  Intent intent = new Intent(ListActivity.this, ListActivity.class);

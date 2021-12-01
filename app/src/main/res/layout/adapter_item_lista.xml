@@ -16,23 +16,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="881 119,00"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@id/textViewCenaRekord"
+            android:text="881.00"
             android:textColor="@color/black"
             android:textSize="26sp" />
-
+<!--
         <TextView
             android:id="@+id/textViewZlWRekord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_alignParentTop="true"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/textViewCenaRekord"
             android:paddingTop="5dp"
             android:text="zł"
             android:textColor="@color/black"
             android:textSize="20sp" />
-
+-->
 <!--
         <ImageView
             android:id="@+id/imageView"
