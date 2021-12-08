@@ -23,8 +23,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -53,13 +55,16 @@ public class ListActivity extends AppCompatActivity {
     ArrayList<String> lista_id,lista_kwota,lista_opis,lista_szczegol,lista_data,lista_kategoria;
 
     private String kategorieA[]={"Wybierz kategorię","Rachunki","Spożywcze","Prezenty","Chemia","Remont"};
-   // DBHelper DB;
+    private Button buttonOnPressEdit,buttonOnPressDelete;
+    // DBHelper DB;
+    private static ListActivity instance = null;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista);
+        this.instance = this;
 
         //DB= new DBHelper(this);
         mRecyclerView =findViewById(R.id.recycler_view);
@@ -290,7 +295,9 @@ private void filter(String text){
          mRecyclerView.setAdapter(mAdapter);
          mRecyclerView.setLayoutManager(new LinearLayoutManager(ListActivity.this));
      }
-     void abc(){
+
+
+    void abc(){
          mAdapter = new ExampleAdapter(ListActivity.this,lista_id,lista_kwota,lista_opis,lista_szczegol,lista_data,lista_kategoria,1);
 
      }
