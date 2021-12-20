@@ -23,10 +23,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -52,12 +50,13 @@ public class ListActivity extends AppCompatActivity {
     private MenuItem dodajLista;
     public int czyPopupDodaj;
     SqLiteManager myDB;
-    ArrayList<String> lista_id,lista_kwota,lista_opis,lista_szczegol,lista_data,lista_kategoria;
+    //ArrayList<String> lista_id,lista_kwota,lista_opis,lista_szczegol,lista_data,lista_kategoria;
 
     private String kategorieA[]={"Wybierz kategorię","Rachunki","Spożywcze","Prezenty","Chemia","Remont"};
     private Button buttonOnPressEdit,buttonOnPressDelete;
     // DBHelper DB;
     private static ListActivity instance = null;
+    private ArrayList<ReadAllHistoriaResponse> lista_historia;
 
 
     @Override
@@ -70,7 +69,7 @@ public class ListActivity extends AppCompatActivity {
         mRecyclerView =findViewById(R.id.recycler_view);
 
         zapiszListeDoArray();
-        mAdapter = new ExampleAdapter(ListActivity.this,lista_id,lista_kwota,lista_opis,lista_szczegol,lista_data,lista_kategoria,1);
+        mAdapter = new ExampleAdapter(ListActivity.this,lista_historia,1);
 
         wczytajZBazy();
 
@@ -270,24 +269,34 @@ private void filter(String text){
     {
 
         myDB =new SqLiteManager(ListActivity.this);
-        lista_id = new ArrayList<>();
+        lista_historia =new ArrayList<>();
+      /*  lista_id = new ArrayList<>();
         lista_kwota = new ArrayList<>();
         lista_opis = new ArrayList<>();
         lista_szczegol = new ArrayList<>();
         lista_data = new ArrayList<>();
         lista_kategoria = new ArrayList<>();
-
+*/
         Cursor cursor = myDB.readAllHistoria();
         if(cursor.getCount()==0){
             Toast.makeText(this,"Brak danych.",Toast.LENGTH_SHORT).show();
         }else{
             while(cursor.moveToNext()){
-                lista_id.add(cursor.getString(0));
+                ReadAllHistoriaResponse readAHR = new ReadAllHistoriaResponse();
+                readAHR.id=cursor.getString(0);
+                readAHR.kwota=cursor.getString(1);
+                readAHR.opis=cursor.getString(2);
+                readAHR.szczegol_opis=cursor.getString(3);
+                readAHR.data=cursor.getString(4);
+                readAHR.kategoria_id=cursor.getString(5);
+
+                lista_historia.add(readAHR);
+                /*lista_id.add(cursor.getString(0));
                 lista_kwota.add(cursor.getString(1));
                 lista_opis.add(cursor.getString(2));
                 lista_szczegol.add(cursor.getString(3));
                 lista_data.add(cursor.getString(4));
-                lista_kategoria.add(cursor.getString(5));
+                lista_kategoria.add(cursor.getString(5));*/
             }
         }
     }
@@ -298,7 +307,7 @@ private void filter(String text){
 
 
     void abc(){
-         mAdapter = new ExampleAdapter(ListActivity.this,lista_id,lista_kwota,lista_opis,lista_szczegol,lista_data,lista_kategoria,1);
+         mAdapter = new ExampleAdapter(ListActivity.this,lista_historia,1);
 
      }
 
