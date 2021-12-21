@@ -11,13 +11,17 @@
     <GridLayout
         android:id="@+id/przyciski"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="80dp"
+        android:gravity="center_horizontal"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="0dp"
         android:columnCount="2"
         android:foregroundGravity="bottom"
-        android:rowCount="1">
+        android:rowCount="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
 
     <Button
         android:id="@+id/buttonDeleteListOnPress"
@@ -30,8 +34,9 @@
         android:backgroundTint="@color/greyRed"
         android:text="USUŃ"
         android:textColor="@color/white"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:textSize="20sp"
         android:clickable="true"
         android:focusable="true" />
     <Button
@@ -45,8 +50,9 @@
         android:backgroundTint="@color/Blue"
         android:text="EDYTUJ"
         android:textColor="@color/white"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:textSize="20sp"
         android:clickable="true"
         android:focusable="true" />
 

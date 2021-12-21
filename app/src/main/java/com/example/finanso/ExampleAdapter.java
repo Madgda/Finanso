@@ -1,5 +1,6 @@
 package com.example.finanso;
 
+import static com.google.android.material.internal.ContextUtils.getActivity;
 import static java.lang.Double.parseDouble;
 
 import android.app.AlertDialog;
@@ -132,18 +133,25 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
         //SwipeListener swipeListener = new SwipeListener(context);
        // swipeListener= new SwipeListener(listaRelativeLayoutPozycja);
 
-        //holder.listaRelativeLayoutPozycja.onSwipeTouchListner
+        holder.listaRelativeLayoutPozycja.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Toast.makeText(context,"Dlaczego trzymasz tu ten palec?Puść!!!",Toast.LENGTH_SHORT).show();
+                createNewDialog();
+                return false;
+            }
+        });
+/*        holder.listaRelativeLayoutPozycja.OnLongClickListener{(
 
-//        holder.listaRelativeLayoutPozycja.setOnLongClickListener(new View.OnLongClickListener(){
-//            @Override
-//            public boolean onLongClick(View view) {
-//
-//               // Toast.makeText(context,"Dlaczego trzymasz tu ten palec?Puść!!!",Toast.LENGTH_SHORT).show();
-//                createDialogOnPress();
-//
-//                return false;
-//            }
-//        });
+            @Override
+            public boolean onLongClick(View view) {
+
+                Toast.makeText(context,"Dlaczego trzymasz tu ten palec?Puść!!!",Toast.LENGTH_SHORT).show();
+                createDialogOnPress();
+
+                return false;
+            }
+       });*/
         //Context context = holder.listaKwotaEditText.getContext();
 
 
@@ -180,16 +188,27 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
         mExampleList =filteredList;
         notifyDataSetChanged();
     }
-    public void createDialogOnPress(){
+    public void createNewDialog(){
+        //pop up dodawanie rekordu
+        dialogBuild = new AlertDialog.Builder(context);
+        LayoutInflater li= LayoutInflater.from(getActivity(context));
+        View listOnLongPressPopupView=li.inflate(R.layout.popup_lista_onlongpress,null);
+
+        dialogBuild.setView(listOnLongPressPopupView);
+        dialog = dialogBuild.create();
+        dialog.show();
+    }
+
+    public void createDialogOnPressy(){
         //pop up dodawanie rekordu
 
         dialogBuild = new AlertDialog.Builder(mListActivity);
        final View listaPopupView= LayoutInflater.from(mListActivity).inflate(R.layout.popup_lista_onlongpress,null,false);
-        dialogBuild.setView(listaPopupView);
+       // dialogBuild.setView();
         dialog = dialogBuild.create();
         dialog.show();
 
-        //final View listaPopupView=getLayoutInflater().inflate(R.layout.popup_lista,null);
+      //  final View listaPopupView=getLayoutInflater().inflate(R.layout.popup_lista,null);
 
      //  buttonOnPressEdit = (Button) onPressView.findViewById(R.id.buttonEditListOnPress);
        // buttonOnPressDelete = (Button) onPressView.findViewById(R.id.buttonDeleteListOnPress);
