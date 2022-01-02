@@ -21,6 +21,7 @@
             android:text="881.00"
             android:textColor="@color/black"
             android:textSize="26sp" />
+
 <!--
         <TextView
             android:id="@+id/textViewZlWRekord"
@@ -67,6 +68,28 @@
             android:text="Line 2"
             android:textColor="@color/grey"
             android:textSize="15sp" />
-    </RelativeLayout>
 
+       <!-- <TextView
+            android:id="@+id/textViewInfoKlikAdapter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:text="Przytrzymaj by usunąć lub edytować"
+            android:textColor="@color/grey"
+            android:textSize="15sp" />
+            -->
+        <TextView
+            android:id="@+id/textViewInfoKlikAdapter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewCenaRekord"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            android:text="Przytrzymaj by usunąć lub edytować"
+            android:textColor="@color/grey"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
 </androidx.cardview.widget.CardView>

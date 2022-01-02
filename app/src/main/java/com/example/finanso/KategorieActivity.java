@@ -73,7 +73,7 @@ public class KategorieActivity  extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new ExampleAdapter(exampleList, this, 2);
+      //  mAdapter = new ExampleAdapter(exampleList, this, 2);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);

@@ -113,7 +113,7 @@ public class ParagonyActivity  extends AppCompatActivity {
         mRecyclerView =findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager=new LinearLayoutManager(this);
-        mAdapter=new ExampleAdapter(exampleList, this,3);
+      //  mAdapter=new ExampleAdapter(exampleList, this,3);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);

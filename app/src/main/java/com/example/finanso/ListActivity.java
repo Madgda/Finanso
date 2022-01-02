@@ -1,5 +1,7 @@
 package com.example.finanso;
 
+import static android.media.CamcorderProfile.get;
+
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,12 +28,14 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class ListActivity extends AppCompatActivity {
@@ -48,6 +52,7 @@ public class ListActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     public ArrayList<ExampleItem> exampleList = new ArrayList<>();
     private MenuItem dodajLista;
+    private TextView mItemInfo;
     public int czyPopupDodaj;
     SqLiteManager myDB;
     //ArrayList<String> lista_id,lista_kwota,lista_opis,lista_szczegol,lista_data,lista_kategoria;
@@ -67,6 +72,7 @@ public class ListActivity extends AppCompatActivity {
 
         //DB= new DBHelper(this);
         mRecyclerView =findViewById(R.id.recycler_view);
+        mItemInfo= findViewById(R.id.textViewInfoKlikAdapter);
 
         zapiszListeDoArray();
         mAdapter = new ExampleAdapter(ListActivity.this,lista_historia,1);
@@ -310,6 +316,10 @@ private void filter(String text){
          mAdapter = new ExampleAdapter(ListActivity.this,lista_historia,1);
 
      }
+    /*void notifyChanged(){
+         mAdapter.notifyDataSetChanged();
+      }
+ */
 
 }
 

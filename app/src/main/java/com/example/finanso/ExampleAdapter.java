@@ -5,9 +5,11 @@ import static java.lang.Double.parseDouble;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,23 +26,19 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
     Context context;
     private ArrayList<ExampleItem> mExampleList;
     private ArrayList<ReadAllHistoriaResponse> lista_historia;
-   // private ArrayList lista_id,lista_kwota,lista_opis,lista_szczegol,lista_data,lista_kategoria;
     private AppCompatActivity mListActivity;
     private int layoutExample;
     private AlertDialog dialog;
     private int rodzajExampleItem;
     private AlertDialog.Builder dialogBuild;
-    public void odswiezListe() {
-            notifyDataSetChanged();
-    }
+    private int row_index=-1;
 
-    public static class ExampleViewHolder extends RecyclerView.ViewHolder{
+    public class ExampleViewHolder extends RecyclerView.ViewHolder {
         private RelativeLayout listaRelativeLayoutPozycja;
         private TextView listaOpisEditText;
         private TextView listaDataEditText;
-
         private TextView listaKwotaEditText;
-        private TextView listaZlEditText;
+         TextView listaInfoEditText;
 
         public ExampleViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -49,12 +47,16 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
             listaOpisEditText =itemView.findViewById(R.id.textViewOpisRekord);
             listaDataEditText =itemView.findViewById(R.id.textViewDataRekord);
             listaKwotaEditText =itemView.findViewById(R.id.textViewCenaRekord);
-         //   listaZlEditText =itemView.findViewById(R.id.textViewZlWRekord);
+            listaInfoEditText =itemView.findViewById(R.id.textViewInfoKlikAdapter);
+            //   listaZlEditText =itemView.findViewById(R.id.textViewZlWRekord);
         }
+
+
     }
  ExampleAdapter(Context context,ArrayList <ReadAllHistoriaResponse> lista_historia, int rodzajExampleItem){
         this.context =context;
         this.lista_historia = lista_historia;
+
         /*this.lista_id=lista_id;
         this.lista_kwota=lista_kwota;
         this.lista_opis=lista_opis;
@@ -67,18 +69,12 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
          case 1: {
              layoutExample = R.layout.adapter_item_lista;
          }
-         case 2: {
-             layoutExample = R.layout.adapter_item_kategorie;
-         }
-         case 3: {
-             layoutExample = R.layout.adapter_item_paragony;
-         }
 
      }
 
 }
 
-    public ExampleAdapter(ArrayList<ExampleItem>exampleItems, AppCompatActivity listActivity, int rodzajExampleItem) {
+/*    public ExampleAdapter(ArrayList<ExampleItem>exampleItems, AppCompatActivity listActivity, int rodzajExampleItem) {
         mExampleList = exampleItems;
         this.rodzajExampleItem = rodzajExampleItem;
         mListActivity = listActivity;
@@ -87,15 +83,9 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
             case 1: {
                 layoutExample = R.layout.adapter_item_lista;
             }
-            case 2: {
-                layoutExample = R.layout.adapter_item_kategorie;
-            }
-            case 3: {
-                layoutExample = R.layout.adapter_item_paragony;
-            }
 
         }
-    }
+    }*/
     @NonNull
     @Override
     public ExampleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -109,6 +99,7 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
        //currentItem = (ExampleAdapter) lista_id.get(position);
         String kwota;
 
+        ListActivity listActivity = new ListActivity();
         ReadAllHistoriaResponse rowRAHR = lista_historia.get(position);
         //ReadAllHistoriaResponse rowRAHR = new ReadAllHistoriaResponse();
 
@@ -126,12 +117,45 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
         holder.listaOpisEditText.setText(rowRAHR.opis);
         holder.listaKwotaEditText.setText(rowRAHR.kwota+" zł");
         holder.listaKwotaEditText.setTextColor(priceColor);
+      // holder.listaInfoEditText.setTextColor(priceColor);
+    //   holder.listaInfoEditText.setText("TROLOLOLOLO");
         holder.listaDataEditText.setText(rowRAHR.data);
        /* holder.listaKwotaEditText.setText((String.valueOf(lista_kwota.get(position)))+"zł");
         holder.listaKwotaEditText.setTextColor(priceColor);
         holder.listaDataEditText.setText(String.valueOf(lista_data.get(position)));*/
         //SwipeListener swipeListener = new SwipeListener(context);
        // swipeListener= new SwipeListener(listaRelativeLayoutPozycja);
+       holder.listaRelativeLayoutPozycja.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                row_index = holder.getAdapterPosition();
+                notifyDataSetChanged();
+            }
+
+
+               /* Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                    }
+                }, 3000);*//*
+              //  holder.listaInfoEditText.setVisibility(View.GONE);
+          */
+
+        });
+       if(row_index==position)
+       {
+           holder.listaInfoEditText.setVisibility(View.VISIBLE);
+           Handler handler = new Handler();
+           handler.postDelayed(new Runnable() {
+               public void run() {
+                   holder.listaInfoEditText.setVisibility(View.GONE);
+               }
+           }, 2000);
+       }
+       else
+       {
+           holder.listaInfoEditText.setVisibility(View.GONE);
+       }
 
         holder.listaRelativeLayoutPozycja.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
