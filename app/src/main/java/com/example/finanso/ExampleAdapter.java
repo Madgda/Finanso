@@ -3,15 +3,22 @@ package com.example.finanso;
 import static com.google.android.material.internal.ContextUtils.getActivity;
 import static java.lang.Double.parseDouble;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Handler;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +27,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.motion.widget.OnSwipe;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleViewHolder> {
     Context context;
@@ -32,13 +43,24 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
     private int rodzajExampleItem;
     private AlertDialog.Builder dialogBuild;
     private int row_index=-1;
+    private ListActivity listActivity = new ListActivity();
+    private Button buttonListDelete, buttonListEdit;
+    String rowId = "-1" ;
+    private EditText liczbaE;
+    private EditText opisE;
+    private EditText opisSzczegolE;
+    private EditText dateE;
+    private Button zapiszB;
+    private Spinner kategoriaS;
+
 
     public class ExampleViewHolder extends RecyclerView.ViewHolder {
         private RelativeLayout listaRelativeLayoutPozycja;
         private TextView listaOpisEditText;
         private TextView listaDataEditText;
         private TextView listaKwotaEditText;
-         TextView listaInfoEditText;
+
+        TextView listaInfoEditText;
 
         public ExampleViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -99,7 +121,6 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
        //currentItem = (ExampleAdapter) lista_id.get(position);
         String kwota;
 
-        ListActivity listActivity = new ListActivity();
         ReadAllHistoriaResponse rowRAHR = lista_historia.get(position);
         //ReadAllHistoriaResponse rowRAHR = new ReadAllHistoriaResponse();
 
@@ -161,7 +182,8 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
             @Override
             public boolean onLongClick(View view) {
                 Toast.makeText(context,"Dlaczego trzymasz tu ten palec?Puść!!!",Toast.LENGTH_SHORT).show();
-                createNewDialog();
+                rowId= String.valueOf(holder.getAdapterPosition());
+                createNewDialog(rowId);
                 return false;
             }
         });
@@ -212,32 +234,104 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
         mExampleList =filteredList;
         notifyDataSetChanged();
     }
-    public void createNewDialog(){
-        //pop up dodawanie rekordu
+    public void createNewDialog(String rowId){
+        this.rowId=rowId;
         dialogBuild = new AlertDialog.Builder(context);
         LayoutInflater li= LayoutInflater.from(getActivity(context));
         View listOnLongPressPopupView=li.inflate(R.layout.popup_lista_onlongpress,null);
 
+        buttonListDelete = (Button) listOnLongPressPopupView.findViewById(R.id.buttonDeleteListOnPress);
+        buttonListEdit = (Button) listOnLongPressPopupView.findViewById(R.id.buttonEditListOnPress);
+
         dialogBuild.setView(listOnLongPressPopupView);
         dialog = dialogBuild.create();
         dialog.show();
+
+        buttonListDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listActivity.deleteListRecord(rowId);
+                dialog.dismiss();
+            }
+        });
+
+        buttonListEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                createNewEditDialog();
+            }
+        });
     }
 
-    public void createDialogOnPressy(){
-        //pop up dodawanie rekordu
+    public void createNewEditDialog() {
+        this.rowId=rowId;
+        dialogBuild = new AlertDialog.Builder(context);
+        LayoutInflater li= LayoutInflater.from(getActivity(context));
+        View listEditPopupView=li.inflate(R.layout.popup_lista_edit,null);
 
-        dialogBuild = new AlertDialog.Builder(mListActivity);
-       final View listaPopupView= LayoutInflater.from(mListActivity).inflate(R.layout.popup_lista_onlongpress,null,false);
-       // dialogBuild.setView();
+        liczbaE = (EditText) listEditPopupView.findViewById(R.id.kwotaE);
+        opisE = (EditText) listEditPopupView.findViewById(R.id.opisE);
+        opisSzczegolE = (EditText) listEditPopupView.findViewById(R.id.opisDlugiE);
+        dateE = (EditText) listEditPopupView.findViewById(R.id.dataE);
+        zapiszB = (Button) listEditPopupView.findViewById(R.id.zapiszB);
+        kategoriaS = (Spinner) listEditPopupView.findViewById(R.id.kategoriaS);
+        String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+
+         String kategorieA[]={"Wybierz kategorię","Rachunki","Spożywcze","Prezenty","Chemia","Remont"};
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, kategorieA);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
+        kategoriaS.setAdapter(spinnerArrayAdapter);
+
+        dateE.setText(currentDate);
+
+        dialogBuild.setView(listEditPopupView);
         dialog = dialogBuild.create();
         dialog.show();
 
-      //  final View listaPopupView=getLayoutInflater().inflate(R.layout.popup_lista,null);
 
-     //  buttonOnPressEdit = (Button) onPressView.findViewById(R.id.buttonEditListOnPress);
-       // buttonOnPressDelete = (Button) onPressView.findViewById(R.id.buttonDeleteListOnPress);
+        dateE.setInputType(InputType.TYPE_NULL);
+        dateE.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Calendar kalendarz = Calendar.getInstance();
+                int day = kalendarz.get(Calendar.DAY_OF_MONTH);
+                int month = kalendarz.get(Calendar.MONTH);
+                int year = kalendarz.get(Calendar.YEAR);
+
+                DatePickerDialog picker = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        dateE.setText(day + "/" + (month + 1) + "/" + year);
+                    }
+                }, year, month, day);
+                picker.show();
+            }
+        });
+        zapiszB.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onClick(View view) {
+               // SqLiteManager myDB=new SqLiteManager(context);
+                //  if(liczbaE.getText()<> "" && opisE.getText()<> "" && opisSzczegolE.getText()<> "" && dateE.getText() <> "") {
+             //   if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
+               //     myDB.addWpis(liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), 1);
+                    dialog.dismiss();
+                   // zapiszListeDoArray();
+                    //abc();
+                    //wczytajZBazy();
+                    //  Intent intent = new Intent(ListActivity.this, ListActivity.class);
+                    //    startActivity(intent);
+             //   }
+               // else{
+                    //Toast.makeText(context,"BŁĄD",Toast.LENGTH_SHORT).show();
+               // }
+            }
+        });
 
 
     }
+
+
 
 }

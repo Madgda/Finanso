@@ -62,6 +62,7 @@ public class ListActivity extends AppCompatActivity {
     // DBHelper DB;
     private static ListActivity instance = null;
     private ArrayList<ReadAllHistoriaResponse> lista_historia;
+    private String rowId;
 
 
     @Override
@@ -321,6 +322,12 @@ private void filter(String text){
       }
  */
 
+    void deleteListRecord(String rowId)
+    {
+        rowId=this.rowId;
+        myDB =new SqLiteManager(ListActivity.this);
+        myDB.deleteOneRow(rowId);
+    }
 }
 
 
