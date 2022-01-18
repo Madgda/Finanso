@@ -50,26 +50,8 @@ public class SqLiteManager extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_2);
-        onCreate(db);
     }
 
-    void addWpis(String kwota, String opis, String szczegol_opis, String data, int kategoria_id){
-        SQLiteDatabase db=this.getWritableDatabase();
-        ContentValues cv= new ContentValues();
-        cv. put(KOL_KWOTA,kwota);
-        cv. put(KOL_OPIS,opis);
-        cv. put(KOL_SZCZEGOL_OPIS,szczegol_opis);
-        cv. put(KOL_DATA,data);
-        cv. put(KOL_KATEGORIA_ID,kategoria_id);
-       long result= db.insert(TABLE_NAME,null,cv);
-       if(result==-1){
-           Toast.makeText(context,"BŁĄD",Toast.LENGTH_SHORT).show();
-       }
-       else{
-            Toast.makeText(context,"POPRAWNIE DODANO!",Toast.LENGTH_SHORT).show();
-        }
-
-    }
     void addKategoria(String kolor, String nazwa2, String opis2){
         SQLiteDatabase db2=this.getWritableDatabase();
         ContentValues cv2= new ContentValues();
@@ -83,7 +65,6 @@ public class SqLiteManager extends SQLiteOpenHelper {
        else{
             Toast.makeText(context,"POPRAWNIE DODANO!",Toast.LENGTH_SHORT).show();
         }
-
     }
 
     Cursor readAllHistoria(){
@@ -96,15 +77,57 @@ public class SqLiteManager extends SQLiteOpenHelper {
 
         }
         return cursor;
+
+
     }
-    void deleteOneRow(String row_id){
+
+    void addWpis(String kwota, String opis, String szczegol_opis, String data, int kategoria_id){
+        SQLiteDatabase db=this.getWritableDatabase();
+        ContentValues cv= new ContentValues();
+        cv. put(KOL_KWOTA,kwota);
+        cv. put(KOL_OPIS,opis);
+        cv. put(KOL_SZCZEGOL_OPIS,szczegol_opis);
+        cv. put(KOL_DATA,data);
+        cv. put(KOL_KATEGORIA_ID,kategoria_id);
+        long result= db.insert(TABLE_NAME,null,cv);
+        if(result==-1){
+            Toast.makeText(context,"BŁĄD",Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(context,"POPRAWNIE DODANO!",Toast.LENGTH_SHORT).show();
+        }
+    }
+    public boolean deleteOneRow(String row_id){
+        this.close();
         SQLiteDatabase db =this.getWritableDatabase();
-            long result =  db.delete(TABLE_NAME,"Id=?",new String[]{row_id});
+
+        //long result =  db.delete(TABLE_NAME,KOL_ID +"=?", new String[]{String.valueOf(row_id)});
+        long result =  db.delete(TABLE_NAME,KOL_ID +"=" + row_id,null);
         if(result ==-1){
             Toast.makeText(context,"BŁĄD",Toast.LENGTH_SHORT).show();
         }
         else{
             Toast.makeText(context,"POPRAWNIE USUNIĘTO!",Toast.LENGTH_SHORT).show();
         }
+        return result>0;
+    }
+    public void updateData(String row_id,String kwota, String opis, String szczegol_opis, String data,  Integer kategoria_id)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(KOL_KWOTA,kwota);
+        cv.put(KOL_OPIS,opis);
+        cv.put(KOL_DATA,data);
+        cv.put(KOL_SZCZEGOL_OPIS,szczegol_opis);
+        cv. put(KOL_KATEGORIA_ID,kategoria_id);
+
+       long result = db.update(TABLE_NAME,cv,KOL_ID +"=" + row_id,null);
+        if(result == -1){
+            Toast.makeText(context,"Błąd!!",Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(context,"POPRAWNIE ZEDYTOWANO!",Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

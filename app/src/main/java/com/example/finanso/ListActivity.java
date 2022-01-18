@@ -54,7 +54,7 @@ public class ListActivity extends AppCompatActivity {
     private MenuItem dodajLista;
     private TextView mItemInfo;
     public int czyPopupDodaj;
-    SqLiteManager myDB;
+    public SqLiteManager myDB;
     //ArrayList<String> lista_id,lista_kwota,lista_opis,lista_szczegol,lista_data,lista_kategoria;
 
     private String kategorieA[]={"Wybierz kategorię","Rachunki","Spożywcze","Prezenty","Chemia","Remont"};
@@ -65,11 +65,16 @@ public class ListActivity extends AppCompatActivity {
     private String rowId;
 
 
+    public ListActivity(){
+        myDB=new SqLiteManager(this);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista);
         this.instance = this;
+
 
         //DB= new DBHelper(this);
         mRecyclerView =findViewById(R.id.recycler_view);
@@ -153,7 +158,15 @@ public class ListActivity extends AppCompatActivity {
         toggle.syncState();
     }
 
-private void filter(String text){
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //DB= new DBHelper(this);
+        // Toast.makeText(ListActivity.this,"ERROR Z REASUMA! ",Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void filter(String text){
         ArrayList<ExampleItem> filteredList = new ArrayList<>();
 
         for(ExampleItem item : exampleList){
@@ -254,7 +267,7 @@ private void filter(String text){
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View view) {
-                SqLiteManager myDB=new SqLiteManager(ListActivity.this);
+                 myDB=new SqLiteManager(ListActivity.this);
               //  if(liczbaE.getText()<> "" && opisE.getText()<> "" && opisSzczegolE.getText()<> "" && dateE.getText() <> "") {
                 if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
                     myDB.addWpis(liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), 1);
@@ -322,12 +335,18 @@ private void filter(String text){
       }
  */
 
-    void deleteListRecord(String rowId)
-    {
-        rowId=this.rowId;
-        myDB =new SqLiteManager(ListActivity.this);
-        myDB.deleteOneRow(rowId);
-    }
+    /*void deleteListRecord(String rowId_) {
+        this.rowId = rowId_;
+        //  Toast.makeText(this,"BŁĄD: "+ListActivity.this,Toast.LENGTH_SHORT).show();
+        // myDB=new SqLiteManager(this);
+        //         myDB=new SqLiteManager(this);
+        // myDB =new SqLiteManager(ListActivity.this);
+        if (myDB == null) {
+            Toast.makeText(this, "Error usuwania, brak zmiennej myDB ", Toast.LENGTH_SHORT).show();
+        } else {
+            myDB.deleteOneRow(rowId);
+        }
+    }*/
 }
 
 

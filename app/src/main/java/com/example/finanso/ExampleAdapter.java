@@ -12,7 +12,6 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -24,7 +23,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.motion.widget.OnSwipe;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
@@ -43,7 +41,7 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
     private int rodzajExampleItem;
     private AlertDialog.Builder dialogBuild;
     private int row_index=-1;
-    private ListActivity listActivity = new ListActivity();
+    static ListActivity listActivity = new ListActivity();
     private Button buttonListDelete, buttonListEdit;
     String rowId = "-1" ;
     private EditText liczbaE;
@@ -52,12 +50,18 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
     private EditText dateE;
     private Button zapiszB;
     private Spinner kategoriaS;
+    private String opisValue;
+    private String kwotaValue;
+    private String dataValue;
+    private String szczegolOpisValue;
+    private String listId;
 
 
     public class ExampleViewHolder extends RecyclerView.ViewHolder {
         private RelativeLayout listaRelativeLayoutPozycja;
         private TextView listaOpisEditText;
         private TextView listaDataEditText;
+        private TextView listaSzczegolOpisEditText;
         private TextView listaKwotaEditText;
 
         TextView listaInfoEditText;
@@ -69,6 +73,7 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
             listaOpisEditText =itemView.findViewById(R.id.textViewOpisRekord);
             listaDataEditText =itemView.findViewById(R.id.textViewDataRekord);
             listaKwotaEditText =itemView.findViewById(R.id.textViewCenaRekord);
+            listaSzczegolOpisEditText =itemView.findViewById(R.id.textViewSzczegolRekord);
             listaInfoEditText =itemView.findViewById(R.id.textViewInfoKlikAdapter);
             //   listaZlEditText =itemView.findViewById(R.id.textViewZlWRekord);
         }
@@ -134,19 +139,13 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
         else {
                  priceColor = context.getColor(R.color.greyRed);
              }
-
+        listId =rowRAHR.id;
         holder.listaOpisEditText.setText(rowRAHR.opis);
         holder.listaKwotaEditText.setText(rowRAHR.kwota+" zł");
         holder.listaKwotaEditText.setTextColor(priceColor);
-      // holder.listaInfoEditText.setTextColor(priceColor);
-    //   holder.listaInfoEditText.setText("TROLOLOLOLO");
+        holder.listaSzczegolOpisEditText.setText(rowRAHR.szczegol_opis);
         holder.listaDataEditText.setText(rowRAHR.data);
-       /* holder.listaKwotaEditText.setText((String.valueOf(lista_kwota.get(position)))+"zł");
-        holder.listaKwotaEditText.setTextColor(priceColor);
-        holder.listaDataEditText.setText(String.valueOf(lista_data.get(position)));*/
-        //SwipeListener swipeListener = new SwipeListener(context);
-       // swipeListener= new SwipeListener(listaRelativeLayoutPozycja);
-       holder.listaRelativeLayoutPozycja.setOnClickListener(new View.OnClickListener() {
+        holder.listaRelativeLayoutPozycja.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 row_index = holder.getAdapterPosition();
@@ -182,8 +181,13 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
             @Override
             public boolean onLongClick(View view) {
                 Toast.makeText(context,"Dlaczego trzymasz tu ten palec?Puść!!!",Toast.LENGTH_SHORT).show();
-                rowId= String.valueOf(holder.getAdapterPosition());
-                createNewDialog(rowId);
+                rowId= String.valueOf(listId);
+                opisValue = holder.listaOpisEditText.getText().toString();
+                kwotaValue = rowRAHR.kwota.toString();
+                dataValue = holder.listaDataEditText.getText().toString();
+                szczegolOpisValue = holder.listaSzczegolOpisEditText.getText().toString();
+
+                createNewDialog(rowId, kwotaValue, opisValue, szczegolOpisValue, dataValue);
                 return false;
             }
         });
@@ -234,8 +238,9 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
         mExampleList =filteredList;
         notifyDataSetChanged();
     }
-    public void createNewDialog(String rowId){
+    public void createNewDialog(String rowId, String kwotaValue,String opisValue,String szczegolOpisValue, String dataValue){
         this.rowId=rowId;
+        this.opisValue=opisValue;
         dialogBuild = new AlertDialog.Builder(context);
         LayoutInflater li= LayoutInflater.from(getActivity(context));
         View listOnLongPressPopupView=li.inflate(R.layout.popup_lista_onlongpress,null);
@@ -250,7 +255,10 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
         buttonListDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listActivity.deleteListRecord(rowId);
+                SqLiteManager myDB=new SqLiteManager(context);
+                myDB.deleteOneRow(rowId);
+               // listActivity.deleteListRecord(rowId);
+                Toast.makeText(context,"KolumnaID to: "+rowId,Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });
@@ -259,21 +267,26 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                createNewEditDialog();
+                createNewEditDialog(rowId,kwotaValue,opisValue,szczegolOpisValue,dataValue);
             }
         });
     }
 
-    public void createNewEditDialog() {
+    public void createNewEditDialog(String rowId, String kwotaValue,String opisValue,String szczegolOpisValue, String dataValue) {
         this.rowId=rowId;
+        this.opisValue=opisValue;
         dialogBuild = new AlertDialog.Builder(context);
         LayoutInflater li= LayoutInflater.from(getActivity(context));
         View listEditPopupView=li.inflate(R.layout.popup_lista_edit,null);
 
         liczbaE = (EditText) listEditPopupView.findViewById(R.id.kwotaE);
+        liczbaE.setText(kwotaValue);
         opisE = (EditText) listEditPopupView.findViewById(R.id.opisE);
+        opisE.setText(opisValue);
         opisSzczegolE = (EditText) listEditPopupView.findViewById(R.id.opisDlugiE);
+        opisSzczegolE.setText(szczegolOpisValue);
         dateE = (EditText) listEditPopupView.findViewById(R.id.dataE);
+        dateE.setText(dataValue);
         zapiszB = (Button) listEditPopupView.findViewById(R.id.zapiszB);
         kategoriaS = (Spinner) listEditPopupView.findViewById(R.id.kategoriaS);
         String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
@@ -312,20 +325,22 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View view) {
-               // SqLiteManager myDB=new SqLiteManager(context);
-                //  if(liczbaE.getText()<> "" && opisE.getText()<> "" && opisSzczegolE.getText()<> "" && dateE.getText() <> "") {
-             //   if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
-               //     myDB.addWpis(liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), 1);
-                    dialog.dismiss();
-                   // zapiszListeDoArray();
-                    //abc();
-                    //wczytajZBazy();
-                    //  Intent intent = new Intent(ListActivity.this, ListActivity.class);
-                    //    startActivity(intent);
-             //   }
-               // else{
-                    //Toast.makeText(context,"BŁĄD",Toast.LENGTH_SHORT).show();
-               // }
+               SqLiteManager myDB=new SqLiteManager(context);
+                      if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
+                          myDB.updateData(rowId,liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), 1);
+                          dialog.dismiss();
+                          notifyDataSetChanged();
+/*
+                          listActivity.zapiszListeDoArray();
+                          listActivity.abc();
+                          listActivity.wczytajZBazy();*/
+                          //  Intent intent = new Intent(ListActivity.this, ListActivity.class);
+                          //    startActivity(intent);*/
+                             }
+                           else{
+                          Toast.makeText(context,"BŁĄD",Toast.LENGTH_SHORT).show();
+                           }
+
             }
         });
 
