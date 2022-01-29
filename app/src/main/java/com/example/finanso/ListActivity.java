@@ -15,6 +15,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
@@ -38,7 +39,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class ListActivity extends AppCompatActivity {
+public class ListActivity extends AppCompatActivity implements ExampleAdapter.OnNoteListener {
 
     private DrawerLayout drawer;
     private RecyclerView mRecyclerView;
@@ -63,7 +64,7 @@ public class ListActivity extends AppCompatActivity {
     private static ListActivity instance = null;
     private ArrayList<ReadAllHistoriaResponse> lista_historia;
     private String rowId;
-
+    private int position;
 
     public ListActivity(){
         myDB=new SqLiteManager(this);
@@ -81,9 +82,9 @@ public class ListActivity extends AppCompatActivity {
         mItemInfo= findViewById(R.id.textViewInfoKlikAdapter);
 
         zapiszListeDoArray();
-        mAdapter = new ExampleAdapter(ListActivity.this,lista_historia,1);
-
-        wczytajZBazy();
+      //  mAdapter = new ExampleAdapter(ListActivity.this,lista_historia,1);
+        buildRecyclerView();
+       // przeladuj();
 
         Intent intent = getIntent();
         czyPopupDodaj=intent.getIntExtra(MainActivity.CZY_POPUP_LISTA,0);
@@ -158,13 +159,14 @@ public class ListActivity extends AppCompatActivity {
         toggle.syncState();
     }
 
-    @Override
+ /*   @Override
     protected void onResume() {
         super.onResume();
+        przeladuj();
         //DB= new DBHelper(this);
-        // Toast.makeText(ListActivity.this,"ERROR Z REASUMA! ",Toast.LENGTH_SHORT).show();
+         Toast.makeText(ListActivity.this,"SIE WZIEŁO SIE PRZEŁADOWAŁO SIE!! ",Toast.LENGTH_SHORT).show();
 
-    }
+    }*/
 
     private void filter(String text){
         ArrayList<ExampleItem> filteredList = new ArrayList<>();
@@ -272,9 +274,8 @@ public class ListActivity extends AppCompatActivity {
                 if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
                     myDB.addWpis(liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), 1);
                     dialog.dismiss();
-                       zapiszListeDoArray();
-                    abc();
-                    wczytajZBazy();
+                    zapiszListeDoArray();
+                    buildRecyclerView();
                   //  Intent intent = new Intent(ListActivity.this, ListActivity.class);
                 //    startActivity(intent);
                 }
@@ -285,10 +286,14 @@ public class ListActivity extends AppCompatActivity {
         });
 
     }
+/*    void przeladuj() {
+        abc();
+
+    }*/
     void zapiszListeDoArray()
     {
 
-        myDB =new SqLiteManager(ListActivity.this);
+        myDB =new SqLiteManager(ListActivity.instance);
         lista_historia =new ArrayList<>();
       /*  lista_id = new ArrayList<>();
         lista_kwota = new ArrayList<>();
@@ -299,7 +304,7 @@ public class ListActivity extends AppCompatActivity {
 */
         Cursor cursor = myDB.readAllHistoria();
         if(cursor.getCount()==0){
-            Toast.makeText(this,"Brak danych.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(ListActivity.instance,"Brak danych.",Toast.LENGTH_SHORT).show();
         }else{
             while(cursor.moveToNext()){
                 ReadAllHistoriaResponse readAHR = new ReadAllHistoriaResponse();
@@ -309,7 +314,7 @@ public class ListActivity extends AppCompatActivity {
                 readAHR.szczegol_opis=cursor.getString(3);
                 readAHR.data=cursor.getString(4);
                 readAHR.kategoria_id=cursor.getString(5);
-
+                readAHR.pressed="0";
                 lista_historia.add(readAHR);
                 /*lista_id.add(cursor.getString(0));
                 lista_kwota.add(cursor.getString(1));
@@ -320,16 +325,69 @@ public class ListActivity extends AppCompatActivity {
             }
         }
     }
-     void wczytajZBazy(){
-         mRecyclerView.setAdapter(mAdapter);
-         mRecyclerView.setLayoutManager(new LinearLayoutManager(ListActivity.this));
-     }
+/*
+    public void showInfoHelper(int position_) {
+        this.position = position_;
+    }*/
 
+/*
+    void wczytajZBazy(ExampleAdapter mAdapter_){
+        this.mAdapter=mAdapter_;
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(ListActivity.instance));
 
+    }
     void abc(){
-         mAdapter = new ExampleAdapter(ListActivity.this,lista_historia,1);
+         mAdapter = new ExampleAdapter(ListActivity.instance,lista_historia,1);
+        wczytajZBazy(mAdapter);
+     }
+*/
+/*
+            listaInfoEditText.setVisibility(View.VISIBLE);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    listaInfoEditText.setVisibility(View.GONE);
+                }
+            }, 2000);
+        }
+        else
+        {
+            listaInfoEditText.setVisibility(View.GONE);
+        }
+    }*/
+public void removeItem(int position){
+    lista_historia.remove(position);
+    mAdapter.notifyItemRemoved(position);
+}
+     public void buildRecyclerView(){
+        mRecyclerView=findViewById(R.id.recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+         mAdapter = new ExampleAdapter(ListActivity.this,lista_historia,1,this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+
+
 
      }
+
+
+    /*@Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
+    }
+
+*/
+
+   /* private void setOnClickListener() {
+        listener = new ExampleAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+            }
+        };
+    }
+*/
     /*void notifyChanged(){
          mAdapter.notifyDataSetChanged();
       }
@@ -347,6 +405,13 @@ public class ListActivity extends AppCompatActivity {
             myDB.deleteOneRow(rowId);
         }
     }*/
+
+    @Override
+    public void onNoteClick(int position) {
+        Toast.makeText(ListActivity.this, "KLIKNIETO A ONCLICK ZADZIALAL!", Toast.LENGTH_SHORT).show();
+
+    }
+
 }
 
 

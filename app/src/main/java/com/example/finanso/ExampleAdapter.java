@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
@@ -55,18 +57,31 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
     private String dataValue;
     private String szczegolOpisValue;
     private String listId;
+    private Integer position;
+    private OnNoteListener mOnNoteListener;
+
+    public interface OnNoteListener {
+            void onNoteClick(int position);
+
+    }
 
 
-    public class ExampleViewHolder extends RecyclerView.ViewHolder {
+/*
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mListener = listener;
+    }
+*/
+
+    public  class ExampleViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener{
         private RelativeLayout listaRelativeLayoutPozycja;
         private TextView listaOpisEditText;
         private TextView listaDataEditText;
         private TextView listaSzczegolOpisEditText;
         private TextView listaKwotaEditText;
+        private TextView listaInfoEditText;
+        OnNoteListener onNoteListener;
 
-        TextView listaInfoEditText;
-
-        public ExampleViewHolder(@NonNull View itemView) {
+        public ExampleViewHolder(@NonNull View itemView, OnNoteListener onNoteListener) {
             super(itemView);
            // mImageView=itemView.findViewById(R.id.imageView);
             listaRelativeLayoutPozycja =itemView.findViewById(R.id.pozycjaLinia);
@@ -76,48 +91,38 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
             listaSzczegolOpisEditText =itemView.findViewById(R.id.textViewSzczegolRekord);
             listaInfoEditText =itemView.findViewById(R.id.textViewInfoKlikAdapter);
             //   listaZlEditText =itemView.findViewById(R.id.textViewZlWRekord);
+            this.onNoteListener = mOnNoteListener;
+            itemView.setOnLongClickListener(this);
         }
 
 
+        @Override
+        public boolean onLongClick(View view) {
+            onNoteListener.onNoteClick(getAdapterPosition());
+            return false;
+        }
     }
- ExampleAdapter(Context context,ArrayList <ReadAllHistoriaResponse> lista_historia, int rodzajExampleItem){
-        this.context =context;
-        this.lista_historia = lista_historia;
+        public ExampleAdapter(Context context,ArrayList <ReadAllHistoriaResponse> lista_historia, int rodzajExampleItem, OnNoteListener onNoteListener){
+            this.context =context;
+            this.mOnNoteListener = onNoteListener;
+            this.lista_historia = lista_historia;
 
-        /*this.lista_id=lista_id;
-        this.lista_kwota=lista_kwota;
-        this.lista_opis=lista_opis;
-        this.lista_szczegol=lista_szczegol;
-        this.lista_data=lista_data;
-        this.lista_kategoria=lista_kategoria;*/
-     this.rodzajExampleItem = rodzajExampleItem;
-     switch (rodzajExampleItem) {
+            this.rodzajExampleItem = rodzajExampleItem;
+                switch (rodzajExampleItem) {
 
-         case 1: {
-             layoutExample = R.layout.adapter_item_lista;
-         }
+                case 1: {
+                layoutExample = R.layout.adapter_item_lista;
+                    }
 
      }
 
 }
 
-/*    public ExampleAdapter(ArrayList<ExampleItem>exampleItems, AppCompatActivity listActivity, int rodzajExampleItem) {
-        mExampleList = exampleItems;
-        this.rodzajExampleItem = rodzajExampleItem;
-        mListActivity = listActivity;
-        switch (rodzajExampleItem) {
-
-            case 1: {
-                layoutExample = R.layout.adapter_item_lista;
-            }
-
-        }
-    }*/
     @NonNull
     @Override
     public ExampleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(layoutExample,parent,false);
-    ExampleViewHolder evh = new ExampleViewHolder(v);
+    ExampleViewHolder evh = new ExampleViewHolder(v,mOnNoteListener);
     return evh;
     }
 
@@ -145,21 +150,23 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
         holder.listaKwotaEditText.setTextColor(priceColor);
         holder.listaSzczegolOpisEditText.setText(rowRAHR.szczegol_opis);
         holder.listaDataEditText.setText(rowRAHR.data);
+
+     /*   if (rowRAHR.pressed=="0")
+        {
+            holder.listaInfoEditText.setVisibility(View.GONE);
+        }
+        else{
+            holder.listaInfoEditText.setVisibility(View.VISIBLE);
+        }*/
+/*
+
+
         holder.listaRelativeLayoutPozycja.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 row_index = holder.getAdapterPosition();
                 notifyDataSetChanged();
             }
-
-
-               /* Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                    }
-                }, 3000);*//*
-              //  holder.listaInfoEditText.setVisibility(View.GONE);
-          */
 
         });
        if(row_index==position)
@@ -176,21 +183,23 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
        {
            holder.listaInfoEditText.setVisibility(View.GONE);
        }
+*/
 
-        holder.listaRelativeLayoutPozycja.setOnLongClickListener(new View.OnLongClickListener() {
+//TODO POPUP ONLONG CLICK
+  /*      holder.listaRelativeLayoutPozycja.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Toast.makeText(context,"Dlaczego trzymasz tu ten palec?Puść!!!",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context,"Dlaczego trzymasz tu ten palec?Puść!!!",Toast.LENGTH_SHORT).show();
                 rowId= String.valueOf(listId);
                 opisValue = holder.listaOpisEditText.getText().toString();
                 kwotaValue = rowRAHR.kwota.toString();
                 dataValue = holder.listaDataEditText.getText().toString();
                 szczegolOpisValue = holder.listaSzczegolOpisEditText.getText().toString();
-
-                createNewDialog(rowId, kwotaValue, opisValue, szczegolOpisValue, dataValue);
+                int positionDialog= holder.getAdapterPosition();
+                createNewDialog(positionDialog, rowId, kwotaValue, opisValue, szczegolOpisValue, dataValue);
                 return false;
             }
-        });
+        });*/
 /*        holder.listaRelativeLayoutPozycja.OnLongClickListener{(
 
             @Override
@@ -238,9 +247,10 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
         mExampleList =filteredList;
         notifyDataSetChanged();
     }
-    public void createNewDialog(String rowId, String kwotaValue,String opisValue,String szczegolOpisValue, String dataValue){
+    public void createNewDialog(Integer position, String rowId, String kwotaValue,String opisValue,String szczegolOpisValue, String dataValue){
         this.rowId=rowId;
         this.opisValue=opisValue;
+        this.position = position;
         dialogBuild = new AlertDialog.Builder(context);
         LayoutInflater li= LayoutInflater.from(getActivity(context));
         View listOnLongPressPopupView=li.inflate(R.layout.popup_lista_onlongpress,null);
@@ -257,11 +267,21 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
             public void onClick(View view) {
                 SqLiteManager myDB=new SqLiteManager(context);
                 myDB.deleteOneRow(rowId);
-               // listActivity.deleteListRecord(rowId);
-                Toast.makeText(context,"KolumnaID to: "+rowId,Toast.LENGTH_SHORT).show();
+                myDB.close();
+                listActivity.zapiszListeDoArray();
+             //   listActivity.przeladuj();
+                notifyDataSetChanged();
+                notifyItemRemoved(position);
                 dialog.dismiss();
+
+
+                //  notifyItemRemoved(position);
+                //notifyItemRangeChanged(position, getItemCount());
+               // listActivity.finish();
+                //listActivity.startActivity(listActivity.getIntent());
             }
         });
+
 
         buttonListEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -271,6 +291,13 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
             }
         });
     }
+/*
+    private void deleteFromArray(Integer position) {
+        this.position=position;
+        lista_historia.remove(position);
+    }*/
+
+
 
     public void createNewEditDialog(String rowId, String kwotaValue,String opisValue,String szczegolOpisValue, String dataValue) {
         this.rowId=rowId;
@@ -302,7 +329,6 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
         dialog = dialogBuild.create();
         dialog.show();
 
-
         dateE.setInputType(InputType.TYPE_NULL);
         dateE.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -330,12 +356,8 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
                           myDB.updateData(rowId,liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), 1);
                           dialog.dismiss();
                           notifyDataSetChanged();
-/*
-                          listActivity.zapiszListeDoArray();
-                          listActivity.abc();
-                          listActivity.wczytajZBazy();*/
-                          //  Intent intent = new Intent(ListActivity.this, ListActivity.class);
-                          //    startActivity(intent);*/
+                           Intent intent = new Intent(context, listActivity.getClass());
+                            listActivity.startActivity(intent);
                              }
                            else{
                           Toast.makeText(context,"BŁĄD",Toast.LENGTH_SHORT).show();
