@@ -61,18 +61,11 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
     private OnNoteListener mOnNoteListener;
 
     public interface OnNoteListener {
-            void onNoteClick(int position);
-
+            void onLongClick(int position);
+            void onItemClick(int position);
     }
 
-
-/*
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        mListener = listener;
-    }
-*/
-
-    public  class ExampleViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener{
+    public  class ExampleViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener{
         private RelativeLayout listaRelativeLayoutPozycja;
         private TextView listaOpisEditText;
         private TextView listaDataEditText;
@@ -93,13 +86,19 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
             //   listaZlEditText =itemView.findViewById(R.id.textViewZlWRekord);
             this.onNoteListener = mOnNoteListener;
             itemView.setOnLongClickListener(this);
+            itemView.setOnClickListener(this);
         }
 
 
         @Override
         public boolean onLongClick(View view) {
-            onNoteListener.onNoteClick(getAdapterPosition());
-            return false;
+            onNoteListener.onLongClick(getAdapterPosition());
+            return true;
+        }
+
+        @Override
+        public void onClick(View view) {
+            onNoteListener.onItemClick(getAdapterPosition());
         }
     }
         public ExampleAdapter(Context context,ArrayList <ReadAllHistoriaResponse> lista_historia, int rodzajExampleItem, OnNoteListener onNoteListener){
@@ -291,8 +290,12 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
             }
         });
     }
-/*
-    private void deleteFromArray(Integer position) {
+
+    public void infoTextShow(Integer position) {
+        lista_historia.get(position);
+
+    }
+/*    private void deleteFromArray(Integer position) {
         this.position=position;
         lista_historia.remove(position);
     }*/

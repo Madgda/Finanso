@@ -2,6 +2,8 @@ package com.example.finanso;
 
 import static android.media.CamcorderProfile.get;
 
+import static com.google.android.material.internal.ContextUtils.getActivity;
+
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +22,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,7 +39,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class ListActivity extends AppCompatActivity implements ExampleAdapter.OnNoteListener {
@@ -65,6 +67,10 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
     private ArrayList<ReadAllHistoriaResponse> lista_historia;
     private String rowId;
     private int position;
+    private String pressed;
+    private TextView infoTextOnClick;
+    private Button buttonListDelete;
+    private Button buttonListEdit;
 
     public ListActivity(){
         myDB=new SqLiteManager(this);
@@ -91,7 +97,7 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
 
         switch (czyPopupDodaj){
             case 1:
-                createNewDialog();
+                createDialogAddNewRecord();
                 czyPopupDodaj=0;
                 break;
 
@@ -213,14 +219,14 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
 
                 if(id==R.id.menuDodajLista)
                 {
-                    createNewDialog();
+                    createDialogAddNewRecord();
                     return true;
                 }
                 return super.onOptionsItemSelected(item);
     }
 
 
-    public void createNewDialog(){
+    public void createDialogAddNewRecord(){
         //pop up dodawanie rekordu
         dialogBuild = new AlertDialog.Builder(this);
         final View listaPopupView=getLayoutInflater().inflate(R.layout.popup_lista,null);
@@ -292,7 +298,7 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
     }*/
     void zapiszListeDoArray()
     {
-
+        this.pressed=pressed;
         myDB =new SqLiteManager(ListActivity.instance);
         lista_historia =new ArrayList<>();
       /*  lista_id = new ArrayList<>();
@@ -314,7 +320,6 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
                 readAHR.szczegol_opis=cursor.getString(3);
                 readAHR.data=cursor.getString(4);
                 readAHR.kategoria_id=cursor.getString(5);
-                readAHR.pressed="0";
                 lista_historia.add(readAHR);
                 /*lista_id.add(cursor.getString(0));
                 lista_kwota.add(cursor.getString(1));
@@ -372,6 +377,10 @@ public void removeItem(int position){
 
      }
 
+    /*public void setItmInfo(){
+        lista_historia.set(5,);
+
+   } */
 
     /*@Override
     public void onPointerCaptureChanged(boolean hasCapture) {
@@ -405,13 +414,84 @@ public void removeItem(int position){
             myDB.deleteOneRow(rowId);
         }
     }*/
+/*
 
     @Override
     public void onNoteClick(int position) {
         Toast.makeText(ListActivity.this, "KLIKNIETO A ONCLICK ZADZIALAL!", Toast.LENGTH_SHORT).show();
 
     }
+*/
+    public void createDialogOnLongPress(){
+        /*this.rowId=rowId;
+        this.opisValue=opisValue;
+        this.position = position;
+        */
+        dialogBuild = new AlertDialog.Builder(this);
+        LayoutInflater li= LayoutInflater.from(getActivity(this));
+        View listOnLongPressPopupView=li.inflate(R.layout.popup_lista_onlongpress,null);
+
+        buttonListDelete = (Button) listOnLongPressPopupView.findViewById(R.id.buttonDeleteListOnPress);
+        buttonListEdit = (Button) listOnLongPressPopupView.findViewById(R.id.buttonEditListOnPress);
+
+        dialogBuild.setView(listOnLongPressPopupView);
+        dialog = dialogBuild.create();
+        dialog.show();
+
+      /*  buttonListDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SqLiteManager myDB=new SqLiteManager(context);
+                myDB.deleteOneRow(rowId);
+                myDB.close();
+                listActivity.zapiszListeDoArray();
+                //   listActivity.przeladuj();
+                mAdapter.notifyDataSetChanged();
+                notifyItemRemoved(position);
+                dialog.dismiss();
+
+
+                //  notifyItemRemoved(position);
+                //notifyItemRangeChanged(position, getItemCount());
+                // listActivity.finish();
+                //listActivity.startActivity(listActivity.getIntent());
+            }
+        });
+*/
+
+/*
+        buttonListEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                createNewEditDialog(rowId,kwotaValue,opisValue,szczegolOpisValue,dataValue);
+            }
+        });
+*/
+    }
+
+    @Override
+    public void onLongClick(int position) {
+        createDialogOnLongPress();
+    }
+
+    @Override
+    public void onItemClick(int position) {
+
+        infoTextOnClick = findViewById(R.id.infoShowHelpOnClick);
+        infoTextOnClick.setVisibility(View.VISIBLE);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                infoTextOnClick.setVisibility(View.GONE);
+            }
+        }, 1500);
+
+    }
+
 
 }
+
 
 
