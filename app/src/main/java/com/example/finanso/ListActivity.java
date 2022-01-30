@@ -71,6 +71,9 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
     private TextView infoTextOnClick;
     private Button buttonListDelete;
     private Button buttonListEdit;
+    private ReadAllHistoriaResponse dataEditPopup;
+    private String opisValue;
+    private Button zapiszB;
 
     public ListActivity(){
         myDB=new SqLiteManager(this);
@@ -422,7 +425,7 @@ public void removeItem(int position){
 
     }
 */
-    public void createDialogOnLongPress(){
+    public void createDialogOnLongPress(Integer position){
         /*this.rowId=rowId;
         this.opisValue=opisValue;
         this.position = position;
@@ -438,10 +441,24 @@ public void removeItem(int position){
         dialog = dialogBuild.create();
         dialog.show();
 
-      /*  buttonListDelete.setOnClickListener(new View.OnClickListener() {
+        dataEditPopup = lista_historia.get(position);
+        Toast.makeText(ListActivity.this, dataEditPopup.id+" - "+ dataEditPopup.kwota+" - "+ dataEditPopup.opis+" - "+ dataEditPopup.data+" - "+ dataEditPopup.szczegol_opis, Toast.LENGTH_SHORT).show();
+
+        buttonListDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SqLiteManager myDB=new SqLiteManager(context);
+
+
+                myDB=new SqLiteManager(ListActivity.this);
+                //  if(liczbaE.getText()<> "" && opisE.getText()<> "" && opisSzczegolE.getText()<> "" && dateE.getText() <> "") {
+             /*   if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
+                    myDB.addWpis(liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), 1);
+             */       dialog.dismiss();
+               /*     zapiszListeDoArray();
+                    buildRecyclerView();
+                */    //  Intent intent = new Intent(ListActivity.this, ListActivity.class);
+                    //    startActivity(intent);
+                /*SqLiteManager myDB=new SqLiteManager(this);
                 myDB.deleteOneRow(rowId);
                 myDB.close();
                 listActivity.zapiszListeDoArray();
@@ -449,7 +466,7 @@ public void removeItem(int position){
                 mAdapter.notifyDataSetChanged();
                 notifyItemRemoved(position);
                 dialog.dismiss();
-
+*/
 
                 //  notifyItemRemoved(position);
                 //notifyItemRangeChanged(position, getItemCount());
@@ -457,22 +474,96 @@ public void removeItem(int position){
                 //listActivity.startActivity(listActivity.getIntent());
             }
         });
-*/
 
-/*
+
+
         buttonListEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                createNewEditDialog(rowId,kwotaValue,opisValue,szczegolOpisValue,dataValue);
+                createEditRecorDialog(dataEditPopup.id,dataEditPopup.kwota,dataEditPopup.opis,dataEditPopup.szczegol_opis,dataEditPopup.data);
             }
         });
-*/
+
     }
 
+
+
+    public void createEditRecorDialog(String rowId, String kwotaValue, String opisValue, String szczegolOpisValue, String dataValue) {
+        this.rowId=rowId;
+        this.opisValue=opisValue;
+        dialogBuild = new AlertDialog.Builder(this);
+        LayoutInflater li= LayoutInflater.from(getActivity(this));
+        View listEditPopupView=li.inflate(R.layout.popup_lista_edit,null);
+
+        liczbaE = (EditText) listEditPopupView.findViewById(R.id.kwotaE);
+        liczbaE.setText(kwotaValue);
+        opisE = (EditText) listEditPopupView.findViewById(R.id.opisE);
+        opisE.setText(opisValue);
+        opisSzczegolE = (EditText) listEditPopupView.findViewById(R.id.opisDlugiE);
+        opisSzczegolE.setText(szczegolOpisValue);
+        dateE = (EditText) listEditPopupView.findViewById(R.id.dataE);
+        dateE.setText(dataValue);
+        zapiszB = (Button) listEditPopupView.findViewById(R.id.zapiszB);
+        kategoriaS = (Spinner) listEditPopupView.findViewById(R.id.kategoriaS);
+        String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+
+        String kategorieA[]={"Wybierz kategorię","Rachunki","Spożywcze","Prezenty","Chemia","Remont"};
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, kategorieA);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
+        kategoriaS.setAdapter(spinnerArrayAdapter);
+
+        dateE.setText(currentDate);
+
+        dialogBuild.setView(listEditPopupView);
+        dialog = dialogBuild.create();
+        dialog.show();
+
+        dateE.setInputType(InputType.TYPE_NULL);
+        dateE.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Calendar kalendarz = Calendar.getInstance();
+                int day = kalendarz.get(Calendar.DAY_OF_MONTH);
+                int month = kalendarz.get(Calendar.MONTH);
+                int year = kalendarz.get(Calendar.YEAR);
+
+                DatePickerDialog picker = new DatePickerDialog(ListActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        dateE.setText(day + "/" + (month + 1) + "/" + year);
+                    }
+                }, year, month, day);
+                picker.show();
+            }
+        });
+        zapiszB.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onClick(View view) {
+                SqLiteManager myDB=new SqLiteManager(ListActivity.this);
+                if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
+                    myDB.updateData(rowId,liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), 1);
+                    dialog.dismiss();
+                    mAdapter.notifyDataSetChanged();
+                    Intent intent = new Intent(ListActivity.this, ListActivity.class);
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(ListActivity.this,"BŁĄD",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+
+    }
+
+
     @Override
-    public void onLongClick(int position) {
-        createDialogOnLongPress();
+    public void onLongClick(int position_) {
+        this.position=position_;
+        createDialogOnLongPress(position);
     }
 
     @Override
