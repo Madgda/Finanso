@@ -376,7 +376,7 @@ public void removeItem(int position){
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-
+       // lista_historia.set(position,)
 
      }
 
@@ -442,7 +442,7 @@ public void removeItem(int position){
         dialog.show();
 
         dataEditPopup = lista_historia.get(position);
-        Toast.makeText(ListActivity.this, dataEditPopup.id+" - "+ dataEditPopup.kwota+" - "+ dataEditPopup.opis+" - "+ dataEditPopup.data+" - "+ dataEditPopup.szczegol_opis, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(ListActivity.this, dataEditPopup.id+" - "+ dataEditPopup.kwota+" - "+ dataEditPopup.opis+" - "+ dataEditPopup.data+" - "+ dataEditPopup.szczegol_opis, Toast.LENGTH_SHORT).show();
 
         buttonListDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -453,7 +453,13 @@ public void removeItem(int position){
                 //  if(liczbaE.getText()<> "" && opisE.getText()<> "" && opisSzczegolE.getText()<> "" && dateE.getText() <> "") {
              /*   if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
                     myDB.addWpis(liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), 1);
-             */       dialog.dismiss();
+             */
+                myDB.deleteOneRow(dataEditPopup.id);
+                dialog.dismiss();
+                mAdapter.notifyDataSetChanged();
+                finish();
+                Intent intent = new Intent(ListActivity.this, ListActivity.class);
+                startActivity(intent);
                /*     zapiszListeDoArray();
                     buildRecyclerView();
                 */    //  Intent intent = new Intent(ListActivity.this, ListActivity.class);
@@ -546,6 +552,7 @@ public void removeItem(int position){
                     myDB.updateData(rowId,liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), 1);
                     dialog.dismiss();
                     mAdapter.notifyDataSetChanged();
+                    finish();
                     Intent intent = new Intent(ListActivity.this, ListActivity.class);
                     startActivity(intent);
                 }
