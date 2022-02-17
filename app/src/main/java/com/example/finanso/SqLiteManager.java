@@ -77,8 +77,17 @@ public class SqLiteManager extends SQLiteOpenHelper {
 
         }
         return cursor;
+    }
+    Cursor readAllKategorie() {
+        String query = "SELECT * FROM " + TABLE_NAME_2;
+        SQLiteDatabase db = this.getReadableDatabase();
 
+        Cursor cursor = null;
+        if (db != null) {
+            cursor = db.rawQuery(query, null);
 
+        }
+        return cursor;
     }
 
     void addWpis(String kwota, String opis, String szczegol_opis, String data, int kategoria_id){

@@ -65,6 +65,7 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
     // DBHelper DB;
     private static ListActivity instance = null;
     private ArrayList<ReadAllHistoriaResponse> lista_historia;
+    private ArrayList<ReadAllCategoryResponse> lista_kategorie;
     private String rowId;
     private int position;
     private String pressed;
@@ -74,6 +75,10 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
     private ReadAllHistoriaResponse dataEditPopup;
     private String opisValue;
     private Button zapiszB;
+    private ArrayList<String> lista_kategorie_id;
+    private ArrayList<String> lista_kategorie_kolor;
+    private ArrayList<String> lista_kategorie_nazwa;
+    private ArrayList<String> lista_kategorie_opis;
 
     public ListActivity(){
         myDB=new SqLiteManager(this);
@@ -91,6 +96,7 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
         mItemInfo= findViewById(R.id.textViewInfoKlikAdapter);
 
         zapiszListeDoArray();
+        zapiszKategorieDoArray();
       //  mAdapter = new ExampleAdapter(ListActivity.this,lista_historia,1);
         buildRecyclerView();
        // przeladuj();
@@ -240,9 +246,9 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
         dodajB = (Button) listaPopupView.findViewById(R.id.dodajB);
         kategoriaS = (Spinner) listaPopupView.findViewById(R.id.kategoriaS);
         String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
-
+        //kategorieA=lista_kategorie.nazwa
         //kategoriaS.setPrompt("Wybierz kategorię");
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this,   android.R.layout.simple_spinner_item, kategorieA);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this,   android.R.layout.simple_spinner_item,lista_kategorie_nazwa);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
         kategoriaS.setAdapter(spinnerArrayAdapter);
 
@@ -301,16 +307,9 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
     }*/
     void zapiszListeDoArray()
     {
-        this.pressed=pressed;
         myDB =new SqLiteManager(ListActivity.instance);
         lista_historia =new ArrayList<>();
-      /*  lista_id = new ArrayList<>();
-        lista_kwota = new ArrayList<>();
-        lista_opis = new ArrayList<>();
-        lista_szczegol = new ArrayList<>();
-        lista_data = new ArrayList<>();
-        lista_kategoria = new ArrayList<>();
-*/
+
         Cursor cursor = myDB.readAllHistoria();
         if(cursor.getCount()==0){
             Toast.makeText(ListActivity.instance,"Brak danych.",Toast.LENGTH_SHORT).show();
@@ -324,46 +323,38 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
                 readAHR.data=cursor.getString(4);
                 readAHR.kategoria_id=cursor.getString(5);
                 lista_historia.add(readAHR);
-                /*lista_id.add(cursor.getString(0));
-                lista_kwota.add(cursor.getString(1));
-                lista_opis.add(cursor.getString(2));
-                lista_szczegol.add(cursor.getString(3));
-                lista_data.add(cursor.getString(4));
-                lista_kategoria.add(cursor.getString(5));*/
             }
         }
     }
-/*
-    public void showInfoHelper(int position_) {
-        this.position = position_;
-    }*/
 
-/*
-    void wczytajZBazy(ExampleAdapter mAdapter_){
-        this.mAdapter=mAdapter_;
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(ListActivity.instance));
+    void zapiszKategorieDoArray()
+    {
+        myDB =new SqLiteManager(ListActivity.instance);
+        lista_kategorie_id =new ArrayList<>();
+        lista_kategorie_kolor =new ArrayList<>();
+        lista_kategorie_nazwa =new ArrayList<>();
+        lista_kategorie_opis =new ArrayList<>();
 
+        Cursor cursor = myDB.readAllKategorie();
+        if(cursor.getCount()==0){
+            Toast.makeText(ListActivity.instance,"Brak danych.",Toast.LENGTH_SHORT).show();
+        }else{
+            while(cursor.moveToNext()){
+              /*  ReadAllCategoryResponse readACR = new ReadAllCategoryResponse();
+                readACR.id=cursor.getString(0);
+                readACR.kolor=cursor.getString(1);
+                readACR.nazwa=cursor.getString(2);
+                readACR.opis=cursor.getString(3);
+                lista_kategorie.add(readACR);*/
+                lista_kategorie_id.add(cursor.getString(0));
+                lista_kategorie_kolor.add(cursor.getString(1));
+                lista_kategorie_nazwa.add(cursor.getString(2));
+                lista_kategorie_opis.add(cursor.getString(3));
+
+            }
+        }
     }
-    void abc(){
-         mAdapter = new ExampleAdapter(ListActivity.instance,lista_historia,1);
-        wczytajZBazy(mAdapter);
-     }
-*/
-/*
-            listaInfoEditText.setVisibility(View.VISIBLE);
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    listaInfoEditText.setVisibility(View.GONE);
-                }
-            }, 2000);
-        }
-        else
-        {
-            listaInfoEditText.setVisibility(View.GONE);
-        }
-    }*/
+
 public void removeItem(int position){
     lista_historia.remove(position);
     mAdapter.notifyItemRemoved(position);
@@ -515,7 +506,7 @@ public void removeItem(int position){
         String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
 
         String kategorieA[]={"Wybierz kategorię","Rachunki","Spożywcze","Prezenty","Chemia","Remont"};
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, kategorieA);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, lista_kategorie_nazwa);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
         kategoriaS.setAdapter(spinnerArrayAdapter);
 
@@ -565,6 +556,7 @@ public void removeItem(int position){
 
 
     }
+
 
 
     @Override
