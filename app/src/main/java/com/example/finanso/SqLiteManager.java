@@ -19,7 +19,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 2;
 
     private static final String TABLE_NAME = "Historia";
-    private static final String KOL_ID = "Id";
+    private static final String KOL_ID = "IdHistoria";
     private static final String KOL_KWOTA = "Kwota";
     private static final String KOL_OPIS = "Opis";
     private static final String KOL_SZCZEGOL_OPIS = "Szczegol_opis";
@@ -27,7 +27,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
     private static final String KOL_KATEGORIA_ID = "Kategoria";
 
     private static final String TABLE_NAME_2 = "Kategorie";
-    private static final String KOL2_ID = "Id2";
+    private static final String KOL2_ID = "IdKategoria";
     private static final String KOL2_KOLOR = "Kolor";
     private static final String KOL2_NAZWA = "Nazwa";
     private static final String KOL2_OPIS = "Opis";
@@ -78,6 +78,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
         }
         return cursor;
     }
+
     Cursor readAllKategorie() {
         String query = "SELECT * FROM " + TABLE_NAME_2;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -90,7 +91,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
         return cursor;
     }
 
-    void addWpis(String kwota, String opis, String szczegol_opis, String data, int kategoria_id){
+    void addWpis(String kwota, String opis, String szczegol_opis, String data, String kategoria_id){
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues cv= new ContentValues();
         cv. put(KOL_KWOTA,kwota);
@@ -120,7 +121,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
         }
         return result>0;
     }
-    public void updateData(String row_id,String kwota, String opis, String szczegol_opis, String data,  Integer kategoria_id)
+    public void updateData(String row_id,String kwota, String opis, String szczegol_opis, String data,  String kategoria_id)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();

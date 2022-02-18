@@ -79,6 +79,7 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
     private ArrayList<String> lista_kategorie_kolor;
     private ArrayList<String> lista_kategorie_nazwa;
     private ArrayList<String> lista_kategorie_opis;
+    private ArrayList<String> kategoriaArray;
 
     public ListActivity(){
         myDB=new SqLiteManager(this);
@@ -139,23 +140,6 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
             }
         });
 
-        //exampleList.add(lista_id,lista_kwota,lista_opis,lista_szczegol,lista_data,lista_kategoria);
-       // exampleList.add(new ExampleItem("#ff9d9c","Prezenty świąteczne","2021.12.05","-6566.77"));
-        //exampleList.add(new ExampleItem("#a3bce1","Wypłata","2021.12.01","6776.99"));
-        /*exampleList.add(new ExampleItem("#6C4D70","Zakupy spożywcze","2021.11.13","-144.32"));
-        exampleList.add(new ExampleItem("#ff9d9c","Prezenty świąteczne","2021.11.05","-6566.77"));
-        exampleList.add(new ExampleItem("#a3bce1","Wypłata","2021.11.01","6776.99"));
-*/
-     /*        mRecyclerView =findViewById(R.id.recycler_view);
-
-       mRecyclerView.setHasFixedSize(true);
-
-        mLayoutManager=new LinearLayoutManager(this);
-        mAdapter=new ExampleAdapter(exampleList, this,1);
-
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-*/
         drawer = findViewById(R.id.drawer_layout_list);
       //  plus =findViewById(R.id.plus);
     //    plus.setOnClickListener(new View.OnClickListener(){
@@ -248,7 +232,7 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
         String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
         //kategorieA=lista_kategorie.nazwa
         //kategoriaS.setPrompt("Wybierz kategorię");
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this,   android.R.layout.simple_spinner_item,lista_kategorie_nazwa);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this,   android.R.layout.simple_spinner_item,kategoriaArray);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
         kategoriaS.setAdapter(spinnerArrayAdapter);
 
@@ -284,10 +268,13 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View view) {
+                String kategoriaDoBazy=kategoriaS.getSelectedItem().toString();
+                int countDot = kategoriaDoBazy.indexOf(".");
+                kategoriaDoBazy= kategoriaDoBazy.toString().substring(0,countDot).toString();
                  myDB=new SqLiteManager(ListActivity.this);
               //  if(liczbaE.getText()<> "" && opisE.getText()<> "" && opisSzczegolE.getText()<> "" && dateE.getText() <> "") {
                 if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
-                    myDB.addWpis(liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), 1);
+                    myDB.addWpis(liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), kategoriaDoBazy);
                     dialog.dismiss();
                     zapiszListeDoArray();
                     buildRecyclerView();
@@ -334,6 +321,7 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
         lista_kategorie_kolor =new ArrayList<>();
         lista_kategorie_nazwa =new ArrayList<>();
         lista_kategorie_opis =new ArrayList<>();
+        kategoriaArray =new ArrayList<>();
 
         Cursor cursor = myDB.readAllKategorie();
         if(cursor.getCount()==0){
@@ -350,6 +338,7 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
                 lista_kategorie_kolor.add(cursor.getString(1));
                 lista_kategorie_nazwa.add(cursor.getString(2));
                 lista_kategorie_opis.add(cursor.getString(3));
+                kategoriaArray.add(cursor.getString(0)+". "+cursor.getString(2));
 
             }
         }
@@ -478,7 +467,7 @@ public void removeItem(int position){
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                createEditRecorDialog(dataEditPopup.id,dataEditPopup.kwota,dataEditPopup.opis,dataEditPopup.szczegol_opis,dataEditPopup.data);
+                createEditRecordDialog(dataEditPopup.id,dataEditPopup.kwota,dataEditPopup.opis,dataEditPopup.szczegol_opis,dataEditPopup.data);
             }
         });
 
@@ -486,7 +475,7 @@ public void removeItem(int position){
 
 
 
-    public void createEditRecorDialog(String rowId, String kwotaValue, String opisValue, String szczegolOpisValue, String dataValue) {
+    public void createEditRecordDialog(String rowId, String kwotaValue, String opisValue, String szczegolOpisValue, String dataValue) {
         this.rowId=rowId;
         this.opisValue=opisValue;
         dialogBuild = new AlertDialog.Builder(this);
@@ -506,7 +495,7 @@ public void removeItem(int position){
         String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
 
         String kategorieA[]={"Wybierz kategorię","Rachunki","Spożywcze","Prezenty","Chemia","Remont"};
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, lista_kategorie_nazwa);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, kategoriaArray);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
         kategoriaS.setAdapter(spinnerArrayAdapter);
 
@@ -538,9 +527,13 @@ public void removeItem(int position){
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View view) {
+                String kategoriaDoBazy=kategoriaS.getSelectedItem().toString();
+                int countDot = kategoriaDoBazy.indexOf(".");
+                kategoriaDoBazy= kategoriaDoBazy.toString().substring(0,countDot).toString();
+
                 SqLiteManager myDB=new SqLiteManager(ListActivity.this);
                 if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
-                    myDB.updateData(rowId,liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), 1);
+                    myDB.updateData(rowId,liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(),kategoriaDoBazy);
                     dialog.dismiss();
                     mAdapter.notifyDataSetChanged();
                     finish();
