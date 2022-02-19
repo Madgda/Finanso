@@ -505,7 +505,7 @@ public void removeItem(int position){
         Log.v(TAG, kategoria_id+". "+kategoria_nazwa);
         pozycjaKategoria =kategoriaArray.indexOf(kategoria_id+". "+kategoria_nazwa);
         if(pozycjaKategoria>0) {
-`            kategoriaS.setSelection(pozycjaKategoria);
+            kategoriaS.setSelection(pozycjaKategoria);
         }
         Log.v(TAG, pozycjaKategoria.toString());
 
