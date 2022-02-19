@@ -1,5 +1,6 @@
 package com.example.finanso;
 
+import static android.content.ContentValues.TAG;
 import static android.media.CamcorderProfile.get;
 
 import static com.google.android.material.internal.ContextUtils.getActivity;
@@ -22,6 +23,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -297,7 +299,7 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
         myDB =new SqLiteManager(ListActivity.instance);
         lista_historia =new ArrayList<>();
 
-        Cursor cursor = myDB.readAllHistoria();
+        Cursor cursor = myDB.readAllHistoryWithKategorie();
         if(cursor.getCount()==0){
             Toast.makeText(ListActivity.instance,"Brak danych.",Toast.LENGTH_SHORT).show();
         }else{
@@ -309,6 +311,7 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
                 readAHR.szczegol_opis=cursor.getString(3);
                 readAHR.data=cursor.getString(4);
                 readAHR.kategoria_id=cursor.getString(5);
+                readAHR.kategoria_nazwa=cursor.getString(8);
                 lista_historia.add(readAHR);
             }
         }
@@ -467,7 +470,7 @@ public void removeItem(int position){
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                createEditRecordDialog(dataEditPopup.id,dataEditPopup.kwota,dataEditPopup.opis,dataEditPopup.szczegol_opis,dataEditPopup.data);
+                createEditRecordDialog(dataEditPopup.id,dataEditPopup.kwota,dataEditPopup.opis,dataEditPopup.szczegol_opis,dataEditPopup.data,dataEditPopup.kategoria_id,dataEditPopup.kategoria_nazwa);
             }
         });
 
@@ -475,7 +478,7 @@ public void removeItem(int position){
 
 
 
-    public void createEditRecordDialog(String rowId, String kwotaValue, String opisValue, String szczegolOpisValue, String dataValue) {
+    public void createEditRecordDialog(String rowId, String kwotaValue, String opisValue, String szczegolOpisValue, String dataValue, String kategoria_id, String kategoria_nazwa) {
         this.rowId=rowId;
         this.opisValue=opisValue;
         dialogBuild = new AlertDialog.Builder(this);
@@ -498,6 +501,13 @@ public void removeItem(int position){
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, kategoriaArray);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
         kategoriaS.setAdapter(spinnerArrayAdapter);
+        Integer pozycjaKategoria=0;
+        Log.v(TAG, kategoria_id+". "+kategoria_nazwa);
+        pozycjaKategoria =kategoriaArray.indexOf(kategoria_id+". "+kategoria_nazwa);
+        if(pozycjaKategoria>0) {
+`            kategoriaS.setSelection(pozycjaKategoria);
+        }
+        Log.v(TAG, pozycjaKategoria.toString());
 
         dateE.setText(currentDate);
 

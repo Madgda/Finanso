@@ -16,7 +16,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
 
     private Context context;
     private static final String DATABASE_NAME = "Finanso.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     private static final String TABLE_NAME = "Historia";
     private static final String KOL_ID = "IdHistoria";
@@ -81,6 +81,19 @@ public class SqLiteManager extends SQLiteOpenHelper {
 
     Cursor readAllKategorie() {
         String query = "SELECT * FROM " + TABLE_NAME_2;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        if (db != null) {
+            cursor = db.rawQuery(query, null);
+
+        }
+        return cursor;
+    }
+    Cursor readAllHistoryWithKategorie() {
+        String query = "SELECT * FROM " + TABLE_NAME + " INNER JOIN "
+                + TABLE_NAME_2 + " ON " + TABLE_NAME + "." + KOL_KATEGORIA_ID + " = "
+                + TABLE_NAME_2 + "." + KOL2_ID;
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = null;
