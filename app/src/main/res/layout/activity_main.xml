@@ -6,14 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".MainActivity"
+    tools:context=".MainActivity.MainActivity"
     android:screenOrientation="portrait" >
 
 <RelativeLayout
     android:layout_width="match_parent"
     android:background="@color/Blue"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity.MainActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"

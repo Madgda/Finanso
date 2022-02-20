@@ -1,16 +1,7 @@
-package com.example.finanso;
+/*
+package com.example.finanso.ListActivity;
 
-import static java.security.AccessController.getContext;
-
-import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
-
-import java.util.List;
 
 public class ExampleItem {
     private int mColor1;
@@ -30,6 +21,7 @@ public class ExampleItem {
         mText3=text3;
 
     }
+*/
 
    /* public int getImageColor()
     {
@@ -59,6 +51,7 @@ public class ExampleItem {
     }
 
      */
+/*
     public int getColor1(){
         return Color.parseColor(stringColor);
     }
@@ -73,3 +66,4 @@ public class ExampleItem {
     }
 
 }
+*/

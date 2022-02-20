@@ -1,4 +1,4 @@
-package com.example.finanso;
+package com.example.finanso.SQLite;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -52,7 +52,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_2);
     }
 
-    void addKategoria(String kolor, String nazwa2, String opis2){
+    public void addKategoria(String kolor, String nazwa2, String opis2){
         SQLiteDatabase db2=this.getWritableDatabase();
         ContentValues cv2= new ContentValues();
         cv2. put(KOL2_KOLOR,kolor);
@@ -67,7 +67,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
         }
     }
 
-    Cursor readAllHistoria(){
+ /*   Cursor readAllHistoria(){
         String query ="SELECT * FROM " + TABLE_NAME;
         SQLiteDatabase db=this.getReadableDatabase();
 
@@ -78,8 +78,8 @@ public class SqLiteManager extends SQLiteOpenHelper {
         }
         return cursor;
     }
-
-    Cursor readAllKategorie() {
+*/
+    public Cursor readAllKategorie() {
         String query = "SELECT * FROM " + TABLE_NAME_2;
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -90,7 +90,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
         }
         return cursor;
     }
-    Cursor readAllHistoryWithKategorie() {
+    public Cursor readAllHistoryWithKategorie() {
         String query = "SELECT * FROM " + TABLE_NAME + " INNER JOIN "
                 + TABLE_NAME_2 + " ON " + TABLE_NAME + "." + KOL_KATEGORIA_ID + " = "
                 + TABLE_NAME_2 + "." + KOL2_ID;
@@ -104,7 +104,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
         return cursor;
     }
 
-    void addWpis(String kwota, String opis, String szczegol_opis, String data, String kategoria_id){
+    public void addWpis(String kwota, String opis, String szczegol_opis, String data, String kategoria_id){
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues cv= new ContentValues();
         cv. put(KOL_KWOTA,kwota);

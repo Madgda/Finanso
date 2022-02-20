@@ -12,7 +12,7 @@
         >
 
         <TextView
-            android:id="@+id/textViewCenaRekord"
+            android:id="@+id/textViewIdRekord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -22,16 +22,6 @@
             android:textSize="26sp" />
 
 
-
-        <!--
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_centerVertical="true"
-                    android:background="@color/Blue"
-                    android:padding="2dp" />-->
-        <!-- android:foreground="@drawable/home"-->
 
 
         <TextView
@@ -47,7 +37,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/textViewDataRekord"
+            android:id="@+id/textSzczegolOpisRekord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/textViewOpisRekord"

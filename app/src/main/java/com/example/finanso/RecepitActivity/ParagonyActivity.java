@@ -1,9 +1,7 @@
-package com.example.finanso;
+package com.example.finanso.RecepitActivity;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -13,15 +11,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +24,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.finanso.ListActivity.ListAdapter;
+import com.example.finanso.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
@@ -43,9 +39,8 @@ public class ParagonyActivity  extends AppCompatActivity {
     private DrawerLayout drawer;
     private FloatingActionButton plus;
     private RecyclerView mRecyclerView;
-    private ExampleAdapter mAdapter;
+    private ListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    public ArrayList<ExampleItem> exampleList = new ArrayList<>();
     private MenuItem dodajLista;
     private AlertDialog.Builder dialogBuild;
     private AlertDialog dialog;
@@ -82,11 +77,13 @@ public class ParagonyActivity  extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+/*
                 filter(s.toString());
+*/
             }
         });
 
-        exampleList.add(new ExampleItem("#FFFFFF","Toster. Gwarancja do 22.10.2023","22.11.2021","1"));
+     /*   exampleList.add(new ExampleItem("#FFFFFF","Toster. Gwarancja do 22.10.2023","22.11.2021","1"));
         exampleList.add(new ExampleItem("#FFFFFF","Lodówka. Gwarancja do 21.11.2021","12.10.2021","2"));
         exampleList.add(new ExampleItem("#FFFFFF","Czajnik. Gwarancja do 10.10.2022","02.10.2021","3"));
         exampleList.add(new ExampleItem("#FFFFFF","Toster. Gwarancja do 22.10.2023","22.11.2021","1"));
@@ -95,7 +92,7 @@ public class ParagonyActivity  extends AppCompatActivity {
         exampleList.add(new ExampleItem("#FFFFFF","Toster. Gwarancja do 22.10.2023","22.11.2021","1"));
         exampleList.add(new ExampleItem("#FFFFFF","Lodówka. Gwarancja do 21.11.2021","12.10.2021","2"));
         exampleList.add(new ExampleItem("#FFFFFF","Czajnik. Gwarancja do 10.10.2022","02.10.2021","3"));
-
+*/
 
       //  exampleList.add(new ExampleItem(R.drawable.person,"linia jeden","liniadwa","0"));
       /*  exampleList.add(new ExampleItem(R.drawable.menu,"linia jeden2","liniadwa2","0"));
@@ -164,7 +161,7 @@ public class ParagonyActivity  extends AppCompatActivity {
 
         }
     }
-    private void filter(String text){
+/*    private void filter(String text){
         ArrayList<ExampleItem> filteredList = new ArrayList<>();
 
         for(ExampleItem item : exampleList){
@@ -173,7 +170,7 @@ public class ParagonyActivity  extends AppCompatActivity {
             }
         }
         mAdapter.filterList(filteredList);
-    }
+    }*/
     public void createNewDialog(){
         //pop up dodawanie rekordu
         dialogBuild = new AlertDialog.Builder(this);

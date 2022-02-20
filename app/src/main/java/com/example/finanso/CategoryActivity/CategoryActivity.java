@@ -1,22 +1,15 @@
-package com.example.finanso;
+package com.example.finanso.CategoryActivity;
 
 import static android.content.ContentValues.TAG;
-import static android.media.CamcorderProfile.get;
-
 import static com.google.android.material.internal.ContextUtils.getActivity;
-
-import androidx.appcompat.widget.Toolbar;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import static java.lang.String.format;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -31,19 +24,29 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.example.finanso.MainActivity.MainActivity;
+import com.example.finanso.R;
+import com.example.finanso.SQLite.SqLiteManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class ListActivity extends AppCompatActivity implements ExampleAdapter.OnNoteListener {
+public class CategoryActivity extends AppCompatActivity implements CategoryAdapter.OnCategoryClickListener {
 
     private DrawerLayout drawer;
     private RecyclerView mRecyclerView;
@@ -53,20 +56,15 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
     private Button dodajB;
     private DatePickerDialog picker;
     private Spinner kategoriaS;
-    private ExampleAdapter mAdapter;
+    private CategoryAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    public ArrayList<ExampleItem> exampleList = new ArrayList<>();
     private MenuItem dodajLista;
     private TextView mItemInfo;
     public int czyPopupDodaj;
     public SqLiteManager myDB;
-    //ArrayList<String> lista_id,lista_kwota,lista_opis,lista_szczegol,lista_data,lista_kategoria;
-
     private String kategorieA[]={"Wybierz kategorię","Rachunki","Spożywcze","Prezenty","Chemia","Remont"};
     private Button buttonOnPressEdit,buttonOnPressDelete;
-    // DBHelper DB;
-    private static ListActivity instance = null;
-    private ArrayList<ReadAllHistoriaResponse> lista_historia;
+    private static CategoryAdapter instance = null;
     private ArrayList<ReadAllCategoryResponse> lista_kategorie;
     private String rowId;
     private int position;
@@ -74,35 +72,29 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
     private TextView infoTextOnClick;
     private Button buttonListDelete;
     private Button buttonListEdit;
-    private ReadAllHistoriaResponse dataEditPopup;
+    private ReadAllCategoryResponse dataEditPopup;
     private String opisValue;
     private Button zapiszB;
-    private ArrayList<String> lista_kategorie_id;
-    private ArrayList<String> lista_kategorie_kolor;
-    private ArrayList<String> lista_kategorie_nazwa;
-    private ArrayList<String> lista_kategorie_opis;
     private ArrayList<String> kategoriaArray;
 
-    public ListActivity(){
+    public CategoryActivity(){
         myDB=new SqLiteManager(this);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lista);
-        this.instance = this;
+        setContentView(R.layout.activity_kategorie);
+       // this.instance = this;
 
 
         //DB= new DBHelper(this);
         mRecyclerView =findViewById(R.id.recycler_view);
         mItemInfo= findViewById(R.id.textViewInfoKlikAdapter);
 
-        zapiszListeDoArray();
         zapiszKategorieDoArray();
-      //  mAdapter = new ExampleAdapter(ListActivity.this,lista_historia,1);
         buildRecyclerView();
-       // przeladuj();
+        // przeladuj();
 
         Intent intent = getIntent();
         czyPopupDodaj=intent.getIntExtra(MainActivity.CZY_POPUP_LISTA,0);
@@ -125,7 +117,7 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
         toolbar.setTitle("Finanso");
         setSupportActionBar(toolbar);
 
-        EditText editText = findViewById((R.id.loopaView));
+      /*  EditText editText = findViewById((R.id.loopaView));
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -138,52 +130,33 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
 
             @Override
             public void afterTextChanged(Editable s) {
-            filter(s.toString());
+                *//*filter(s.toString());*//*
             }
-        });
+        });*/
 
         drawer = findViewById(R.id.drawer_layout_list);
-      //  plus =findViewById(R.id.plus);
-    //    plus.setOnClickListener(new View.OnClickListener(){
-/*
-            @Override
-            public void onClick(View view) {
-              Intent intent = new Intent(ListActivity.this,MainActivity.class);
-              startActivity(intent);
-            }
-        });
-        //Intent intent = getIntent();
-*/
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
     }
+/*
 
- /*   @Override
-    protected void onResume() {
-        super.onResume();
-        przeladuj();
-        //DB= new DBHelper(this);
-         Toast.makeText(ListActivity.this,"SIE WZIEŁO SIE PRZEŁADOWAŁO SIE!! ",Toast.LENGTH_SHORT).show();
-
-    }*/
+//TODO
 
     private void filter(String text){
-        ArrayList<ExampleItem> filteredList = new ArrayList<>();
+        ArrayList<ReadAllHistoriaResponse> filteredList = new ArrayList<>();
 
-        for(ExampleItem item : exampleList){
-            if(item.getText1().toLowerCase().contains(text.toLowerCase())||item.getText2().toLowerCase().contains(text.toLowerCase())||item.getText3().toLowerCase().contains(text.toLowerCase())){
+        for(ReadAllHistoriaResponse item : exampleList){
                 filteredList.add(item);
             }
         }
         mAdapter.filterList(filteredList);
 }
+*/
 
 
-   // public void dashGo(View view) {
-    //    setContentView(R.layout.activity_main);
-    //}
+
 
 
     @Override
@@ -210,14 +183,14 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-                int id = item.getItemId();
+        int id = item.getItemId();
 
-                if(id==R.id.menuDodajLista)
-                {
-                    createDialogAddNewRecord();
-                    return true;
-                }
-                return super.onOptionsItemSelected(item);
+        if(id==R.id.menuDodajLista)
+        {
+            createDialogAddNewRecord();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -256,7 +229,7 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
 
                 Locale locale = getResources().getConfiguration().locale;
                 Locale.setDefault(locale);
-                picker=new DatePickerDialog(ListActivity.this, new DatePickerDialog.OnDateSetListener() {
+                picker=new DatePickerDialog(CategoryActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         dateE.setText(day+"/"+(month+1)+"/"+year);
@@ -273,95 +246,70 @@ public class ListActivity extends AppCompatActivity implements ExampleAdapter.On
                 String kategoriaDoBazy=kategoriaS.getSelectedItem().toString();
                 int countDot = kategoriaDoBazy.indexOf(".");
                 kategoriaDoBazy= kategoriaDoBazy.toString().substring(0,countDot).toString();
-                 myDB=new SqLiteManager(ListActivity.this);
-              //  if(liczbaE.getText()<> "" && opisE.getText()<> "" && opisSzczegolE.getText()<> "" && dateE.getText() <> "") {
+                myDB=new SqLiteManager(CategoryActivity.this);
+                //  if(liczbaE.getText()<> "" && opisE.getText()<> "" && opisSzczegolE.getText()<> "" && dateE.getText() <> "") {
                 if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
                     myDB.addWpis(liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), kategoriaDoBazy);
                     dialog.dismiss();
-                    zapiszListeDoArray();
+                    zapiszKategorieDoArray();
                     buildRecyclerView();
-                  //  Intent intent = new Intent(ListActivity.this, ListActivity.class);
-                //    startActivity(intent);
+                    //  Intent intent = new Intent(ListActivity.this, ListActivity.class);
+                    //    startActivity(intent);
                 }
                 else{
-                    Toast.makeText(ListActivity.this,"BŁĄD",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CategoryActivity.this,"BŁĄD",Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
     }
-/*    void przeladuj() {
-        abc();
-
-    }*/
-    void zapiszListeDoArray()
-    {
-        myDB =new SqLiteManager(ListActivity.instance);
-        lista_historia =new ArrayList<>();
-
-        Cursor cursor = myDB.readAllHistoryWithKategorie();
-        if(cursor.getCount()==0){
-            Toast.makeText(ListActivity.instance,"Brak danych.",Toast.LENGTH_SHORT).show();
-        }else{
-            while(cursor.moveToNext()){
-                ReadAllHistoriaResponse readAHR = new ReadAllHistoriaResponse();
-                readAHR.id=cursor.getString(0);
-                readAHR.kwota=cursor.getString(1);
-                readAHR.opis=cursor.getString(2);
-                readAHR.szczegol_opis=cursor.getString(3);
-                readAHR.data=cursor.getString(4);
-                readAHR.kategoria_id=cursor.getString(5);
-                readAHR.kategoria_nazwa=cursor.getString(8);
-                lista_historia.add(readAHR);
-            }
-        }
-    }
 
     void zapiszKategorieDoArray()
     {
-        myDB =new SqLiteManager(ListActivity.instance);
-        lista_kategorie_id =new ArrayList<>();
-        lista_kategorie_kolor =new ArrayList<>();
-        lista_kategorie_nazwa =new ArrayList<>();
-        lista_kategorie_opis =new ArrayList<>();
-        kategoriaArray =new ArrayList<>();
+        myDB=new SqLiteManager(CategoryActivity.this);
+        lista_kategorie =new ArrayList<>();
 
         Cursor cursor = myDB.readAllKategorie();
         if(cursor.getCount()==0){
-            Toast.makeText(ListActivity.instance,"Brak danych.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(CategoryActivity.instance.context,"Brak danych.",Toast.LENGTH_SHORT).show();
         }else{
             while(cursor.moveToNext()){
-              /*  ReadAllCategoryResponse readACR = new ReadAllCategoryResponse();
-                readACR.id=cursor.getString(0);
-                readACR.kolor=cursor.getString(1);
-                readACR.nazwa=cursor.getString(2);
-                readACR.opis=cursor.getString(3);
-                lista_kategorie.add(readACR);*/
-                lista_kategorie_id.add(cursor.getString(0));
-                lista_kategorie_kolor.add(cursor.getString(1));
-                lista_kategorie_nazwa.add(cursor.getString(2));
-                lista_kategorie_opis.add(cursor.getString(3));
-                kategoriaArray.add(cursor.getString(0)+". "+cursor.getString(2));
-
+                ReadAllCategoryResponse readAHR = new ReadAllCategoryResponse();
+                readAHR.id=cursor.getString(0);
+                readAHR.kolor=cursor.getString(1);
+                readAHR.nazwa=cursor.getString(2);
+                readAHR.opis=cursor.getString(3);
+                lista_kategorie.add(readAHR);
             }
         }
     }
 
-public void removeItem(int position){
-    lista_historia.remove(position);
-    mAdapter.notifyItemRemoved(position);
-}
-     public void buildRecyclerView(){
+
+    public void removeItem(int position){
+        lista_kategorie.remove(position);
+        mAdapter.notifyItemRemoved(position);
+    }
+    public void buildRecyclerView(){
         mRecyclerView=findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
-         mAdapter = new ExampleAdapter(ListActivity.this,lista_historia,1,this);
+        mAdapter = new CategoryAdapter(CategoryActivity.this,lista_kategorie,this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-       // lista_historia.set(position,)
+        // lista_historia.set(position,)
 
-     }
+    }
+
+    @Override
+    public void onLongClick(int position) {
+
+    }
+
+    @Override
+    public void onItemClick(int position) {
+
+    }
 
     /*public void setItmInfo(){
         lista_historia.set(5,);
@@ -408,11 +356,11 @@ public void removeItem(int position){
 
     }
 */
-    public void createDialogOnLongPress(Integer position){
-        /*this.rowId=rowId;
+  /*  public void createDialogOnLongPress(Integer position){
+        *//*this.rowId=rowId;
         this.opisValue=opisValue;
         this.position = position;
-        */
+        *//*
         dialogBuild = new AlertDialog.Builder(this);
         LayoutInflater li= LayoutInflater.from(getActivity(this));
         View listOnLongPressPopupView=li.inflate(R.layout.popup_lista_onlongpress,null);
@@ -427,27 +375,33 @@ public void removeItem(int position){
         dataEditPopup = lista_historia.get(position);
         //Toast.makeText(ListActivity.this, dataEditPopup.id+" - "+ dataEditPopup.kwota+" - "+ dataEditPopup.opis+" - "+ dataEditPopup.data+" - "+ dataEditPopup.szczegol_opis, Toast.LENGTH_SHORT).show();
 
+*//*
         buttonListDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
 
-                myDB=new SqLiteManager(ListActivity.this);
+                myDB=new SqLiteManager(CategoryActivity.this);
                 //  if(liczbaE.getText()<> "" && opisE.getText()<> "" && opisSzczegolE.getText()<> "" && dateE.getText() <> "") {
-             /*   if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
+             *//*
+*//*   if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
                     myDB.addWpis(liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), 1);
-             */
+             *//**//*
+
                 myDB.deleteOneRow(dataEditPopup.id);
                 dialog.dismiss();
                 mAdapter.notifyDataSetChanged();
                 finish();
-                Intent intent = new Intent(ListActivity.this, ListActivity.class);
+                Intent intent = new Intent(CategoryActivity.this, CategoryActivity.class);
                 startActivity(intent);
-               /*     zapiszListeDoArray();
+               *//*
+*//*     zapiszListeDoArray();
                     buildRecyclerView();
-                */    //  Intent intent = new Intent(ListActivity.this, ListActivity.class);
-                    //    startActivity(intent);
-                /*SqLiteManager myDB=new SqLiteManager(this);
+                *//**//*
+    //  Intent intent = new Intent(ListActivity.this, ListActivity.class);
+                //    startActivity(intent);
+                *//*
+*//*SqLiteManager myDB=new SqLiteManager(this);
                 myDB.deleteOneRow(rowId);
                 myDB.close();
                 listActivity.zapiszListeDoArray();
@@ -455,7 +409,8 @@ public void removeItem(int position){
                 mAdapter.notifyDataSetChanged();
                 notifyItemRemoved(position);
                 dialog.dismiss();
-*/
+*//**//*
+
 
                 //  notifyItemRemoved(position);
                 //notifyItemRangeChanged(position, getItemCount());
@@ -463,22 +418,23 @@ public void removeItem(int position){
                 //listActivity.startActivity(listActivity.getIntent());
             }
         });
+*//*
 
 
 
-        buttonListEdit.setOnClickListener(new View.OnClickListener() {
+    *//*    buttonListEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
                 createEditRecordDialog(dataEditPopup.id,dataEditPopup.kwota,dataEditPopup.opis,dataEditPopup.szczegol_opis,dataEditPopup.data,dataEditPopup.kategoria_id,dataEditPopup.kategoria_nazwa);
             }
         });
-
+*//*
     }
+*/
 
 
-
-    public void createEditRecordDialog(String rowId, String kwotaValue, String opisValue, String szczegolOpisValue, String dataValue, String kategoria_id, String kategoria_nazwa) {
+    /*public void createEditRecordDialog(String rowId, String kwotaValue, String opisValue, String szczegolOpisValue, String dataValue, String kategoria_id, String kategoria_nazwa) {
         this.rowId=rowId;
         this.opisValue=opisValue;
         dialogBuild = new AlertDialog.Builder(this);
@@ -581,10 +537,6 @@ public void removeItem(int position){
             }
         }, 1500);
 
-    }
-
+    }*/
 
 }
-
-
-

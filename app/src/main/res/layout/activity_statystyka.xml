@@ -8,14 +8,14 @@
     android:fitsSystemWindows="true"
     app:itemTextColor="@color/black"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    tools:context=".StatystykaActivity"
+    tools:context=".StatisticsActivity.StatystykaActivity"
     >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/Blue"
-        tools:context=".ListActivity">
+        tools:context=".ListActivity.ListActivity">
         <GridLayout
             android:id="@+id/menuListPas"
             android:layout_width="match_parent"

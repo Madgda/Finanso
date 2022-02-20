@@ -12,35 +12,35 @@
         android:theme="@style/Theme.Finanso"
         >
         <activity
-            android:name=".ListActivity"
-            android:parentActivityName=".MainActivity"
+            android:name=".ListActivity.ListActivity"
+            android:parentActivityName=".MainActivity.MainActivity"
             android:label="@string/title_activity_side_menu"
             android:screenOrientation="sensorPortrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".MainActivity.MainActivity"/>
         </activity>
         <activity
-            android:name=".KategorieActivity"
+            android:name=".CategoryActivity.CategoryActivity"
             android:label="@string/title_activity_side_menu"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.Finanso.NoActionBar" >
         </activity>
 
         <activity
-            android:name=".ParagonyActivity"
+            android:name=".RecepitActivity.ParagonyActivity"
             android:label="@string/title_activity_side_menu"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.Finanso.NoActionBar" >
         </activity>
 
         <activity
-            android:name=".StatystykaActivity"
+            android:name=".StatisticsActivity.StatystykaActivity"
             android:label="@string/title_activity_side_menu"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.Finanso.NoActionBar" >
         </activity>
-        <activity android:name=".MainActivity"
+        <activity android:name=".MainActivity.MainActivity"
             android:screenOrientation="sensorPortrait"
             >
 

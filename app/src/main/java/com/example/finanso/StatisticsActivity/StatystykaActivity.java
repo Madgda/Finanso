@@ -1,23 +1,20 @@
-package com.example.finanso;
+package com.example.finanso.StatisticsActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.Html;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.finanso.ListActivity.ListAdapter;
+import com.example.finanso.R;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -30,11 +27,8 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.DefaultValueFormatter;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -45,9 +39,8 @@ public class StatystykaActivity  extends AppCompatActivity {
     private DrawerLayout drawer;
     private FloatingActionButton plus;
     private RecyclerView mRecyclerView;
-    private ExampleAdapter mAdapter;
+    private ListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    public ArrayList<ExampleItem> exampleList = new ArrayList<>();
     private MenuItem dodajLista;
     private PieChart pieChart;
     private BarChart barChart;

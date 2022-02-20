@@ -1,43 +1,26 @@
-package com.example.finanso;
+package com.example.finanso.ListActivity;
 
-import static com.google.android.material.internal.ContextUtils.getActivity;
-import static java.lang.Double.parseDouble;
-
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Handler;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import com.example.finanso.R;
 
-public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleViewHolder> {
+import java.util.ArrayList;
+
+public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> {
     Context context;
-    private ArrayList<ExampleItem> mExampleList;
     private ArrayList<ReadAllHistoriaResponse> lista_historia;
-    private AppCompatActivity mListActivity;
     private int layoutExample;
     private AlertDialog dialog;
     private int rodzajExampleItem;
@@ -58,33 +41,33 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
     private String szczegolOpisValue;
     private String listId;
     private Integer position;
-    private OnNoteListener mOnNoteListener;
+    private OnlistClickListener mOnlistClickListener;
 
-    public interface OnNoteListener {
-            void onLongClick(int position);
-            void onItemClick(int position);
+    public interface OnlistClickListener {
+        void onLongClick(int position);
+        void onItemClick(int position);
     }
 
-    public  class ExampleViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener{
+    public  class ListViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener{
         private RelativeLayout listaRelativeLayoutPozycja;
         private TextView listaOpisEditText;
         private TextView listaDataEditText;
         private TextView listaSzczegolOpisEditText;
         private TextView listaKwotaEditText;
         private TextView listaInfoEditText;
-        OnNoteListener onNoteListener;
+        OnlistClickListener onlistClickListener;
 
-        public ExampleViewHolder(@NonNull View itemView, OnNoteListener onNoteListener) {
+        public ListViewHolder(@NonNull View itemView, OnlistClickListener onlistClickListener) {
             super(itemView);
-           // mImageView=itemView.findViewById(R.id.imageView);
+            // mImageView=itemView.findViewById(R.id.imageView);
             listaRelativeLayoutPozycja =itemView.findViewById(R.id.pozycjaLinia);
             listaOpisEditText =itemView.findViewById(R.id.textViewOpisRekord);
             listaDataEditText =itemView.findViewById(R.id.textViewDataRekord);
-            listaKwotaEditText =itemView.findViewById(R.id.textViewCenaRekord);
+            listaKwotaEditText =itemView.findViewById(R.id.textViewIdRekord);
             listaSzczegolOpisEditText =itemView.findViewById(R.id.textViewSzczegolRekord);
             listaInfoEditText =itemView.findViewById(R.id.textViewInfoKlikAdapter);
             //   listaZlEditText =itemView.findViewById(R.id.textViewZlWRekord);
-            this.onNoteListener = mOnNoteListener;
+            this.onlistClickListener = mOnlistClickListener;
             itemView.setOnLongClickListener(this);
             itemView.setOnClickListener(this);
         }
@@ -92,42 +75,33 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
 
         @Override
         public boolean onLongClick(View view) {
-            onNoteListener.onLongClick(getAdapterPosition());
+            onlistClickListener.onLongClick(getAdapterPosition());
             return true;
         }
 
         @Override
         public void onClick(View view) {
-            onNoteListener.onItemClick(getAdapterPosition());
+            onlistClickListener.onItemClick(getAdapterPosition());
         }
     }
-        public ExampleAdapter(Context context,ArrayList <ReadAllHistoriaResponse> lista_historia, int rodzajExampleItem, OnNoteListener onNoteListener){
-            this.context =context;
-            this.mOnNoteListener = onNoteListener;
-            this.lista_historia = lista_historia;
-
-            this.rodzajExampleItem = rodzajExampleItem;
-                switch (rodzajExampleItem) {
-
-                case 1: {
+    public ListAdapter(Context context, ArrayList <ReadAllHistoriaResponse> lista_historia, OnlistClickListener onlistClickListener){
+        this.context =context;
+        this.mOnlistClickListener = onlistClickListener;
+        this.lista_historia = lista_historia;
                 layoutExample = R.layout.adapter_item_lista;
-                    }
 
-     }
-
-}
+    }
 
     @NonNull
     @Override
-    public ExampleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(layoutExample,parent,false);
-    ExampleViewHolder evh = new ExampleViewHolder(v,mOnNoteListener);
-    return evh;
+        ListViewHolder lvh = new ListViewHolder(v, mOnlistClickListener);
+        return lvh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ExampleViewHolder holder, int position) {
-       //currentItem = (ExampleAdapter) lista_id.get(position);
+    public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
         String kwota;
 
         ReadAllHistoriaResponse rowRAHR = lista_historia.get(position);
@@ -136,13 +110,13 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
         kwota= rowRAHR.kwota;
 
         int priceColor;
-             if(Double.parseDouble(kwota)>=0)
+        if(Double.parseDouble(kwota)>=0)
         {
             priceColor = context.getColor(R.color.greyGreen);
         }
         else {
-                 priceColor = context.getColor(R.color.greyRed);
-             }
+            priceColor = context.getColor(R.color.greyRed);
+        }
         listId =rowRAHR.id;
         holder.listaOpisEditText.setText(rowRAHR.opis);
         holder.listaKwotaEditText.setText(rowRAHR.kwota+" zł");
@@ -152,30 +126,18 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
 
     }
 
-    private int checkIfMoreThanZero(String kwota) {
-         int mColorPrice;
-        if(parseDouble(kwota)>=0){
-            mColorPrice=mListActivity.getColor(R.color.greyGreen);
-        }
-        else
-        {
-            mColorPrice= mListActivity.getColor(R.color.BlueDarker);
-
-        }
-
-        return mColorPrice;
-    }
-
     @Override
     public int getItemCount() {
         //return mExampleList.size();
         return lista_historia.size();
     }
 
-    public void filterList(ArrayList<ExampleItem>filteredList){
-        mExampleList =filteredList;
+ /*   public void filterList(ArrayList<ReadAllHistoriaResponse>filteredList){
+        lista_historia =filteredList;
         notifyDataSetChanged();
     }
 
 
+}
+*/
 }

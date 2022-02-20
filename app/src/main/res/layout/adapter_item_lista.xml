@@ -12,12 +12,12 @@
         >
 
         <TextView
-            android:id="@+id/textViewCenaRekord"
+            android:id="@+id/textViewIdRekord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_toStartOf="@id/textViewCenaRekord"
+            android:layout_toStartOf="@id/textViewIdRekord"
             android:text="881.00"
             android:textColor="@color/black"
             android:textSize="26sp" />
@@ -94,7 +94,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
             android:layout_toLeftOf="@id/textViewOpisRekord"
-            android:layout_toRightOf="@id/textViewCenaRekord"
+            android:layout_toRightOf="@id/textViewIdRekord"
             android:text="To jest przykłądowy do mojej aasdasdasdasdasdasdplikacji"
             android:textAlignment="center"
             android:textColor="@color/darkGrey"
