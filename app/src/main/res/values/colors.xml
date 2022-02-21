@@ -3,6 +3,7 @@
     <color name="BlueLight">#a3bce1</color>
     <color name="Blue">#477AC5</color>
     <color name="BlueDarker">#2e5692</color>
+    <color name="BlueDarkest">#0C2243</color>
     <color name="Purple">#6C4D70</color>
     <color name="LightYellow">#fee7b5</color>
     <color name="LightPink">#ff9d9c</color>
@@ -17,6 +18,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#7E8288</color>
     <color name="darkGrey">#3C3E40</color>
+    <color name="darkestGrey">#242425</color>
     <color name="greyRed">#8F4E4A</color>
     <color name="greyGreen">#477338</color>
 </resources>

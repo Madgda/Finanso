@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import petrov.kristiyan.colorpicker.ColorPicker;
 
 public class CategoryActivity extends AppCompatActivity implements CategoryAdapter.OnCategoryClickListener {
 
@@ -68,6 +69,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
     private ArrayList<ReadAllCategoryResponse> lista_kategorie;
     private String rowId;
     private int position;
+    private String pickedColor = "#7E8288";
     private String pressed;
     private TextView infoTextOnClick;
     private Button buttonListDelete;
@@ -76,6 +78,9 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
     private String opisValue;
     private Button zapiszB;
     private ArrayList<String> kategoriaArray;
+    private ImageButton dodajKolorKategorii;
+    private EditText nazwaKategorie,opisKategorie;
+    private Button dodajWpisKategorii;
 
     public CategoryActivity(){
         myDB=new SqLiteManager(this);
@@ -101,7 +106,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
 
         switch (czyPopupDodaj){
             case 1:
-                createDialogAddNewRecord();
+                createNewDialog();
                 czyPopupDodaj=0;
                 break;
 
@@ -113,7 +118,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
 
 
 
-        Toolbar toolbar = findViewById(R.id.toolbar1);
+        Toolbar toolbar = findViewById(R.id.toolbarCategory);
         toolbar.setTitle("Finanso");
         setSupportActionBar(toolbar);
 
@@ -162,7 +167,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater=getMenuInflater();
-        inflater.inflate(R.menu.menu_toolbar_lista,menu);
+        inflater.inflate(R.menu.menu_toolbar_kategorie,menu);
         menu.findItem(R.id.item2).setTitle(Html.fromHtml("<font color='#000000'>wyszukaj daty</font>"));
         menu.findItem(R.id.item3).setTitle(Html.fromHtml("<font color='#000000'>sortuj wg </font>"));
         menu.findItem(R.id.item4).setTitle(Html.fromHtml("<font color='#000000'>pokaż</font>"));
@@ -180,89 +185,75 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
     }
 
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
 
-        if(id==R.id.menuDodajLista)
-        {
-            createDialogAddNewRecord();
+        if (id == R.id.menuDodajKategorie) {
+            createNewDialog();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-
-    public void createDialogAddNewRecord(){
-        //pop up dodawanie rekordu
+    public void createNewDialog() {
         dialogBuild = new AlertDialog.Builder(this);
-        final View listaPopupView=getLayoutInflater().inflate(R.layout.popup_lista,null);
-        liczbaE = (EditText) listaPopupView.findViewById(R.id.kwotaE);
-        opisE = (EditText) listaPopupView.findViewById(R.id.opisE);
-        opisSzczegolE = (EditText) listaPopupView.findViewById(R.id.opisDlugiE);
-        dateE = (EditText) listaPopupView.findViewById(R.id.dataE);
-        dodajB = (Button) listaPopupView.findViewById(R.id.dodajB);
-        kategoriaS = (Spinner) listaPopupView.findViewById(R.id.kategoriaS);
-        String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
-        //kategorieA=lista_kategorie.nazwa
-        //kategoriaS.setPrompt("Wybierz kategorię");
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this,   android.R.layout.simple_spinner_item,kategoriaArray);
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
-        kategoriaS.setAdapter(spinnerArrayAdapter);
-
-        dateE.setText(currentDate);
-
-
-        dialogBuild.setView(listaPopupView);
+        final View kategoriePopupView = getLayoutInflater().inflate(R.layout.popup_kategorie, null);
+        nazwaKategorie = (EditText) kategoriePopupView.findViewById(R.id.NazwaPopupKategorie);
+        opisKategorie = (EditText) kategoriePopupView.findViewById(R.id.OpisPopupKategorie);
+        dodajKolorKategorii = (ImageButton) kategoriePopupView.findViewById(R.id.kolorKategorieButton);
+        dodajWpisKategorii = (Button) kategoriePopupView.findViewById(R.id.dodajButtonKategorie);
+        //  dodajKolorKategorii.set(Integer.parseInt(pickedColor));
+        dialogBuild.setView(kategoriePopupView);
         dialog = dialogBuild.create();
         dialog.show();
 
-        dateE.setInputType(InputType.TYPE_NULL);
-        dateE.setOnClickListener(new View.OnClickListener() {
+        dodajKolorKategorii.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Calendar kalendarz = Calendar.getInstance();
-                int day= kalendarz.get(Calendar.DAY_OF_MONTH);
-                int month= kalendarz.get(Calendar.MONTH);
-                int year= kalendarz.get(Calendar.YEAR);
-
-                Locale locale = getResources().getConfiguration().locale;
-                Locale.setDefault(locale);
-                picker=new DatePickerDialog(CategoryActivity.this, new DatePickerDialog.OnDateSetListener() {
+                final ColorPicker colorPicker = new ColorPicker(CategoryActivity.this);
+                colorPicker.setOnFastChooseColorListener(new ColorPicker.OnFastChooseColorListener() {
                     @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        dateE.setText(day+"/"+(month+1)+"/"+year);
+                    public void setOnFastChooseColorListener(int position, int color) {
+                        pickedColor = String.format("#%06X", 0xFFFFFF & color);
+                        dodajKolorKategorii.setBackgroundColor(Color.parseColor(pickedColor));
+
                     }
-                },year,month,day);
-                picker.show();
+
+                    @Override
+                    public void onCancel() {
+                        colorPicker.dismissDialog();
+                    }
+                })
+                        // set the number of color columns
+                        // you want  to show in dialog.
+                        .setColumns(5)
+                        // set a default color selected
+                        // in the dialog
+                        .setDefaultColorButton(Color.parseColor("#000000"))
+                        .show();
             }
         });
 
-        dodajB.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("NotifyDataSetChanged")
+        dodajWpisKategorii.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String kategoriaDoBazy=kategoriaS.getSelectedItem().toString();
-                int countDot = kategoriaDoBazy.indexOf(".");
-                kategoriaDoBazy= kategoriaDoBazy.toString().substring(0,countDot).toString();
-                myDB=new SqLiteManager(CategoryActivity.this);
-                //  if(liczbaE.getText()<> "" && opisE.getText()<> "" && opisSzczegolE.getText()<> "" && dateE.getText() <> "") {
-                if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
-                    myDB.addWpis(liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), kategoriaDoBazy);
+                // dialog.dismiss();
+                SqLiteManager myDBKat=new SqLiteManager(CategoryActivity.this);
+
+                if (nazwaKategorie.getText().toString().trim().length() > 0 && opisKategorie.getText().toString().trim().length() > 0) {
+                    myDBKat.addKategoria(pickedColor.trim(),nazwaKategorie.getText().toString().trim(), opisKategorie.getText().toString().trim());
                     dialog.dismiss();
-                    zapiszKategorieDoArray();
-                    buildRecyclerView();
-                    //  Intent intent = new Intent(ListActivity.this, ListActivity.class);
-                    //    startActivity(intent);
-                }
-                else{
-                    Toast.makeText(CategoryActivity.this,"BŁĄD",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(CategoryActivity.this, "Uzupełnij nazwę i opis", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
     }
+
 
     void zapiszKategorieDoArray()
     {
