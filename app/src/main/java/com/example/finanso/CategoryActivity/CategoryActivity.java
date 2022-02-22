@@ -37,6 +37,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.finanso.ListActivity.ListActivity;
 import com.example.finanso.MainActivity.MainActivity;
 import com.example.finanso.R;
 import com.example.finanso.SQLite.SqLiteManager;
@@ -95,7 +97,6 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
 
         //DB= new DBHelper(this);
         mRecyclerView =findViewById(R.id.recycler_view);
-        mItemInfo= findViewById(R.id.textViewInfoKlikAdapter);
 
         zapiszKategorieDoArray();
         buildRecyclerView();
@@ -275,11 +276,6 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
         }
     }
 
-
-    public void removeItem(int position){
-        lista_kategorie.remove(position);
-        mAdapter.notifyItemRemoved(position);
-    }
     public void buildRecyclerView(){
         mRecyclerView=findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
@@ -288,70 +284,9 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-        // lista_historia.set(position,)
-
     }
+    public void createDialogOnLongPress(Integer position){
 
-    @Override
-    public void onLongClick(int position) {
-
-    }
-
-    @Override
-    public void onItemClick(int position) {
-
-    }
-
-    /*public void setItmInfo(){
-        lista_historia.set(5,);
-
-   } */
-
-    /*@Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-        super.onPointerCaptureChanged(hasCapture);
-    }
-
-*/
-
-   /* private void setOnClickListener() {
-        listener = new ExampleAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-            }
-        };
-    }
-*/
-    /*void notifyChanged(){
-         mAdapter.notifyDataSetChanged();
-      }
- */
-
-    /*void deleteListRecord(String rowId_) {
-        this.rowId = rowId_;
-        //  Toast.makeText(this,"BŁĄD: "+ListActivity.this,Toast.LENGTH_SHORT).show();
-        // myDB=new SqLiteManager(this);
-        //         myDB=new SqLiteManager(this);
-        // myDB =new SqLiteManager(ListActivity.this);
-        if (myDB == null) {
-            Toast.makeText(this, "Error usuwania, brak zmiennej myDB ", Toast.LENGTH_SHORT).show();
-        } else {
-            myDB.deleteOneRow(rowId);
-        }
-    }*/
-/*
-
-    @Override
-    public void onNoteClick(int position) {
-        Toast.makeText(ListActivity.this, "KLIKNIETO A ONCLICK ZADZIALAL!", Toast.LENGTH_SHORT).show();
-
-    }
-*/
-  /*  public void createDialogOnLongPress(Integer position){
-        *//*this.rowId=rowId;
-        this.opisValue=opisValue;
-        this.position = position;
-        *//*
         dialogBuild = new AlertDialog.Builder(this);
         LayoutInflater li= LayoutInflater.from(getActivity(this));
         View listOnLongPressPopupView=li.inflate(R.layout.popup_lista_onlongpress,null);
@@ -363,151 +298,34 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
         dialog = dialogBuild.create();
         dialog.show();
 
-        dataEditPopup = lista_historia.get(position);
-        //Toast.makeText(ListActivity.this, dataEditPopup.id+" - "+ dataEditPopup.kwota+" - "+ dataEditPopup.opis+" - "+ dataEditPopup.data+" - "+ dataEditPopup.szczegol_opis, Toast.LENGTH_SHORT).show();
+        //dataEditPopup = lista_kategorie.get(position);
 
-*//*
         buttonListDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-
+/*
                 myDB=new SqLiteManager(CategoryActivity.this);
-                //  if(liczbaE.getText()<> "" && opisE.getText()<> "" && opisSzczegolE.getText()<> "" && dateE.getText() <> "") {
-             *//*
-*//*   if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
-                    myDB.addWpis(liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), 1);
-             *//**//*
-
-                myDB.deleteOneRow(dataEditPopup.id);
-                dialog.dismiss();
+                myDB.deleteOneRow(dataEditPopup.id);*/
+                dialog.dismiss();/*
                 mAdapter.notifyDataSetChanged();
                 finish();
                 Intent intent = new Intent(CategoryActivity.this, CategoryActivity.class);
-                startActivity(intent);
-               *//*
-*//*     zapiszListeDoArray();
-                    buildRecyclerView();
-                *//**//*
-    //  Intent intent = new Intent(ListActivity.this, ListActivity.class);
-                //    startActivity(intent);
-                *//*
-*//*SqLiteManager myDB=new SqLiteManager(this);
-                myDB.deleteOneRow(rowId);
-                myDB.close();
-                listActivity.zapiszListeDoArray();
-                //   listActivity.przeladuj();
-                mAdapter.notifyDataSetChanged();
-                notifyItemRemoved(position);
-                dialog.dismiss();
-*//**//*
-
-
-                //  notifyItemRemoved(position);
-                //notifyItemRangeChanged(position, getItemCount());
-                // listActivity.finish();
-                //listActivity.startActivity(listActivity.getIntent());
-            }
+                startActivity(intent);*/
+              }
         });
-*//*
 
 
 
-    *//*    buttonListEdit.setOnClickListener(new View.OnClickListener() {
+        buttonListEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                createEditRecordDialog(dataEditPopup.id,dataEditPopup.kwota,dataEditPopup.opis,dataEditPopup.szczegol_opis,dataEditPopup.data,dataEditPopup.kategoria_id,dataEditPopup.kategoria_nazwa);
+                //createEditRecordDialog(dataEditPopup.id,dataEditPopup.kwota,dataEditPopup.opis,dataEditPopup.szczegol_opis,dataEditPopup.data,dataEditPopup.kategoria_id,dataEditPopup.kategoria_nazwa);
             }
         });
-*//*
-    }
-*/
-
-
-    /*public void createEditRecordDialog(String rowId, String kwotaValue, String opisValue, String szczegolOpisValue, String dataValue, String kategoria_id, String kategoria_nazwa) {
-        this.rowId=rowId;
-        this.opisValue=opisValue;
-        dialogBuild = new AlertDialog.Builder(this);
-        LayoutInflater li= LayoutInflater.from(getActivity(this));
-        View listEditPopupView=li.inflate(R.layout.popup_lista_edit,null);
-
-        liczbaE = (EditText) listEditPopupView.findViewById(R.id.kwotaE);
-        liczbaE.setText(kwotaValue);
-        opisE = (EditText) listEditPopupView.findViewById(R.id.opisE);
-        opisE.setText(opisValue);
-        opisSzczegolE = (EditText) listEditPopupView.findViewById(R.id.opisDlugiE);
-        opisSzczegolE.setText(szczegolOpisValue);
-        dateE = (EditText) listEditPopupView.findViewById(R.id.dataE);
-        dateE.setText(dataValue);
-        zapiszB = (Button) listEditPopupView.findViewById(R.id.zapiszB);
-        kategoriaS = (Spinner) listEditPopupView.findViewById(R.id.kategoriaS);
-        String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
-
-        String kategorieA[]={"Wybierz kategorię","Rachunki","Spożywcze","Prezenty","Chemia","Remont"};
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, kategoriaArray);
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
-        kategoriaS.setAdapter(spinnerArrayAdapter);
-        Integer pozycjaKategoria=0;
-        Log.v(TAG, kategoria_id+". "+kategoria_nazwa);
-        pozycjaKategoria =kategoriaArray.indexOf(kategoria_id+". "+kategoria_nazwa);
-        if(pozycjaKategoria>0) {
-            kategoriaS.setSelection(pozycjaKategoria);
-        }
-        Log.v(TAG, pozycjaKategoria.toString());
-
-        dateE.setText(currentDate);
-
-        dialogBuild.setView(listEditPopupView);
-        dialog = dialogBuild.create();
-        dialog.show();
-
-        dateE.setInputType(InputType.TYPE_NULL);
-        dateE.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Calendar kalendarz = Calendar.getInstance();
-                int day = kalendarz.get(Calendar.DAY_OF_MONTH);
-                int month = kalendarz.get(Calendar.MONTH);
-                int year = kalendarz.get(Calendar.YEAR);
-
-                DatePickerDialog picker = new DatePickerDialog(ListActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        dateE.setText(day + "/" + (month + 1) + "/" + year);
-                    }
-                }, year, month, day);
-                picker.show();
-            }
-        });
-        zapiszB.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onClick(View view) {
-                String kategoriaDoBazy=kategoriaS.getSelectedItem().toString();
-                int countDot = kategoriaDoBazy.indexOf(".");
-                kategoriaDoBazy= kategoriaDoBazy.toString().substring(0,countDot).toString();
-
-                SqLiteManager myDB=new SqLiteManager(ListActivity.this);
-                if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
-                    myDB.updateData(rowId,liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(),kategoriaDoBazy);
-                    dialog.dismiss();
-                    mAdapter.notifyDataSetChanged();
-                    finish();
-                    Intent intent = new Intent(ListActivity.this, ListActivity.class);
-                    startActivity(intent);
-                }
-                else{
-                    Toast.makeText(ListActivity.this,"BŁĄD",Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
-
 
     }
-
-
 
     @Override
     public void onLongClick(int position_) {
@@ -518,7 +336,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
     @Override
     public void onItemClick(int position) {
 
-        infoTextOnClick = findViewById(R.id.infoShowHelpOnClick);
+        infoTextOnClick = findViewById(R.id.infoShowHelpOnClickCategory);
         infoTextOnClick.setVisibility(View.VISIBLE);
 
         Handler handler = new Handler();
@@ -528,6 +346,6 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
             }
         }, 1500);
 
-    }*/
+    }
 
 }

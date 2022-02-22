@@ -65,7 +65,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
             listaDataEditText =itemView.findViewById(R.id.textViewDataRekord);
             listaKwotaEditText =itemView.findViewById(R.id.textViewIdRekord);
             listaSzczegolOpisEditText =itemView.findViewById(R.id.textViewSzczegolRekord);
-            listaInfoEditText =itemView.findViewById(R.id.textViewInfoKlikAdapter);
             //   listaZlEditText =itemView.findViewById(R.id.textViewZlWRekord);
             this.onlistClickListener = mOnlistClickListener;
             itemView.setOnLongClickListener(this);

@@ -101,7 +101,6 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
 
         //DB= new DBHelper(this);
         mRecyclerView =findViewById(R.id.recycler_view);
-        mItemInfo= findViewById(R.id.textViewInfoKlikAdapter);
 
         zapiszListeDoArray();
         zapiszKategorieDoArray();
