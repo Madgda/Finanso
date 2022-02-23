@@ -271,6 +271,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
 
         dodajKolorKategorii.setOnClickListener(new View.OnClickListener() {
             @Override
+
             public void onClick(View view) {
                 pickedColor=kolor;
                 final ColorPicker colorPicker = new ColorPicker(CategoryActivity.this);
