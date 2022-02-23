@@ -49,7 +49,7 @@
                 android:textColor="@color/darkestGrey"
                 android:text="Przytrzymaj jedną z pozycji by usunąć lub edytować"
                 android:padding="10dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 />
         </GridLayout>
 

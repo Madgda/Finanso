@@ -1,10 +1,8 @@
 package com.example.finanso.CategoryActivity;
 
-import static android.content.ContentValues.TAG;
 import static com.google.android.material.internal.ContextUtils.getActivity;
 import static java.lang.String.format;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -12,20 +10,13 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Editable;
 import android.text.Html;
-import android.text.InputType;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -42,11 +33,9 @@ import com.example.finanso.ListActivity.ListActivity;
 import com.example.finanso.MainActivity.MainActivity;
 import com.example.finanso.R;
 import com.example.finanso.SQLite.SqLiteManager;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+
 import petrov.kristiyan.colorpicker.ColorPicker;
 
 public class CategoryActivity extends AppCompatActivity implements CategoryAdapter.OnCategoryClickListener {
@@ -82,7 +71,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
     private ArrayList<String> kategoriaArray;
     private ImageButton dodajKolorKategorii;
     private EditText nazwaKategorie,opisKategorie;
-    private Button dodajWpisKategorii;
+    private Button zapiszEdycjeKategorii;
 
     public CategoryActivity(){
         myDB=new SqLiteManager(this);
@@ -92,10 +81,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kategorie);
-       // this.instance = this;
 
-
-        //DB= new DBHelper(this);
         mRecyclerView =findViewById(R.id.recycler_view);
 
         zapiszKategorieDoArray();
@@ -122,23 +108,6 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
         Toolbar toolbar = findViewById(R.id.toolbarCategory);
         toolbar.setTitle("Finanso");
         setSupportActionBar(toolbar);
-
-      /*  EditText editText = findViewById((R.id.loopaView));
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                *//*filter(s.toString());*//*
-            }
-        });*/
 
         drawer = findViewById(R.id.drawer_layout_list);
 
@@ -205,7 +174,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
         nazwaKategorie = (EditText) kategoriePopupView.findViewById(R.id.NazwaPopupKategorie);
         opisKategorie = (EditText) kategoriePopupView.findViewById(R.id.OpisPopupKategorie);
         dodajKolorKategorii = (ImageButton) kategoriePopupView.findViewById(R.id.kolorKategorieButton);
-        dodajWpisKategorii = (Button) kategoriePopupView.findViewById(R.id.dodajButtonKategorie);
+        zapiszEdycjeKategorii = (Button) kategoriePopupView.findViewById(R.id.dodajButtonKategorie);
         //  dodajKolorKategorii.set(Integer.parseInt(pickedColor));
         dialogBuild.setView(kategoriePopupView);
         dialog = dialogBuild.create();
@@ -238,7 +207,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
             }
         });
 
-        dodajWpisKategorii.setOnClickListener(new View.OnClickListener() {
+        zapiszEdycjeKategorii.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // dialog.dismiss();
@@ -285,6 +254,63 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
         mRecyclerView.setAdapter(mAdapter);
 
     }
+    public void createEditCategoryDialog(String rowId, String kolor, String nazwa, String opis) {
+        dialogBuild = new AlertDialog.Builder(this);
+        final View kategoriePopupView = getLayoutInflater().inflate(R.layout.popup_kategorie, null);
+        nazwaKategorie = (EditText) kategoriePopupView.findViewById(R.id.NazwaPopupKategorie);
+        nazwaKategorie.setText(nazwa);
+        opisKategorie = (EditText) kategoriePopupView.findViewById(R.id.OpisPopupKategorie);
+        opisKategorie.setText(opis);
+        dodajKolorKategorii = (ImageButton) kategoriePopupView.findViewById(R.id.kolorKategorieButton);
+        dodajKolorKategorii.setBackgroundColor(Color.parseColor(kolor));
+        zapiszEdycjeKategorii = (Button) kategoriePopupView.findViewById(R.id.dodajButtonKategorie);
+        //  dodajKolorKategorii.set(Integer.parseInt(pickedColor));
+        dialogBuild.setView(kategoriePopupView);
+        dialog = dialogBuild.create();
+        dialog.show();
+
+        dodajKolorKategorii.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pickedColor=kolor;
+                final ColorPicker colorPicker = new ColorPicker(CategoryActivity.this);
+                colorPicker.setOnFastChooseColorListener(new ColorPicker.OnFastChooseColorListener() {
+                    @Override
+                    public void setOnFastChooseColorListener(int position, int color) {
+                        pickedColor = String.format("#%06X", 0xFFFFFF & color);
+                        dodajKolorKategorii.setBackgroundColor(Color.parseColor(pickedColor));
+
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        colorPicker.dismissDialog();
+                    }
+                })
+                        .setColumns(5)
+                        .setDefaultColorButton(Color.parseColor(kolor))
+                        .show();
+            }
+        });
+
+        zapiszEdycjeKategorii.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // dialog.dismiss();
+                SqLiteManager myDB = new SqLiteManager(CategoryActivity.this);
+                if (nazwaKategorie.getText().toString().trim().length() > 0 && opisKategorie.getText().toString().trim().length() > 0) {
+                    myDB.updateCategoryData(rowId, pickedColor.trim(), nazwaKategorie.getText().toString().trim(), opisKategorie.getText().toString().trim());
+                    dialog.dismiss();
+                    mAdapter.notifyDataSetChanged();
+                    finish();
+                    Intent intent = new Intent(CategoryActivity.this, CategoryActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(CategoryActivity.this, "BŁĄD", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
     public void createDialogOnLongPress(Integer position){
 
         dialogBuild = new AlertDialog.Builder(this);
@@ -298,20 +324,20 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
         dialog = dialogBuild.create();
         dialog.show();
 
-        //dataEditPopup = lista_kategorie.get(position);
+        dataEditPopup = lista_kategorie.get(position);
 
         buttonListDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-/*
+
                 myDB=new SqLiteManager(CategoryActivity.this);
-                myDB.deleteOneRow(dataEditPopup.id);*/
-                dialog.dismiss();/*
+                myDB.deleteOneRowFromCategory(dataEditPopup.id);
+                dialog.dismiss();
                 mAdapter.notifyDataSetChanged();
                 finish();
                 Intent intent = new Intent(CategoryActivity.this, CategoryActivity.class);
-                startActivity(intent);*/
+                startActivity(intent);
               }
         });
 
@@ -321,7 +347,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                //createEditRecordDialog(dataEditPopup.id,dataEditPopup.kwota,dataEditPopup.opis,dataEditPopup.szczegol_opis,dataEditPopup.data,dataEditPopup.kategoria_id,dataEditPopup.kategoria_nazwa);
+                createEditCategoryDialog(dataEditPopup.id,dataEditPopup.kolor,dataEditPopup.nazwa,dataEditPopup.opis);
             }
         });
 

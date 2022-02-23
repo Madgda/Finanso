@@ -37,17 +37,17 @@
         app:itemTextColor="@color/black"
         />
 
-       <EditText
-           android:id="@+id/loopaView"
-           android:layout_width="match_parent"
-           android:layout_height="40dp"
-           android:background="@color/white"
-           android:inputType="textNoSuggestions"
-           android:defaultFocusHighlightEnabled="false"
-           android:focusedByDefault="false"
-           android:padding="10dp"
-           android:hint="Szukaj..."
-           android:textColor="@color/grey"></EditText>
+    <EditText
+        android:id="@+id/loopaView"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white"
+        android:defaultFocusHighlightEnabled="false"
+        android:focusedByDefault="false"
+        android:hint="Szukaj..."
+        android:inputType="textNoSuggestions"
+        android:padding="10dp"
+        android:textColor="@color/grey"></EditText>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

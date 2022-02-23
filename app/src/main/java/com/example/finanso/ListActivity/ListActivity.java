@@ -418,7 +418,7 @@ public void removeItem(int position){
              /*   if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
                     myDB.addWpis(liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), 1);
              */
-                myDB.deleteOneRow(dataEditPopup.id);
+                myDB.deleteOneRowFromList(dataEditPopup.id);
                 dialog.dismiss();
                 mAdapter.notifyDataSetChanged();
                 finish();
@@ -524,7 +524,7 @@ public void removeItem(int position){
 
                 SqLiteManager myDB=new SqLiteManager(ListActivity.this);
                 if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
-                    myDB.updateData(rowId,liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(),kategoriaDoBazy);
+                    myDB.updateListData(rowId,liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(),kategoriaDoBazy);
                     dialog.dismiss();
                     mAdapter.notifyDataSetChanged();
                     finish();
