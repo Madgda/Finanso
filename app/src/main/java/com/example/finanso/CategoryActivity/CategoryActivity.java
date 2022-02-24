@@ -169,6 +169,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
     }
 
     public void createNewDialog() {
+        //po kliknieciu plusik
         dialogBuild = new AlertDialog.Builder(this);
         final View kategoriePopupView = getLayoutInflater().inflate(R.layout.popup_kategorie, null);
         nazwaKategorie = (EditText) kategoriePopupView.findViewById(R.id.NazwaPopupKategorie);
@@ -216,6 +217,8 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
                 if (nazwaKategorie.getText().toString().trim().length() > 0 && opisKategorie.getText().toString().trim().length() > 0) {
                     myDBKat.addKategoria(pickedColor.trim(),nazwaKategorie.getText().toString().trim(), opisKategorie.getText().toString().trim());
                     dialog.dismiss();
+                    zapiszKategorieDoArray();
+                    buildRecyclerView();
                 } else {
                     Toast.makeText(CategoryActivity.this, "Uzupełnij nazwę i opis", Toast.LENGTH_SHORT).show();
                 }
@@ -232,7 +235,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
 
         Cursor cursor = myDB.readAllKategorie();
         if(cursor.getCount()==0){
-            Toast.makeText(CategoryActivity.instance.context,"Brak danych.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(CategoryActivity.this,"Brak danych.",Toast.LENGTH_SHORT).show();
         }else{
             while(cursor.moveToNext()){
                 ReadAllCategoryResponse readAHR = new ReadAllCategoryResponse();
@@ -255,6 +258,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
 
     }
     public void createEditCategoryDialog(String rowId, String kolor, String nazwa, String opis) {
+       //po kliknięciu edytuj
         dialogBuild = new AlertDialog.Builder(this);
         final View kategoriePopupView = getLayoutInflater().inflate(R.layout.popup_kategorie, null);
         nazwaKategorie = (EditText) kategoriePopupView.findViewById(R.id.NazwaPopupKategorie);
@@ -268,12 +272,11 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
         dialogBuild.setView(kategoriePopupView);
         dialog = dialogBuild.create();
         dialog.show();
-
+        pickedColor=kolor;
         dodajKolorKategorii.setOnClickListener(new View.OnClickListener() {
             @Override
 
             public void onClick(View view) {
-                pickedColor=kolor;
                 final ColorPicker colorPicker = new ColorPicker(CategoryActivity.this);
                 colorPicker.setOnFastChooseColorListener(new ColorPicker.OnFastChooseColorListener() {
                     @Override
@@ -303,9 +306,8 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
                     myDB.updateCategoryData(rowId, pickedColor.trim(), nazwaKategorie.getText().toString().trim(), opisKategorie.getText().toString().trim());
                     dialog.dismiss();
                     mAdapter.notifyDataSetChanged();
-                    finish();
-                    Intent intent = new Intent(CategoryActivity.this, CategoryActivity.class);
-                    startActivity(intent);
+                    zapiszKategorieDoArray();
+                    buildRecyclerView();
                 } else {
                     Toast.makeText(CategoryActivity.this, "BŁĄD", Toast.LENGTH_SHORT).show();
                 }
@@ -313,7 +315,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
         });
     }
     public void createDialogOnLongPress(Integer position){
-
+        //popup edit i delete
         dialogBuild = new AlertDialog.Builder(this);
         LayoutInflater li= LayoutInflater.from(getActivity(this));
         View listOnLongPressPopupView=li.inflate(R.layout.popup_lista_onlongpress,null);

@@ -2,6 +2,7 @@ package com.example.finanso.ListActivity;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,8 +105,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         String kwota;
 
         ReadAllHistoriaResponse rowRAHR = lista_historia.get(position);
-        //ReadAllHistoriaResponse rowRAHR = new ReadAllHistoriaResponse();
-
         kwota= rowRAHR.kwota;
 
         int priceColor;
@@ -122,7 +121,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         holder.listaKwotaEditText.setTextColor(priceColor);
         holder.listaSzczegolOpisEditText.setText(rowRAHR.szczegol_opis);
         holder.listaDataEditText.setText(rowRAHR.data);
-
+        holder.listaOpisEditText.setTextColor(Color.parseColor(rowRAHR.kategoria_kolor));
     }
 
     @Override

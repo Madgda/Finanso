@@ -293,6 +293,7 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
                 readAHR.data=cursor.getString(4);
                 readAHR.kategoria_id=cursor.getString(5);
                 readAHR.kategoria_nazwa=cursor.getString(8);
+                readAHR.kategoria_kolor=cursor.getString(7);
                 lista_historia.add(readAHR);
             }
         }
@@ -527,9 +528,8 @@ public void removeItem(int position){
                     myDB.updateListData(rowId,liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(),kategoriaDoBazy);
                     dialog.dismiss();
                     mAdapter.notifyDataSetChanged();
-                    finish();
-                    Intent intent = new Intent(ListActivity.this, ListActivity.class);
-                    startActivity(intent);
+                    zapiszListeDoArray();
+                    buildRecyclerView();
                 }
                 else{
                     Toast.makeText(ListActivity.this,"BŁĄD",Toast.LENGTH_SHORT).show();
