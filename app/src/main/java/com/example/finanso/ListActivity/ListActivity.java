@@ -37,6 +37,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.finanso.CategoryActivity.CategoryActivity;
 import com.example.finanso.MainActivity.MainActivity;
 import com.example.finanso.R;
 import com.example.finanso.CategoryActivity.ReadAllCategoryResponse;
@@ -551,16 +552,19 @@ public void removeItem(int position){
 
     @Override
     public void onItemClick(int position) {
+        Toast.makeText(ListActivity.this, "Przytrzymaj jedną z pozycji by usunąć lub edytować ", Toast.LENGTH_SHORT).show();
 
-        infoTextOnClick = findViewById(R.id.infoShowHelpOnClick);
-        infoTextOnClick.setVisibility(View.VISIBLE);
+       /* infoTextOnClick = findViewById(R.id.infoShowHelpOnClick);
+        infoTextOnClick.setVisibility(View.VISIBLE);*/
 
-        Handler handler = new Handler();
+
+
+   /*     Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
                 infoTextOnClick.setVisibility(View.GONE);
             }
-        }, 1500);
+        }, 1500);*/
 
     }
 

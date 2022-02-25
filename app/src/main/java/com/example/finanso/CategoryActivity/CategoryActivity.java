@@ -365,7 +365,9 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
     @Override
     public void onItemClick(int position) {
 
-        infoTextOnClick = findViewById(R.id.infoShowHelpOnClickCategory);
+        Toast.makeText(CategoryActivity.this, "Przytrzymaj jedną z pozycji by usunąć lub edytować ", Toast.LENGTH_SHORT).show();
+
+    /*    infoTextOnClick = findViewById(R.id.infoShowHelpOnClickCategory);
         infoTextOnClick.setVisibility(View.VISIBLE);
 
         Handler handler = new Handler();
@@ -373,7 +375,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
             public void run() {
                 infoTextOnClick.setVisibility(View.GONE);
             }
-        }, 1500);
+        }, 1500);*/
 
     }
 
