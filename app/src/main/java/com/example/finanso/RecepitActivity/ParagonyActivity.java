@@ -1,8 +1,15 @@
 package com.example.finanso.RecepitActivity;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
@@ -17,9 +24,12 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +38,8 @@ import com.example.finanso.ListActivity.ListAdapter;
 import com.example.finanso.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,6 +64,7 @@ public class ParagonyActivity  extends AppCompatActivity {
     private String kategorieA[]={"Wybierz kategorię","Rachunki","Spożywcze","Prezenty","Chemia","Remont"};
     private ImageButton dodajZdjecieParagonu;
     private Button dodajWpisParagonu;
+    private boolean photoFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,6 +239,12 @@ public class ParagonyActivity  extends AppCompatActivity {
             }
         });
 
+        dodajZdjecieParagonu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openCamera();
+            }
+        });
         dodajWpisParagonu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -233,5 +252,25 @@ public class ParagonyActivity  extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void openCamera() {
+    if(ContextCompat.checkSelfPermission(ParagonyActivity.this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
+        ActivityCompat.requestPermissions(ParagonyActivity.this,new String[]{
+                Manifest.permission.CAMERA
+        },100);
+    }
+Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityIfNeeded(intent,100);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100) {
+            //get Image
+           // Bitmap captureImage = (Bitmap) data.getExtras().get("data");
+            //imageView.setImageBitmap(captureImage);
+        }
     }
 }

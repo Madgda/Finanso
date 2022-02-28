@@ -170,6 +170,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
 
     public void createNewDialog() {
         //po kliknieciu plusik
+        pickedColor = "#7E8288";
         dialogBuild = new AlertDialog.Builder(this);
         final View kategoriePopupView = getLayoutInflater().inflate(R.layout.popup_kategorie, null);
         nazwaKategorie = (EditText) kategoriePopupView.findViewById(R.id.NazwaPopupKategorie);

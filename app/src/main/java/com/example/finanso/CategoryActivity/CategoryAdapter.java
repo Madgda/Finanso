@@ -87,7 +87,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
         ReadAllCategoryResponse rowRACR = lista_kategoria.get(position);
         listId =rowRACR.id;
-       holder.categoryIdEditText.setText(rowRACR.id);
+       holder.categoryIdEditText.setText(rowRACR.id+ ".");
         holder.categorySzczegolEditText.setText(rowRACR.opis);
         holder.categoryOpisEditText.setText(rowRACR.nazwa);
         holder.categoryRelativeLayoutPozycja.setBackgroundColor(Color.parseColor(rowRACR.kolor));
