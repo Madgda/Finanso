@@ -23,7 +23,9 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -65,6 +67,7 @@ public class ParagonyActivity  extends AppCompatActivity {
     private ImageButton dodajZdjecieParagonu;
     private Button dodajWpisParagonu;
     private boolean photoFile;
+    private Button dodajUprawnienieZdjeciaParagonu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +189,12 @@ public class ParagonyActivity  extends AppCompatActivity {
     }*/
     public void createNewDialog(){
         //pop up dodawanie rekordu
+        if(ContextCompat.checkSelfPermission(ParagonyActivity.this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(ParagonyActivity.this,new String[]{
+                    Manifest.permission.CAMERA
+            },100);
+        }
+
         dialogBuild = new AlertDialog.Builder(this);
         final View paragonyView=getLayoutInflater().inflate(R.layout.popup_paragony,null);
         opisParagony = (EditText) paragonyView.findViewById(R.id.OpisPopupParagony);
@@ -195,6 +204,7 @@ public class ParagonyActivity  extends AppCompatActivity {
         dodajWpisParagonu = (Button) paragonyView.findViewById(R.id.dodajB);
 
         String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+
 
 
         dateE.setText(currentDate);
@@ -239,10 +249,13 @@ public class ParagonyActivity  extends AppCompatActivity {
             }
         });
 
+
         dodajZdjecieParagonu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openCamera();
+
+                    openCamera();
+
             }
         });
         dodajWpisParagonu.setOnClickListener(new View.OnClickListener() {
@@ -255,11 +268,7 @@ public class ParagonyActivity  extends AppCompatActivity {
     }
 
     private void openCamera() {
-    if(ContextCompat.checkSelfPermission(ParagonyActivity.this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
-        ActivityCompat.requestPermissions(ParagonyActivity.this,new String[]{
-                Manifest.permission.CAMERA
-        },100);
-    }
+
 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityIfNeeded(intent,100);
     }
@@ -268,9 +277,28 @@ Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100) {
-            //get Image
-           // Bitmap captureImage = (Bitmap) data.getExtras().get("data");
-            //imageView.setImageBitmap(captureImage);
+     /* Bundle extras = data.getExtras();
+      Bitmap imageBitmap = (Bitmap) extras.get("data");*/
+      //imageView.setImageBitmap(imageBitmap);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    if(requestCode==100){
+        if(grantResults.length>0&&grantResults[0] ==PackageManager.PERMISSION_GRANTED &&grantResults[1] ==PackageManager.PERMISSION_GRANTED){
+            openCamera();
+        }
+    }
+    else{
+        displayMessage(getBaseContext(),"Brak uprawnienia do robienia zdjęć");
+    }
+
+    }
+
+    private void displayMessage(Context context, String message)
+    {
+        Toast.makeText(context,message,Toast.LENGTH_LONG).show();
     }
 }

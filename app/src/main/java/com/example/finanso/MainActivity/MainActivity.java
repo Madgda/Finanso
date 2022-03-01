@@ -3,10 +3,14 @@ package com.example.finanso.MainActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.text.Html;
 import android.view.MenuInflater;
 import android.widget.Button;
@@ -40,6 +44,11 @@ private int czyPopupDodaje ;
         buttonParagonyClick();
         buttonStatystykaClick();
 
+        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(MainActivity.this,new String[]{
+                    Manifest.permission.CAMERA
+            },100);
+        }
     }
 
     private void buttonListClick() {
