@@ -16,7 +16,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
 
     private Context context;
     private static final String DATABASE_NAME = "Finanso.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     private static final String TABLE_NAME = "Historia";
     private static final String KOL_ID = "IdHistoria";
@@ -32,6 +32,13 @@ public class SqLiteManager extends SQLiteOpenHelper {
     private static final String KOL2_NAZWA = "Nazwa";
     private static final String KOL2_OPIS = "Opis";
 
+    private static final String TABLE_NAME_3 = "Paragony";
+    private static final String KOL3_ID = "IdParagony";
+    private static final String KOL3_OPIS = "Opis";
+    private static final String KOL3_DATA = "DataGwarancni";
+    private static final String KOL3_GWARANCJA = "CzyGwarancja";
+    private static final String KOL3_ZDJECIE = "Zdjecie";
+
 
     public SqLiteManager(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -44,6 +51,8 @@ public class SqLiteManager extends SQLiteOpenHelper {
         db.execSQL(query);
         String query2= "CREATE TABLE " + TABLE_NAME_2 +" ("+ KOL2_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " +KOL2_KOLOR + " TEXT, " +KOL2_NAZWA +" TEXT, " +KOL2_OPIS +" TEXT);";
         db.execSQL(query2);
+        String query3= "CREATE TABLE " + TABLE_NAME_3 +" ("+ KOL3_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " +KOL3_OPIS + " TEXT, " +KOL3_GWARANCJA +" INTEGER, " +KOL3_DATA +" TEXT, "+KOL3_ZDJECIE +" TEXT);";
+        db.execSQL(query3);
     }
 
     @Override
@@ -91,13 +100,14 @@ public class SqLiteManager extends SQLiteOpenHelper {
             Toast.makeText(context, "POPRAWNIE DODANO!", Toast.LENGTH_SHORT).show();
         }
     }
-        public void addKategoria(String kolor, String nazwa2, String opis2){
-            SQLiteDatabase db2=this.getWritableDatabase();
-            ContentValues cv2= new ContentValues();
-            cv2. put(KOL2_KOLOR,kolor);
-            cv2. put(KOL2_NAZWA,nazwa2);
-            cv2. put(KOL2_OPIS,opis2);
-            long result= db2.insert(TABLE_NAME_2,null,cv2);
+        public void addParagon(String opis, Integer gwarancja, String data,String zdjecie){
+            SQLiteDatabase db3=this.getWritableDatabase();
+            ContentValues cv3= new ContentValues();
+            cv3. put(KOL3_OPIS,opis);
+            cv3. put(KOL3_GWARANCJA,gwarancja);
+            cv3. put(KOL3_DATA,data);
+            cv3. put(KOL3_ZDJECIE,zdjecie);
+            long result= db3.insert(TABLE_NAME_3,null,cv3);
             if(result==-1){
                 Toast.makeText(context,"BŁĄD",Toast.LENGTH_SHORT).show();
             }
@@ -106,6 +116,22 @@ public class SqLiteManager extends SQLiteOpenHelper {
             }
 
     }
+    public void addKategoria(String kolor, String nazwa2, String opis2){
+        SQLiteDatabase db2=this.getWritableDatabase();
+        ContentValues cv2= new ContentValues();
+        cv2. put(KOL2_KOLOR,kolor);
+        cv2. put(KOL2_NAZWA,nazwa2);
+        cv2. put(KOL2_OPIS,opis2);
+        long result= db2.insert(TABLE_NAME_2,null,cv2);
+        if(result==-1){
+            Toast.makeText(context,"BŁĄD",Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(context,"POPRAWNIE DODANO!",Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     public boolean deleteOneRowFromList(String row_id){
         this.close();
         SQLiteDatabase db =this.getWritableDatabase();
