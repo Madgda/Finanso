@@ -558,7 +558,6 @@ public void removeItem(int position){
         infoTextOnClick.setVisibility(View.VISIBLE);*/
 
 
-
    /*     Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {

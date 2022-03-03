@@ -74,6 +74,7 @@ public class ParagonyActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_paragony);
 
+
         Toolbar toolbar = findViewById(R.id.toolbar1);
         toolbar.setTitle("Finanso");
         setSupportActionBar(toolbar);
@@ -300,5 +301,8 @@ Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     private void displayMessage(Context context, String message)
     {
         Toast.makeText(context,message,Toast.LENGTH_LONG).show();
+    }
+
+    public class OnCategoryClickListener {
     }
 }
