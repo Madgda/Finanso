@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,6 +15,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,8 +38,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.finanso.ListActivity.ListAdapter;
 import com.example.finanso.R;
+import com.example.finanso.SQLite.SqLiteManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
@@ -48,14 +50,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class ParagonyActivity  extends AppCompatActivity {
+public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapter.OnReceiptClickListener {
 
     private DrawerLayout drawer;
     private FloatingActionButton plus;
     private RecyclerView mRecyclerView;
-    private ListAdapter mAdapter;
+    private ReceiptAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private MenuItem dodajLista;
+    public SqLiteManager myDB;
+    private ArrayList<ReadAllReceiptResponse> lista_paragony;
     private AlertDialog.Builder dialogBuild;
     private AlertDialog dialog;
     private CheckBox radioBurronGwarancja;
@@ -63,11 +67,16 @@ public class ParagonyActivity  extends AppCompatActivity {
     private Button dodajB;
     private DatePickerDialog picker;
     public int czyPopupDodaj;
+    String gwarancja= "nie";
     private String kategorieA[]={"Wybierz kategorię","Rachunki","Spożywcze","Prezenty","Chemia","Remont"};
     private ImageButton dodajZdjecieParagonu;
     private Button dodajWpisParagonu;
     private boolean photoFile;
     private Button dodajUprawnienieZdjeciaParagonu;
+
+    public ParagonyActivity(){
+        myDB=new SqLiteManager(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -262,9 +271,65 @@ public class ParagonyActivity  extends AppCompatActivity {
         dodajWpisParagonu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(radioBurronGwarancja.isChecked())
+                {
+                    gwarancja="tak";
+                }
+                else if(radioBurronGwarancja.isChecked()==false)
+                {
+                    gwarancja="nie";
+                    Date d = new Date();
+                    dateE.setText(DateFormat.format("MMMM d, yyyy ", d.getTime()));
+                }
+                else{
+                    gwarancja="error";
+                    Date d = new Date();
+                    dateE.setText(DateFormat.format("MMMM d, yyyy ", d.getTime()));
+                }
+
+                SqLiteManager myDBKat=new SqLiteManager(ParagonyActivity.this);
+
+                if (opisParagony.getText().toString().trim().length() > 0) {
+                    myDBKat.addParagon(opisParagony.getText().toString().trim(),gwarancja.trim(), dateE.getText().toString().trim(),"zdjecie.jpg");
+                    dialog.dismiss();
+                    zapiszParagonDoArray();
+                    buildRecyclerView();
+                } else {
+                    Toast.makeText(ParagonyActivity.this, "Uzupełnij opis", Toast.LENGTH_SHORT).show();
+                }
                 dialog.dismiss();
             }
         });
+
+    }
+
+    void zapiszParagonDoArray()
+    {
+        myDB=new SqLiteManager(ParagonyActivity.this);
+        lista_paragony =new ArrayList<>();
+
+        Cursor cursor = myDB.readAllParagony();
+        if(cursor.getCount()==0){
+            Toast.makeText(ParagonyActivity.this,"Brak danych.",Toast.LENGTH_SHORT).show();
+        }else{
+            while(cursor.moveToNext()){
+                ReadAllReceiptResponse readARR = new ReadAllReceiptResponse();
+                readARR.id=cursor.getString(0);
+                readARR.opis=cursor.getString(1);
+                readARR.czygwarancja=cursor.getString(2);
+                readARR.data=cursor.getString(3);
+                lista_paragony.add(readARR);
+            }
+        }
+    }
+
+    public void buildRecyclerView(){
+        mRecyclerView=findViewById(R.id.recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mAdapter = new ReceiptAdapter(ParagonyActivity.this,lista_paragony,this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
 
     }
 
@@ -303,6 +368,14 @@ Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Toast.makeText(context,message,Toast.LENGTH_LONG).show();
     }
 
-    public class OnCategoryClickListener {
+    @Override
+    public void onLongClick(int position) {
+
     }
+
+    @Override
+    public void onItemClick(int position) {
+
+    }
+
 }

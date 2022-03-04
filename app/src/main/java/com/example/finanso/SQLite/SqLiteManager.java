@@ -16,7 +16,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
 
     private Context context;
     private static final String DATABASE_NAME = "Finanso.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 6;
 
     private static final String TABLE_NAME = "Historia";
     private static final String KOL_ID = "IdHistoria";
@@ -51,7 +51,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
         db.execSQL(query);
         String query2= "CREATE TABLE " + TABLE_NAME_2 +" ("+ KOL2_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " +KOL2_KOLOR + " TEXT, " +KOL2_NAZWA +" TEXT, " +KOL2_OPIS +" TEXT);";
         db.execSQL(query2);
-        String query3= "CREATE TABLE " + TABLE_NAME_3 +" ("+ KOL3_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " +KOL3_OPIS + " TEXT, " +KOL3_GWARANCJA +" INTEGER, " +KOL3_DATA +" TEXT, "+KOL3_ZDJECIE +" TEXT);";
+        String query3= "CREATE TABLE " + TABLE_NAME_3 +" ("+ KOL3_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " +KOL3_OPIS + " TEXT, " +KOL3_GWARANCJA +" TEXT, " +KOL3_DATA +" TEXT, "+KOL3_ZDJECIE +" TEXT);";
         db.execSQL(query3);
     }
 
@@ -59,6 +59,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_2);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_3);
     }
 
     public Cursor readAllHistoryWithKategorie() {
@@ -85,6 +86,17 @@ public class SqLiteManager extends SQLiteOpenHelper {
         }
         return cursor;
     }
+    public Cursor readAllParagony() {
+        String query = "SELECT * FROM " + TABLE_NAME_3;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        if (db != null) {
+            cursor = db.rawQuery(query, null);
+
+        }
+        return cursor;
+    }
     public void addWpis(String kwota, String opis, String szczegol_opis, String data, String kategoria_id) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -100,7 +112,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
             Toast.makeText(context, "POPRAWNIE DODANO!", Toast.LENGTH_SHORT).show();
         }
     }
-        public void addParagon(String opis, Integer gwarancja, String data,String zdjecie){
+        public void addParagon(String opis, String gwarancja, String data,String zdjecie){
             SQLiteDatabase db3=this.getWritableDatabase();
             ContentValues cv3= new ContentValues();
             cv3. put(KOL3_OPIS,opis);
