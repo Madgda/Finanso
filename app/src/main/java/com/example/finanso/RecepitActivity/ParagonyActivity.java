@@ -83,6 +83,10 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_paragony);
 
+        mRecyclerView =findViewById(R.id.recycler_view);
+
+        zapiszParagonDoArray();
+        buildRecyclerView();
 
         Toolbar toolbar = findViewById(R.id.toolbar1);
         toolbar.setTitle("Finanso");
@@ -275,7 +279,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
                 {
                     gwarancja="tak";
                 }
-                else if(radioBurronGwarancja.isChecked()==false)
+                else if(!radioBurronGwarancja.isChecked())
                 {
                     gwarancja="nie";
                     Date d = new Date();

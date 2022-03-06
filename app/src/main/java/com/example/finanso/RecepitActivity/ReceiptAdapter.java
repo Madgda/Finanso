@@ -84,20 +84,21 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ReceiptV
         ReadAllReceiptResponse rowRARR = lista_paragony.get(position);
         listId =rowRARR.id;
         holder.receiptIdEditText.setText(rowRARR.id+ ".");
-        if(rowRARR.czygwarancja=="tak") {
-            holder.receiptDataEditText.setText("gwarancja do:" + rowRARR.data);
+        if(rowRARR.czygwarancja.equals("tak")) {
+            holder.receiptDataEditText.setText("gwarancja obowiązuje do: " + rowRARR.data);
         }
-        else if (rowRARR.czygwarancja=="nie")
+        else if (rowRARR.czygwarancja.equals("nie"))
         {
             holder.receiptDataEditText.setText("brak gwarancji");
 
         }
         else
         {
-            holder.receiptDataEditText.setText("błąd");
+           holder.receiptDataEditText.setText("błąd");
 
-        }
+       }
         holder.receiptOpisEditText.setText(rowRARR.opis);
+        String getteXt = (String) holder.receiptDataEditText.getText();
     }
 
     @Override
