@@ -1,6 +1,7 @@
 package com.example.finanso.RecepitActivity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -8,14 +9,17 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,6 +31,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -34,6 +39,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,6 +69,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
     private ArrayList<ReadAllReceiptResponse> lista_paragony;
     private AlertDialog.Builder dialogBuild;
     private AlertDialog dialog;
+    protected static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
     private CheckBox radioBurronGwarancja;
     private EditText dateE,opisParagony;
     private Button dodajB;
@@ -72,6 +80,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
     private ImageButton dodajZdjecieParagonu;
     private Button dodajWpisParagonu;
     private boolean photoFile;
+    private Uri imageUri=null;
     private Button dodajUprawnienieZdjeciaParagonu;
 
     public ParagonyActivity(){
@@ -208,7 +217,11 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
                     Manifest.permission.CAMERA
             },100);
         }
-
+        if(ContextCompat.checkSelfPermission(ParagonyActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(ParagonyActivity.this, new String[]{
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            }, 101);
+        }
         dialogBuild = new AlertDialog.Builder(this);
         final View paragonyView=getLayoutInflater().inflate(R.layout.popup_paragony,null);
         opisParagony = (EditText) paragonyView.findViewById(R.id.OpisPopupParagony);
@@ -337,20 +350,141 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
 
     }
 
-    private void openCamera() {
 
-Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityIfNeeded(intent,100);
+/*
+
+        }
+    private static Uri getOutputMediaFileUri(int type){
+        return Uri.fromFile(getOutputMediaFile(type));
     }
+    private static File getOutputMediaFile(int type){
 
-    @Override
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "MyCameraApp");
+
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                Log.d("MyCameraApp", "failed to create directory");
+                return null;
+            }
+        }
+        File mediaFile;
+        if (type == 100){
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                    "IMG_" + ".jpg");
+        } else {
+            return null;
+        }
+        return mediaFile;
+    }*/
+   /* @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100) {
-     /* Bundle extras = data.getExtras();
-      Bitmap imageBitmap = (Bitmap) extras.get("data");*/
-      //imageView.setImageBitmap(imageBitmap);
+     //        Bundle extras = data.getExtras();
+    //  Bitmap imageBitmap = (Bitmap) extras.get("data");
+     // imageView.setImageBitmap(imageBitmap);
+            Toast.makeText(this, "Image saved to:\n" +
+                    data.getData(), Toast.LENGTH_LONG).show();
+        } else if (resultCode == RESULT_CANCELED) {
+            // User cancelled the image capture
+        } else {
+            // Image capture failed, advise user
         }
+    }*/
+
+  /*  private void openCamera() {
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        //intent.putExtra(MediaStore.EXTRA_OUTPUT, getOutputMediaFileUri(100));
+        startActivityIfNeeded(intent, 100);
+    }*/
+
+    private void openCamera() {
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    imageUri = Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),"finanso_" + String.valueOf(System.currentTimeMillis()) + ".jpg"));
+       intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+    }
+
+     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            if (resultCode == RESULT_OK) {
+                if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+
+                    //use imageUri here to access the image
+
+                    Bundle extras = data.getExtras();
+
+                    Log.e("URI", imageUri.toString());
+
+                    Bitmap bmp = (Bitmap) extras.get("data");
+
+                    // here you will get the image as bitmap
+
+
+                } else if (resultCode == RESULT_CANCELED) {
+                    Toast.makeText(this, "Picture was not taken", Toast.LENGTH_SHORT);
+                }
+            }
+        }
+        catch(Exception e)
+        {
+
+        }
+
+
+    }
+
+/*
+
+    @Override
+    protected void onActivityResult(int requestCode, int result, @Nullable Intent data) {
+        super.onActivityResult(requestCode, result, data);
+        if(result== Activity.RESULT_OK){
+            Uri uri =data.getData();
+            String nazwa = getFileName(uri,getApplicationContext());
+
+        }
+    }
+*/
+
+    /* @Override
+        public void onActivityResult(ActivityResult result) {
+            if(result.getResultCode()== Activity.RESULT_OK){
+                Intent data =result.getData();
+                Uri uri =data.getData();
+                String nazwa = getFileName(uri,getApplicationContext());
+
+            }
+        }*/
+    String getFileName(Uri uri, Context context){
+        String res = null;
+        if( uri.getScheme().equals("content")){
+            Cursor cursor = context.getContentResolver().query(uri,null,null,null,null,null);
+        try{
+            if(cursor!= null && cursor.moveToFirst()){
+                res = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+
+            }
+        }
+        finally {
+            cursor.close();
+        }
+        if(res==null){
+            res=uri.getPath();
+            int cutt =res.lastIndexOf('/');
+            if(cutt != -1){
+                res= res.substring(cutt+1);
+              }
+            }
+        }
+        return res;
     }
 
     @Override
