@@ -96,6 +96,22 @@
         app:tint="@color/black"
         android:visibility="visible"
         android:src="@drawable/paragon_dodaj_kamera_ikon"
+        app:layout_constraintTop_toBottomOf="@id/przejdzDoZdjecieButton"
+        />
+
+    <Button
+        android:id="@+id/przejdzDoZdjecieButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:paddingBottom="-20dp"
+        android:text="przejdź do zdjęcia"
+        android:textStyle="bold"
+        android:textSize="17dp"
+        android:backgroundTint="@color/Blue"
+        android:visibility="gone"
+        app:tint="@color/black"
         app:layout_constraintTop_toBottomOf="@id/dataE"
         />
 
