@@ -1,5 +1,6 @@
 package com.example.finanso.RecepitActivity;
 
+
 import static com.google.android.material.internal.ContextUtils.getActivity;
 
 import android.Manifest;
@@ -69,7 +70,6 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
 
     private DrawerLayout drawer;
     private FloatingActionButton plus;
-    private View paragonyImageView;
     private RecyclerView mRecyclerView;
     private ReceiptAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -90,7 +90,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
     private Button dodajB;
     private File imagePath;
     private File imagesFolder;
-    private ImageView imageParagon;
+    
     private DatePickerDialog picker;
     public int czyPopupDodaj;
     String gwarancja = "nie";
@@ -104,6 +104,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
     private Button dodajUprawnienieZdjeciaParagonu;
     private int position;
     private String imageUrl;
+    private ImageView imageParagon;
 
     public ParagonyActivity() {
         myDB = new SqLiteManager(this);
@@ -234,7 +235,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
     }*/
 private void createDialogImage(String imageUrl)
     {
-        this.imageUrl=imageUrl;
+        dialogBuild =new AlertDialog.Builder(this);
         final View paragonyImageView = getLayoutInflater().inflate(R.layout.popup_show_image, null);
         File imgFile = new  File(imageUrl);
 
@@ -243,8 +244,8 @@ private void createDialogImage(String imageUrl)
             imageParagon = (ImageView) paragonyImageView.findViewById(R.id.ImageViewParagon);
             imageParagon.setImageBitmap(myBitmap);
         }
-        dialogBuild =new AlertDialog.Builder(this);
         dialogBuild.setView(paragonyImageView);
+        dialog.setContentView(R.layout.popup_show_image);
         dialog =dialogBuild.create();
       //  imageParagon.setImageBitmap(bmp);
         dialog.show();
@@ -453,9 +454,13 @@ private void createDialogImage(String imageUrl)
         dateE.setText(data);
 
         dodajZdjecieParagonu = (ImageButton) paragonyView.findViewById(R.id.zdjęcieButtonParagon);
-        if (zdjecieURL.equals("")){
+        if (zdjecieURL.equals("null/null")){
             buttoPrzejdzDoZdjecia.setVisibility(View.GONE);
+            dodajZdjecieParagonu.setVisibility(View.VISIBLE);
         } else {
+            ///storage/emulated/0/picture/170322204240.jpg
+            ///storage/emulated/0/picture/170322204240.jpg
+            dodajZdjecieParagonu.setVisibility(View.GONE);
             buttoPrzejdzDoZdjecia.setVisibility(View.VISIBLE);
         }
         dodajWpisParagonu = (Button) paragonyView.findViewById(R.id.dodajB);
