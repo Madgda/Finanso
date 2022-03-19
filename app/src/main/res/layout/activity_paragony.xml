@@ -22,6 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:columnCount="1"
+            android:focusableInTouchMode="true"
+            android:focusable="true"
             android:foregroundGravity="top"
             android:rowCount="2">
 
@@ -35,17 +37,18 @@
                 app:itemTextColor="@color/black"
                 />
 
+
             <EditText
                 android:id="@+id/loopaView"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:focusedByDefault="false"
-                android:defaultFocusHighlightEnabled="false"
+                android:layout_height="48dp"
                 android:background="@color/white"
+                android:defaultFocusHighlightEnabled="false"
+                android:focusedByDefault="false"
+                android:hint="Szukaj..."
                 android:inputType="textNoSuggestions"
                 android:padding="10dp"
-                android:hint="Szukaj..."
-                android:textColor="@color/grey"/>
+                android:textColor="@color/grey"></EditText>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

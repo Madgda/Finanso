@@ -75,6 +75,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
     private RecyclerView.LayoutManager mLayoutManager;
     private MenuItem dodajLista;
     public SqLiteManager myDB;
+   public String dataPopup;
     private Bitmap bmp;
     public String image_name;
     private ImageView imageViewCameraImage;
@@ -239,16 +240,27 @@ private void createDialogImage(String imageUrl)
         final View paragonyImageView = getLayoutInflater().inflate(R.layout.popup_show_image, null);
         File imgFile = new  File(imageUrl);
 
-        if(imgFile.exists()){
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            imageParagon = (ImageView) paragonyImageView.findViewById(R.id.ImageViewParagon);
-            imageParagon.setImageBitmap(myBitmap);
-        }
-        dialogBuild.setView(paragonyImageView);
-        dialog.setContentView(R.layout.popup_show_image);
-        dialog =dialogBuild.create();
-      //  imageParagon.setImageBitmap(bmp);
-        dialog.show();
+
+            if (imgFile.exists()) {
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                imageParagon = (ImageView) paragonyImageView.findViewById(R.id.ImageViewParagon);
+                imageParagon.setImageBitmap(myBitmap);
+                dialogBuild.setView(paragonyImageView);
+                dialog.setContentView(R.layout.popup_show_image);
+                dialog = dialogBuild.create();
+                dialog.show();
+            } else {
+                Toast.makeText(ParagonyActivity.this, "Problem ze zdjęciem", Toast.LENGTH_SHORT).show();
+            }
+
+
+
+        imageParagon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
 }
 
     private void createDialogOnLongPresss(int position) {
@@ -293,10 +305,13 @@ private void createDialogImage(String imageUrl)
     }
 
     public void createNewDialog(){
+
+
         //pop up dodawanie rekordu
        // final View paragonyImageView = getLayoutInflater().inflate(R.layout.popup_show_image, null);
          imagePath= new File (imagesFolder+"/"+image_name);
-
+        String zdjecieURL;
+        zdjecieURL= imagePath.toString();
         if(ContextCompat.checkSelfPermission(ParagonyActivity.this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(ParagonyActivity.this,new String[]{
                     Manifest.permission.CAMERA
@@ -403,6 +418,18 @@ private void createDialogImage(String imageUrl)
                 }
 
                  zdjecieS= "";
+
+                if(gwarancja.equals("nie")){
+                    dataPopup="";
+                }
+                else if(gwarancja.equals("tak")){
+                    dataPopup= dateE.getText().toString().trim();
+                }
+                else{
+                    dataPopup= currentDate;
+                }
+
+
                 if(imagePath==null)
                 {
                     zdjecieS ="";
@@ -410,17 +437,29 @@ private void createDialogImage(String imageUrl)
                 else{
                     zdjecieS= String.valueOf(imagePath);
                 }
+
+
                 SqLiteManager myDBKat=new SqLiteManager(ParagonyActivity.this);
 
-                if (opisParagony.getText().toString().trim().length() > 0) {
-                    myDBKat.addParagon(opisParagony.getText().toString().trim(),gwarancja.trim(), dateE.getText().toString().trim(),zdjecieS.trim());
+                if (opisParagony.getText().toString().trim().length() == 0) {
+                    Toast.makeText(ParagonyActivity.this, "Nieprawidłowy opis", Toast.LENGTH_SHORT).show();
+
+                }
+                else if(imagesFolder+"/"+image_name=="null/null"){
+                    Toast.makeText(ParagonyActivity.this, "Dodaj zdjęcie", Toast.LENGTH_SHORT).show();
+
+                }
+
+
+                    else{
+                    myDBKat.addParagon(opisParagony.getText().toString().trim(),gwarancja.trim(),dataPopup.trim(),zdjecieS.trim());
                     dialog.dismiss();
                     zapiszParagonDoArray();
                     buildRecyclerView();
-                } else {
-                    Toast.makeText(ParagonyActivity.this, "Uzupełnij opis", Toast.LENGTH_SHORT).show();
+                    imagesFolder=null;
+                    image_name=null;
+                    dialog.dismiss();
                 }
-                dialog.dismiss();
                 imagePath=null;
             }
         });
@@ -448,7 +487,6 @@ private void createDialogImage(String imageUrl)
         else{
             radioBurronGwarancja.setChecked(false);
         }
-       radioBurronGwarancja.setChecked(true);
 
         dateE = (EditText) paragonyView.findViewById(R.id.dataE);
         dateE.setText(data);
@@ -477,6 +515,14 @@ private void createDialogImage(String imageUrl)
 
         dateE.setInputType(InputType.TYPE_NULL);
 
+        if(radioBurronGwarancja.isChecked())
+        {
+            dateE.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            dateE.setVisibility(View.INVISIBLE);
+        }
 
 
         radioBurronGwarancja.setOnClickListener(new View.OnClickListener() {
@@ -492,6 +538,7 @@ private void createDialogImage(String imageUrl)
                 }
             }
         });
+
 
         dateE.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -545,7 +592,7 @@ private void createDialogImage(String imageUrl)
         dodajWpisParagonu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-             /*   if(radioBurronGwarancja.isChecked())
+                if(radioBurronGwarancja.isChecked())
                 {
                     gwarancja="tak";
                 }
@@ -561,7 +608,7 @@ private void createDialogImage(String imageUrl)
                     dateE.setText(DateFormat.format("MMMM d, yyyy ", d.getTime()));
                 }
 
-                 zdjecieS= "";
+                zdjecieS= "";
                 if(imagePath==null)
                 {
                     zdjecieS ="";
@@ -571,16 +618,38 @@ private void createDialogImage(String imageUrl)
                 }
                 SqLiteManager myDBKat=new SqLiteManager(ParagonyActivity.this);
 
-                if (opisParagony.getText().toString().trim().length() > 0) {
-                    myDBKat.addParagon(opisParagony.getText().toString().trim(),gwarancja.trim(), dateE.getText().toString().trim(),zdjecieS.trim());
+                if(gwarancja.equals("nie")){
+                    dataPopup="";
+                }
+                else if(gwarancja.equals("tak")){
+                    dataPopup= dateE.getText().toString().trim();
+                }
+                else{
+                    dataPopup=  currentDate.toString();
+
+                }
+
+                if (opisParagony.getText().toString().trim().length() == 0) {
+                    Toast.makeText(ParagonyActivity.this, "Nieprawidłowy opis", Toast.LENGTH_SHORT).show();
+
+                }
+                else if(zdjecieURL.equals("null/null")){
+                    Toast.makeText(ParagonyActivity.this, "Dodaj zdjęcie", Toast.LENGTH_SHORT).show();
+
+                }
+
+
+                    else{
+
+                    myDBKat.updateReceiptData(id.trim(),opisParagony.getText().toString().trim(),gwarancja.trim(), dataPopup.trim());
                     dialog.dismiss();
                     zapiszParagonDoArray();
                     buildRecyclerView();
-                } else {
-                    Toast.makeText(ParagonyActivity.this, "Uzupełnij opis", Toast.LENGTH_SHORT).show();
+                    imagesFolder=null;
+                    image_name=null;
+                    dialog.dismiss();
                 }
-                dialog.dismiss();
-                imagePath=null;*/
+
             }
         });
 
@@ -690,6 +759,8 @@ private void createDialogImage(String imageUrl)
 */
 private File openCamera() throws IOException {
     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    imagesFolder=null;
+    image_name=null;
    // File file = new File(Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath()+ "/picture").getPath());
      imagesFolder = new File(Environment.getExternalStorageDirectory().getPath(), "/picture");
     image_name = new SimpleDateFormat("ddMMyyHHmmss", Locale.US).format(new Date())+".jpg";

@@ -203,4 +203,18 @@ public class SqLiteManager extends SQLiteOpenHelper {
             Toast.makeText(context, "POPRAWNIE ZEDYTOWANO!", Toast.LENGTH_SHORT).show();
         }
     }
+    public void updateReceiptData(String row_id, String opis, String gwarancja, String data) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(KOL3_OPIS, opis);
+        cv.put(KOL3_GWARANCJA, gwarancja);
+        cv.put(KOL3_DATA, data);
+
+        long result = db.update(TABLE_NAME_3, cv, KOL3_ID + "=" + row_id, null);
+        if (result == -1) {
+            Toast.makeText(context, "Błąd!!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "POPRAWNIE ZEDYTOWANO!", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

@@ -124,7 +124,7 @@
         android:layout_marginBottom="10dp"
         android:paddingVertical="15dp"
         android:backgroundTint="@color/BlueDarker"
-        android:text="Dodaj"
+        android:text="Zapisz"
         android:textSize="23sp"
         android:textColor="@color/white"
         android:textStyle="bold"
