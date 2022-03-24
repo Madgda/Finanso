@@ -16,7 +16,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
 
     private Context context;
     private static final String DATABASE_NAME = "Finanso.db";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 8;
 
     private static final String TABLE_NAME = "Historia";
     private static final String KOL_ID = "IdHistoria";
