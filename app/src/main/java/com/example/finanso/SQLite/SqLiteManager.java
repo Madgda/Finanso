@@ -172,6 +172,20 @@ public class SqLiteManager extends SQLiteOpenHelper {
         }
         return result>0;
     }
+    public boolean deleteOneRowFromReceipt(String row_id){
+        this.close();
+        SQLiteDatabase db =this.getWritableDatabase();
+
+        //long result =  db.delete(TABLE_NAME,KOL_ID +"=?", new String[]{String.valueOf(row_id)});
+        long result =  db.delete(TABLE_NAME_3,KOL3_ID +"=" + row_id,null);
+        if(result ==-1){
+            Toast.makeText(context,"BŁĄD",Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(context,"POPRAWNIE USUNIĘTO!",Toast.LENGTH_SHORT).show();
+        }
+        return result>0;
+    }
     public void updateListData(String row_id, String kwota, String opis, String szczegol_opis, String data, String kategoria_id) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();

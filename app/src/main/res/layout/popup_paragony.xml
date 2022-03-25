@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
+    android:id="@+id/parentParagony"
     android:layout_height="match_parent"
     android:theme="@style/Theme.Finanso.NoActionBar"
     android:backgroundTint="@android:color/transparent">
@@ -71,6 +72,7 @@
         android:gravity="center_horizontal"
         android:focusableInTouchMode="false"
         app:layout_constraintTop_toBottomOf="@id/radioButtony" />
+        app:layout_constraintTop_toBottomOf="@id/radioButtony" />
     <!--<EditText
         android:id="@+id/E1"
         android:layout_width="match_parent"
@@ -96,17 +98,17 @@
         app:tint="@color/black"
         android:visibility="visible"
         android:src="@drawable/paragon_dodaj_kamera_ikon"
-        app:layout_constraintTop_toBottomOf="@id/przejdzDoZdjecieButton"
+        app:layout_constraintTop_toBottomOf="@id/wyswietlZdjecieButton"
         />
 
     <Button
-        android:id="@+id/przejdzDoZdjecieButton"
+        android:id="@+id/wyswietlZdjecieButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:paddingBottom="-20dp"
-        android:text="przejdź do zdjęcia"
+        android:text="wyświetl zdjęcie"
         android:textStyle="bold"
         android:textSize="17dp"
         android:backgroundTint="@color/Blue"

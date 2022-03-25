@@ -16,13 +16,13 @@
     tools:context=".MainActivity.MainActivity">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/Blue"
-        android:id="@+id/toolbar"
+        android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
-        android:elevation="4dp">
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark">
 
 
     </androidx.appcompat.widget.Toolbar>
@@ -34,10 +34,11 @@
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="150dp"
-        android:layout_marginTop="@dimen/marginesPlus"
+        android:layout_marginBottom="80dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="@dimen/marginesDash"
         android:layout_marginRight="@dimen/marginesDash"
+        android:minHeight="500dp"
         android:alignmentMode="alignBounds"
         android:layout_centerHorizontal="true"
         android:columnCount="2"
@@ -58,6 +59,7 @@
             android:text="Przeglądaj historię"
             android:textColor="@color/black"
             android:backgroundTint="@color/white"
+            android:minHeight="250dp"
             android:drawableTop="@mipmap/analiza_lista_warstwa"
             />
         <Button
@@ -74,6 +76,7 @@
             android:layout_marginLeft="@dimen/smol_margin"
             android:text="Analiza wydatków"
             android:textColor="@color/black"
+            android:minHeight="250dp"
             android:backgroundTint="@color/white"
             android:drawableTop="@mipmap/statistics_icon_full"
             />
@@ -88,29 +91,32 @@
             android:paddingRight="@dimen/fab_margin"
             android:paddingTop="@dimen/margin30"
             android:clickable="true"
+            android:minHeight="250dp"
             android:layout_marginRight="@dimen/smol_margin"
             android:text="Twoje Paragony"
             android:textColor="@color/black"
             android:backgroundTint="@color/white"
             android:drawableTop="@mipmap/document_file_full"
             />
+
         <Button
             android:id="@+id/imageButton3"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_row="0"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:paddingBottom="0dp"
-            android:paddingLeft="@dimen/smol_margin"
-            android:paddingRight="@dimen/fab_margin"
-            android:paddingTop="@dimen/margin30"
-            android:clickable="true"
+            android:minHeight="250dp"
             android:layout_marginLeft="@dimen/smol_margin"
-            android:text="Ustawienia kategorii"
-            android:textColor="@color/black"
             android:backgroundTint="@color/white"
+            android:clickable="true"
             android:drawableTop="@mipmap/setting_icon_full"
-            />
+            android:paddingLeft="@dimen/smol_margin"
+            android:paddingTop="@dimen/margin30"
+            android:paddingRight="@dimen/fab_margin"
+            android:paddingBottom="0dp"
+            android:text="Ustawienia kategorii"
+            android:textColor="@color/black" />
 
     </GridLayout>
 
@@ -120,15 +126,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="@dimen/marginesPlus"
-        android:layout_marginTop="@dimen/marginesPlus"
-        android:layout_marginEnd="@dimen/marginesPlus"
-        android:layout_marginBottom="@dimen/marginesPlus"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:backgroundTint="@color/PastelBlue"
         android:src="@drawable/plus"
         app:borderWidth="0dp"
-        app:tint="@color/black"
-        />
+        app:tint="@color/black" />
 
 </RelativeLayout>
 

@@ -4,10 +4,8 @@ package com.example.finanso.RecepitActivity;
 import static com.google.android.material.internal.ContextUtils.getActivity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,14 +17,14 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,9 +36,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -53,8 +52,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.finanso.CategoryActivity.CategoryActivity;
-import com.example.finanso.CategoryActivity.ReadAllCategoryResponse;
 import com.example.finanso.R;
 import com.example.finanso.SQLite.SqLiteManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -71,17 +68,12 @@ import java.util.Locale;
 public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapter.OnReceiptClickListener {
 
     private DrawerLayout drawer;
-    private FloatingActionButton plus;
     private RecyclerView mRecyclerView;
     private ReceiptAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private MenuItem dodajLista;
     public SqLiteManager myDB;
     public String dataPopup;
-    private Bitmap bmp;
     public String image_name;
-    private ImageView imageViewCameraImage;
-    private static final int CAMERA_REQUEST = 1888;
     private ArrayList<ReadAllReceiptResponse> lista_paragony;
     private AlertDialog.Builder dialogBuild;
     private ReadAllReceiptResponse dataEditPopup;
@@ -109,6 +101,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
     private String imageUrl;
     private ImageView imageParagon;
     private boolean boolFoto;
+    private View parent;
 
     public ParagonyActivity() {
         myDB = new SqLiteManager(this);
@@ -156,30 +149,6 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
 */
             }
         });
-
-     /*   exampleList.add(new ExampleItem("#FFFFFF","Toster. Gwarancja do 22.10.2023","22.11.2021","1"));
-        exampleList.add(new ExampleItem("#FFFFFF","Lodówka. Gwarancja do 21.11.2021","12.10.2021","2"));
-        exampleList.add(new ExampleItem("#FFFFFF","Czajnik. Gwarancja do 10.10.2022","02.10.2021","3"));
-        exampleList.add(new ExampleItem("#FFFFFF","Toster. Gwarancja do 22.10.2023","22.11.2021","1"));
-        exampleList.add(new ExampleItem("#FFFFFF","Lodówka. Gwarancja do 21.11.2021","12.10.2021","2"));
-        exampleList.add(new ExampleItem("#FFFFFF","Czajnik. Gwarancja do 10.10.2022","02.10.2021","3"));
-        exampleList.add(new ExampleItem("#FFFFFF","Toster. Gwarancja do 22.10.2023","22.11.2021","1"));
-        exampleList.add(new ExampleItem("#FFFFFF","Lodówka. Gwarancja do 21.11.2021","12.10.2021","2"));
-        exampleList.add(new ExampleItem("#FFFFFF","Czajnik. Gwarancja do 10.10.2022","02.10.2021","3"));
-*/
-
-        //  exampleList.add(new ExampleItem(R.drawable.person,"linia jeden","liniadwa","0"));
-      /*  exampleList.add(new ExampleItem(R.drawable.menu,"linia jeden2","liniadwa2","0"));
-        exampleList.add(new ExampleItem(R.drawable.settings,"linia jeden3","liniadwa3","0"));
-        exampleList.add(new ExampleItem(R.drawable.person,"linia jeden","liniadwa","0"));
-        exampleList.add(new ExampleItem(R.drawable.menu,"linia jeden2","liniadwa2","0"));
-        exampleList.add(new ExampleItem(R.drawable.settings,"linia jeden3","liniadwa3","0"));
-        exampleList.add(new ExampleItem(R.drawable.person,"linia jeden","liniadwa","0"));
-        exampleList.add(new ExampleItem(R.drawable.menu,"linia jeden2","liniadwa2","0"));
-        exampleList.add(new ExampleItem(R.drawable.settings,"linia jeden3","liniadwa3","0"));
-        exampleList.add(new ExampleItem(R.drawable.person,"linia jeden","liniadwa","0"));
-        exampleList.add(new ExampleItem(R.drawable.menu,"linia jeden2","liniadwa2","0"));
-        exampleList.add(new ExampleItem(R.drawable.settings,"linia jeden3","liniadwa3","0"));*/
 
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
@@ -236,22 +205,41 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
 
         }
     }
+ /*   private void createDialogImage(String imageUrl) {
+        File imgFile = new File(imageUrl);
+        View view = View.inflate(this,R.layout.popup_show_image,null);
+        final View paragonyImageView = getLayoutInflater().inflate(R.layout.popup_show_image, null);
+        imageParagon = (ImageView) paragonyImageView.findViewById(R.id.ImageViewParagon);
+        parent =  findViewById(R.id.parentParagony);
 
-    /*    private void filter(String text){
-            ArrayList<ExampleItem> filteredList = new ArrayList<>();
+        if (imgFile.exists()) {
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            imageParagon = (ImageView) paragonyImageView.findViewById(R.id.ImageViewParagon);
+            imageParagon.setImageBitmap(myBitmap);
+            *//*dialogBuild.setView(paragonyImageView);
+            dialog.setContentView(R.layout.popup_show_image);
+            dialog = dialogBuild.create();
+            dialog.show();*//*
+        } else {
+            Toast.makeText(ParagonyActivity.this, "Problem ze zdjęciem", Toast.LENGTH_SHORT).show();
+        }
 
-            for(ExampleItem item : exampleList){
-                if(item.getText1().toLowerCase().contains(text.toLowerCase())||item.getText2().toLowerCase().contains(text.toLowerCase())||item.getText3().toLowerCase().contains(text.toLowerCase())){
-                    filteredList.add(item);
-                }
-            }
-            mAdapter.filterList(filteredList);
-        }*/
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+
+        final PopupWindow popupWindow = new PopupWindow(view,0,0,false);
+       // popupWindow.showAtLocation(view,Gravity.CENTER,0,0);
+        popupWindow.setFocusable(true);
+        int location[] = new int[2];
+        view.getLocationOnScreen(location);
+        popupWindow.showAtLocation(view,Gravity.NO_GRAVITY,location[0],location[1]+view.getHeight());
+
+    }*/
+
     private void createDialogImage(String imageUrl) {
         dialogBuild = new AlertDialog.Builder(this);
         final View paragonyImageView = getLayoutInflater().inflate(R.layout.popup_show_image, null);
         File imgFile = new File(imageUrl);
-
 
         if (imgFile.exists()) {
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
@@ -266,12 +254,14 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
         }
 
 
+
         imageParagon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
             }
         });
+
     }
 
     private void createDialogOnLongPresss(int position) {
@@ -291,15 +281,13 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
         buttonListDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-            /*    myDB=new SqLiteManager(ParagonyActivity.this);
-                myDB.deleteOneRowFromCategory(dataEditPopup.id);
+                myDB=new SqLiteManager(ParagonyActivity.this);
+                myDB.deleteOneRowFromReceipt(dataEditPopup.id);
                 dialog.dismiss();
                 mAdapter.notifyDataSetChanged();
                 finish();
-                Intent intent = new Intent(ParagonyActivity.this, CategoryActivity.class);
-                startActivity(intent);*/
+                Intent intent = new Intent(ParagonyActivity.this, ParagonyActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -401,13 +389,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
 
             }
         });
-     /*   buttoPrzejdzDoZdjecia.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createDialogImage();
 
-            }
-        });*/
         dodajWpisParagonu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -465,15 +447,14 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
     }
 
     public void createNewDialogEdit(String id, String opis, String czygwarancja, String data, String zdjecie) {
-        //pop up dodawanie rekordu
+        //pop up edycja rekordu
         // final View paragonyImageView = getLayoutInflater().inflate(R.layout.popup_show_image, null);
         String zdjecieURL;
         zdjecieURL = zdjecie;
-        imagePath = new File(imagesFolder + "/" + image_name);
 
         dialogBuild = new AlertDialog.Builder(this);
         final View paragonyView = getLayoutInflater().inflate(R.layout.popup_paragony, null);
-        buttoPrzejdzDoZdjecia = (Button) paragonyView.findViewById(R.id.przejdzDoZdjecieButton);
+        buttoPrzejdzDoZdjecia = (Button) paragonyView.findViewById(R.id.wyswietlZdjecieButton);
         opisParagony = (EditText) paragonyView.findViewById(R.id.OpisPopupParagony);
         opisParagony.setText(opis);
         radioBurronGwarancja = (CheckBox) paragonyView.findViewById(R.id.radioZGwarancja);
@@ -613,13 +594,13 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
 
                 }
 
-                if (opisParagony.getText().toString().trim().length() == 0||!boolFoto) {
+                if ((opisParagony.getText().toString().trim().length() == 0||!boolFoto)&&zdjecieURL.equals("null/null")) {
                     Toast.makeText(ParagonyActivity.this, "Dodaj zdjęcie", Toast.LENGTH_SHORT).show();
                 }
-                else if (zdjecieURL.equals("null/null")) {
+             /*   else if (zdjecieURL.equals("null/null")) {
                     Toast.makeText(ParagonyActivity.this, "Dodaj zdjęcie", Toast.LENGTH_SHORT).show();
 
-                } else {
+                } */else {
 
                     myDBKat.updateReceiptData(id.trim(), opisParagony.getText().toString().trim(), gwarancja.trim(), dataPopup.trim());
                     dialog.dismiss();
@@ -667,6 +648,8 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
 
     private File openCamera() throws IOException {
         boolFoto = false;
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         imagesFolder = null;
         image_name = null;
@@ -694,6 +677,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
             }
         }
         startActivityIfNeeded(intent, 1888);
+        imagePath = new File(imagesFolder + "/" + image_name);
         return imagePath;
     }
 
