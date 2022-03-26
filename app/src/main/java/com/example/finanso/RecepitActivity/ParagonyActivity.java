@@ -52,6 +52,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.finanso.ListActivity.ReadAllHistoriaResponse;
 import com.example.finanso.R;
 import com.example.finanso.SQLite.SqLiteManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -144,9 +145,9 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
 
             @Override
             public void afterTextChanged(Editable s) {
-/*
+
                 filter(s.toString());
-*/
+
             }
         });
 
@@ -165,7 +166,18 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
         drawer.addDrawerListener(toggle);
         toggle.syncState();
     }
+    private void filter(String text) {
+        ArrayList<ReadAllReceiptResponse> filteredList = new ArrayList<>();
 
+        for (ReadAllReceiptResponse item : lista_paragony) {
+            if (item.opis.toLowerCase().contains(text.toLowerCase())||item.data.toLowerCase().contains(text.toLowerCase())) {
+                {
+                    filteredList.add(item);
+                }
+            }
+            mAdapter.filterList(filteredList);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

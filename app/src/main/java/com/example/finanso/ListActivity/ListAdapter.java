@@ -130,12 +130,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         return lista_historia.size();
     }
 
- /*   public void filterList(ArrayList<ReadAllHistoriaResponse>filteredList){
+    public void filterList(ArrayList<ReadAllHistoriaResponse>filteredList){
         lista_historia =filteredList;
         notifyDataSetChanged();
     }
 
 
 }
-*/
-}
+
+

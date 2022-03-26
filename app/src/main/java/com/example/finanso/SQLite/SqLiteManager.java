@@ -16,7 +16,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
 
     private Context context;
     private static final String DATABASE_NAME = "Finanso.db";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
 
     private static final String TABLE_NAME = "Historia";
     private static final String KOL_ID = "IdHistoria";
@@ -53,6 +53,8 @@ public class SqLiteManager extends SQLiteOpenHelper {
         db.execSQL(query2);
         String query3= "CREATE TABLE " + TABLE_NAME_3 +" ("+ KOL3_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " +KOL3_OPIS + " TEXT, " +KOL3_GWARANCJA +" TEXT, " +KOL3_DATA +" TEXT, "+KOL3_ZDJECIE +" TEXT);";
         db.execSQL(query3);
+        String query4= "INSERT INTO "+TABLE_NAME_2+" ("+KOL2_ID+" , "+KOL2_KOLOR+" , "+KOL2_NAZWA+" , "+KOL3_OPIS+") VALUES ('1','#585858','Brak','Brak kategorii');";
+        db.execSQL(query4);
     }
 
     @Override
@@ -77,6 +79,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
     }
     public Cursor readAllKategorie() {
         String query = "SELECT * FROM " + TABLE_NAME_2;
+        //SELECT '0' AS "+ KOL2_ID+" , '#585858' AS "+KOL2_KOLOR+" , 'Brak kategorii' AS "+KOL2_NAZWA+" , 'Brak kategorii' AS "+KOL2_OPIS+" UNION
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = null;
@@ -231,4 +234,14 @@ public class SqLiteManager extends SQLiteOpenHelper {
             Toast.makeText(context, "POPRAWNIE ZEDYTOWANO!", Toast.LENGTH_SHORT).show();
         }
     }
+/*    public void addKategoriaZero() {
+
+        SQLiteDatabase db2 = this.getWritableDatabase();
+        ContentValues cv2 = new ContentValues();
+        cv2.put(KOL2_KOLOR, "#585858");
+        cv2.put(KOL2_NAZWA, "Brak kategorii");
+        cv2.put(KOL2_OPIS, "Brak kategorii");
+        long result = db2.insert(TABLE_NAME_2, null, cv2);
+    }*/
+
 }

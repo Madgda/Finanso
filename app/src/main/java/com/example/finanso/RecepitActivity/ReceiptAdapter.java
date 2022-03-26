@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.finanso.ListActivity.ReadAllHistoriaResponse;
 import com.example.finanso.R;
 
 import java.util.ArrayList;
@@ -113,6 +114,9 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ReceiptV
         notifyDataSetChanged();
     }
 */
-
+public void filterList(ArrayList<ReadAllReceiptResponse>filteredList){
+    lista_paragony =filteredList;
+    notifyDataSetChanged();
+}
 
 }
