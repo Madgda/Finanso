@@ -1,5 +1,6 @@
 package com.example.finanso.StatisticsActivity;
 
+import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
@@ -11,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -19,6 +21,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.finanso.ListActivity.ListActivity;
 import com.example.finanso.ListActivity.ListAdapter;
 import com.example.finanso.R;
 import com.github.mikephil.charting.animation.Easing;
@@ -39,9 +42,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Locale;
 
 public class StatystykaActivity  extends AppCompatActivity {
@@ -61,6 +62,11 @@ public class StatystykaActivity  extends AppCompatActivity {
     private Button rokButton;
     private TextView dataOdEdit;
     private TextView dataDoEdit;
+    private Integer widok;//0-dzień, 1-tydzień, 2-miesiąc, 3-kwartał, 4-rok
+    private Button nextButton;
+    private Button backButton;
+    private MenuItem wybierzDateMenuItem;
+    private MenuItem ustawDzisDataMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +90,8 @@ public class StatystykaActivity  extends AppCompatActivity {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        backButton= findViewById(R.id.backButton);
+        nextButton= findViewById(R.id.nextButton);
         dzienButton= findViewById(R.id.dzienButton);
         tydzienButton= findViewById(R.id.tydzienButton);
         miesiacButton= findViewById(R.id.miesiacButton);
@@ -103,23 +111,76 @@ public class StatystykaActivity  extends AppCompatActivity {
         c.add(Calendar.DATE, 1);
         String output = sdf1.format(c.getTime());
         dataDoEdit.setText(output);
+        selectButton(dzienButton);
+        widok=0;
+
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            switch (widok){
+                case 0:
+                    naxtOrPreviousDay(1);
+                    dayChangeNextDate();
+                    break;
+                case 1:
+                    nextOrPreviousWeek(1);
+                    weekChangeNextDate();
+                    break;
+                case 2:
+                    nextOrPreviousMonth(1);
+                    monthChangeNextDate();
+                    break;
+                case 3:
+                    nextOrPreviousQuarter(1);
+                    quarterChangeNextDate();
+                    break;
+                case 4:
+                    nextOrPreviousYear(1);
+                    yearChangeNextDate();
+                    break;
+
+            }
+
+
+            }
+        });
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            switch (widok){
+                case 0:
+                    naxtOrPreviousDay(0);
+                    dayChangeNextDate();
+                    break;
+                case 1:
+                    nextOrPreviousWeek(0);
+                    weekChangeNextDate();
+                    break;
+                case 2:
+                    nextOrPreviousMonth(0);
+                    monthChangeNextDate();
+                    break;
+                case 3:
+                    nextOrPreviousQuarter(0);
+                    quarterChangeNextDate();
+                    break;
+                case 4:
+                    nextOrPreviousYear(0);
+                    yearChangeNextDate();
+                    break;
+
+            }
+
+
+            }
+        });
 
         dzienButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 uncheckButtonsAll();
-                String dt = dataOdEdit.getText().toString(); // Start date
-                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-                Calendar c = Calendar.getInstance();
-                try {
-                c.setTime(sdf.parse(dt));
-              } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                c.add(Calendar.DATE, 1);
-                SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
-                String output = sdf1.format(c.getTime());
-                dataDoEdit.setText(output);
+                dayChangeNextDate();
+                widok=0;
                 selectButton(dzienButton);
             }
 
@@ -129,23 +190,8 @@ public class StatystykaActivity  extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 uncheckButtonsAll();
-                String dt = dataOdEdit.getText().toString(); // Start date
-                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-                Calendar c = Calendar.getInstance();
-                try {
-                c.setTime(sdf.parse(dt));
-              } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                c.set(Calendar.DAY_OF_WEEK, 1);
-                SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
-
-                String output = sdf1.format(c.getTime());
-                dataOdEdit.setText(output);
-
-                c.add(Calendar.WEEK_OF_MONTH, 1);
-                output = sdf1.format(c.getTime());
-                dataDoEdit.setText(output);
+                weekChangeNextDate();
+                widok=1;
                 selectButton(tydzienButton);
             }
         });
@@ -153,23 +199,8 @@ public class StatystykaActivity  extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 uncheckButtonsAll();
-                String dt = dataOdEdit.getText().toString(); // Start date
-                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-                Calendar c = Calendar.getInstance();
-                try {
-                c.setTime(sdf.parse(dt));
-              } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                c.set(Calendar.DAY_OF_MONTH, 1);
-                SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
-
-                String output = sdf1.format(c.getTime());
-                dataOdEdit.setText(output);
-
-                c.add(Calendar.MONTH, 1);
-                 output = sdf1.format(c.getTime());
-                dataDoEdit.setText(output);
+                monthChangeNextDate();
+                widok=2;
                 selectButton(miesiacButton);
             }
         });
@@ -177,33 +208,8 @@ public class StatystykaActivity  extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 uncheckButtonsAll();
-                String dt = dataOdEdit.getText().toString(); // Start date
-                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-                Calendar c = Calendar.getInstance();
-                try {
-                c.setTime(sdf.parse(dt));
-              } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                c.set(Calendar.DAY_OF_MONTH, 1);
-                int currentMonth = c.get(Calendar.MONTH) + 1;
-                if (currentMonth >= 1 && currentMonth <= 3)
-                    c.set(Calendar.MONTH, 0);
-                else if (currentMonth >= 4 && currentMonth <= 6)
-                    c.set(Calendar.MONTH, 3);
-                else if (currentMonth >= 7 && currentMonth <= 9)
-                    c.set(Calendar.MONTH, 6);
-                else if (currentMonth >= 10 && currentMonth <= 12)
-                    c.set(Calendar.MONTH, 9);
-
-                SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
-                String output = sdf1.format(c.getTime());
-                dataOdEdit.setText(output);
-
-                c.add(Calendar.MONTH, 3);
-                output = sdf1.format(c.getTime());
-                dataDoEdit.setText(output);
+                quarterChangeNextDate();
+                widok=3;
                 selectButton(kwartalButton);
             }
         });
@@ -211,27 +217,15 @@ public class StatystykaActivity  extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 uncheckButtonsAll();
-                String dt = dataOdEdit.getText().toString(); // Start date
-                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-                Calendar c = Calendar.getInstance();
-                try {
-                c.setTime(sdf.parse(dt));
-              } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                c.set(Calendar.DAY_OF_YEAR, 1);
-                SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
-
-                String output = sdf1.format(c.getTime());
-                dataOdEdit.setText(output);
-
-                c.add(Calendar.YEAR, 1);
-                output = sdf1.format(c.getTime());
-                dataDoEdit.setText(output);
+                yearChangeNextDate();
+                widok=4;
                 selectButton(rokButton);
             }
         });
     }
+
+
+
     private void loadBarChartData() {
         ArrayList<BarEntry> rekordyB = new ArrayList<>();
         rekordyB.add(new BarEntry(0,140f));
@@ -294,7 +288,7 @@ public class StatystykaActivity  extends AppCompatActivity {
         pieChart.getDescription().setTextColor(Color.BLACK);
         Legend l = pieChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
         l.setOrientation(Legend.LegendOrientation.VERTICAL);
         l.setDrawInside(false);
         l.setEnabled(true);
@@ -351,13 +345,311 @@ public class StatystykaActivity  extends AppCompatActivity {
         rokButton.setTextColor(getColor(R.color.white));
     }
 
+    private void naxtOrPreviousDay(Integer way)
+    //way=0 previous
+    //way=1 next
+    {
+        String dt = dataOdEdit.getText().toString(); // Start date
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(dt));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        switch(way){
+            case 0:
+                c.add(Calendar.DATE, -1);
+                break;
+
+            case 1:
+                c.add(Calendar.DATE, 1);
+                break;
+
+            default:
+                break;
+        }
+        SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
+        String output = sdf1.format(c.getTime());
+        dataOdEdit.setText(output);
+    }
+
+    private void nextOrPreviousWeek(Integer way)
+    //way=0 previous
+    //way=1 next
+    {
+        String dt = dataOdEdit.getText().toString(); // Start date
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(dt));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        switch(way){
+            case 0:
+                c.add(Calendar.WEEK_OF_MONTH, -1);
+                break;
+
+            case 1:
+                c.add(Calendar.WEEK_OF_MONTH, 1);
+                break;
+
+            default:
+                break;
+        }
+        SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
+        String output = sdf1.format(c.getTime());
+        dataOdEdit.setText(output);
+    }
+    private void nextOrPreviousMonth(Integer way)
+    //way=0 previous
+    //way=1 next
+    {
+
+        String dt = dataOdEdit.getText().toString(); // Start date
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(dt));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        switch(way){
+            case 0:
+                c.add(Calendar.MONTH, -1);
+                break;
+
+            case 1:
+                c.add(Calendar.MONTH, 1);
+                break;
+
+            default:
+                break;
+        }
+        SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
+        String output = sdf1.format(c.getTime());
+        dataOdEdit.setText(output);
+    }
+ private void nextOrPreviousQuarter(Integer way)
+    //way=0 previous
+    //way=1 next
+    {
+
+        String dt = dataOdEdit.getText().toString(); // Start date
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(dt));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        switch(way){
+            case 0:
+                c.add(Calendar.MONTH, -3);
+                break;
+
+            case 1:
+                c.add(Calendar.MONTH, 3);
+                break;
+
+            default:
+                break;
+        }
+        SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
+        String output = sdf1.format(c.getTime());
+        dataOdEdit.setText(output);
+    }
+ private void nextOrPreviousYear(Integer way)
+    //way=0 previous
+    //way=1 next
+    {
+
+        String dt = dataOdEdit.getText().toString(); // Start date
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(dt));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        switch(way){
+            case 0:
+                c.add(Calendar.YEAR, -1);
+                break;
+
+            case 1:
+                c.add(Calendar.YEAR, 1);
+                break;
+
+            default:
+                break;
+        }
+        SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
+        String output = sdf1.format(c.getTime());
+        dataOdEdit.setText(output);
+    }
+
+        private void dayChangeNextDate(){
+        String dt = dataOdEdit.getText().toString(); // Start date
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(dt));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        c.add(Calendar.DATE, 1);
+        SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
+        String output = sdf1.format(c.getTime());
+        dataDoEdit.setText(output);
+    }
+    private void weekChangeNextDate() {
+        String dt = dataOdEdit.getText().toString(); // Start date
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(dt));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        c.set(Calendar.DAY_OF_WEEK, 2);
+        SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
+
+        String output = sdf1.format(c.getTime());
+        dataOdEdit.setText(output);
+
+        c.add(Calendar.WEEK_OF_MONTH, 1);
+        output = sdf1.format(c.getTime());
+        dataDoEdit.setText(output);
+    }
+
+    private void monthChangeNextDate() {
+        String dt = dataOdEdit.getText().toString(); // Start date
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(dt));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        c.set(Calendar.DAY_OF_MONTH, 1);
+        SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
+
+        String output = sdf1.format(c.getTime());
+        dataOdEdit.setText(output);
+
+        c.add(Calendar.MONTH, 1);
+        output = sdf1.format(c.getTime());
+        dataDoEdit.setText(output);
+    }
+
+    private void quarterChangeNextDate() {
+        String dt = dataOdEdit.getText().toString(); // Start date
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(dt));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        c.set(Calendar.DAY_OF_MONTH, 1);
+        int currentMonth = c.get(Calendar.MONTH) + 1;
+        if (currentMonth >= 1 && currentMonth <= 3)
+            c.set(Calendar.MONTH, 0);
+        else if (currentMonth >= 4 && currentMonth <= 6)
+            c.set(Calendar.MONTH, 3);
+        else if (currentMonth >= 7 && currentMonth <= 9)
+            c.set(Calendar.MONTH, 6);
+        else if (currentMonth >= 10 && currentMonth <= 12)
+            c.set(Calendar.MONTH, 9);
+
+        SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
+        String output = sdf1.format(c.getTime());
+        dataOdEdit.setText(output);
+
+        c.add(Calendar.MONTH, 3);
+        output = sdf1.format(c.getTime());
+        dataDoEdit.setText(output);
+    }
+    private void yearChangeNextDate() {
+        String dt = dataOdEdit.getText().toString(); // Start date
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(dt));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        c.set(Calendar.DAY_OF_YEAR, 1);
+        SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
+
+        String output = sdf1.format(c.getTime());
+        dataOdEdit.setText(output);
+
+        c.add(Calendar.YEAR, 1);
+        output = sdf1.format(c.getTime());
+        dataDoEdit.setText(output);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.menu_toolbar_statystyka,menu);
-        menu.findItem(R.id.item2).setTitle(Html.fromHtml("<font color='#000000'>wyszukaj daty</font>"));
-        menu.findItem(R.id.item3).setTitle(Html.fromHtml("<font color='#000000'>sortuj wg </font>"));
-        menu.findItem(R.id.item4).setTitle(Html.fromHtml("<font color='#000000'>pokaż</font>"));
+         wybierzDateMenuItem = menu.findItem(R.id.item2);
+         ustawDzisDataMenuItem = menu.findItem(R.id.item3);
+        wybierzDateMenuItem.setTitle(Html.fromHtml("<font color='#000000'>Wybierz datę początkową</font>"));
+        ustawDzisDataMenuItem.setTitle(Html.fromHtml("<font color='#000000'>Ustaw dzisiejszą date</font>"));
+
+        ustawDzisDataMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                String currentDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date());
+                dataOdEdit.setText(currentDate);
+                dayChangeNextDate();
+                widok=0;
+                selectButton(dzienButton);
+                return false;
+            }
+        });
+        wybierzDateMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+
+                        final Calendar kalendarz = Calendar.getInstance();
+                        int day = kalendarz.get(Calendar.DAY_OF_MONTH);
+                        int month = kalendarz.get(Calendar.MONTH);
+                        int year = kalendarz.get(Calendar.YEAR);
+
+                        Locale locale = getResources().getConfiguration().locale;
+                        Locale.setDefault(locale);
+                        DatePickerDialog picker = new DatePickerDialog(StatystykaActivity.this, new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                                if(day<10&&month<9){
+                                    dataOdEdit.setText("0"+day + "." + "0"+(month + 1) + "." + year);
+                                }
+                                else if(day<10){
+                                    dataOdEdit.setText("0"+day + "." + (month + 1) + "." + year);
+                                }
+                                else if(month<9) {
+                                    dataOdEdit.setText(day + "." +"0"+(month + 1) + "." + year);
+                                }
+                                else {
+                                    dataOdEdit.setText(day + "." + (month + 1) + "." + year);
+                                }
+                                dayChangeNextDate();
+                            }
+                        }, year, month, day);
+                        picker.show();
+                widok=0;
+                selectButton(dzienButton);
+
+                return false;
+            }
+        });
+
         return true;
     }
 
