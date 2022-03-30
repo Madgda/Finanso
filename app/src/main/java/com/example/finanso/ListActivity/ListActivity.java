@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -88,6 +89,7 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
     private ArrayList<String> lista_kategorie_nazwa;
     private ArrayList<String> lista_kategorie_opis;
     private ArrayList<String> kategoriaArray;
+    private CheckBox wplywCheck,wydatekCheck;
 
     public ListActivity() {
         myDB = new SqLiteManager(this);
@@ -215,6 +217,8 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
             dateE = (EditText) listaPopupView.findViewById(R.id.dataE);
             dodajB = (Button) listaPopupView.findViewById(R.id.dodajB);
             kategoriaS = (Spinner) listaPopupView.findViewById(R.id.kategoriaS);
+            wplywCheck= (CheckBox) listaPopupView.findViewById(R.id.radioWplyw);
+            wydatekCheck= (CheckBox) listaPopupView.findViewById(R.id.radioWydatek);
             String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
             //kategorieA=lista_kategorie.nazwa
             //kategoriaS.setPrompt("Wybierz kategorię");
@@ -256,11 +260,19 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
                 public void onClick(View view) {
                     String kategoriaDoBazy = kategoriaS.getSelectedItem().toString();
                     int countDot = kategoriaDoBazy.indexOf(".");
+                    String czyWplywString="nie";
+                    if(wplywCheck.isChecked()&&!wydatekCheck.isChecked()){
+                        czyWplywString="tak";
+                    } else if(wydatekCheck.isChecked()&&!wydatekCheck.isChecked()){
+                        czyWplywString="nie";
+                    }else {
+                        czyWplywString="błąd";
+                    }
                     kategoriaDoBazy = kategoriaDoBazy.toString().substring(0, countDot).toString();
                     myDB = new SqLiteManager(ListActivity.this);
                     //  if(liczbaE.getText()<> "" && opisE.getText()<> "" && opisSzczegolE.getText()<> "" && dateE.getText() <> "") {
                     if (liczbaE.getText().toString().trim().length() > 0 && opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
-                        myDB.addWpis(liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), kategoriaDoBazy);
+                        myDB.addWpis(liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), kategoriaDoBazy,czyWplywString.trim());
                         dialog.dismiss();
                         zapiszListeDoArray();
                         buildRecyclerView();
@@ -289,9 +301,9 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
                     readAHR.opis = cursor.getString(2);
                     readAHR.szczegol_opis = cursor.getString(3);
                     readAHR.data = cursor.getString(4);
-                    readAHR.kategoria_id = cursor.getString(5);
-                    readAHR.kategoria_nazwa = cursor.getString(8);
-                    readAHR.kategoria_kolor = cursor.getString(7);
+                    readAHR.kategoria_id = cursor.getString(6);
+                    readAHR.kategoria_nazwa = cursor.getString(9);
+                    readAHR.kategoria_kolor = cursor.getString(8);
                     lista_historia.add(readAHR);
                 }
             }
@@ -465,8 +477,8 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
             LayoutInflater li = LayoutInflater.from(getActivity(this));
             View listEditPopupView = li.inflate(R.layout.popup_lista_edit, null);
             if (kategoriaArray.get(0) == "0")
-
-                liczbaE = (EditText) listEditPopupView.findViewById(R.id.kwotaE);
+            {}
+            liczbaE = (EditText) listEditPopupView.findViewById(R.id.kwotaE);
             liczbaE.setText(kwotaValue);
             opisE = (EditText) listEditPopupView.findViewById(R.id.opisE);
             opisE.setText(opisValue);
@@ -476,6 +488,8 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
             dateE.setText(dataValue);
             zapiszB = (Button) listEditPopupView.findViewById(R.id.zapiszB);
             kategoriaS = (Spinner) listEditPopupView.findViewById(R.id.kategoriaS);
+             wplywCheck= (CheckBox) listEditPopupView.findViewById(R.id.radioWplyw);
+             wydatekCheck= (CheckBox) listEditPopupView.findViewById(R.id.radioWydatek);
             String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
 
             String kategorieA[] = {"Wybierz kategorię", "Rachunki", "Spożywcze", "Prezenty", "Chemia", "Remont"};
@@ -519,13 +533,21 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onClick(View view) {
+                    String czyWplywString="nie";
+                    if(wplywCheck.isChecked()&&!wydatekCheck.isChecked()){
+                        czyWplywString="tak";
+                    } else if(wydatekCheck.isChecked()&&!wydatekCheck.isChecked()){
+                        czyWplywString="nie";
+                    }else {
+                        czyWplywString="błąd";
+                    }
                     String kategoriaDoBazy = kategoriaS.getSelectedItem().toString();
                     int countDot = kategoriaDoBazy.indexOf(".");
                     kategoriaDoBazy = kategoriaDoBazy.toString().substring(0, countDot).toString();
 
                     SqLiteManager myDB = new SqLiteManager(ListActivity.this);
                     if (liczbaE.getText().toString().trim().length() > 0 && opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
-                        myDB.updateListData(rowId, liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), kategoriaDoBazy);
+                        myDB.updateListData(rowId, liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), kategoriaDoBazy,czyWplywString.toString().trim());
                         dialog.dismiss();
                         mAdapter.notifyDataSetChanged();
                         zapiszListeDoArray();

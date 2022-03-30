@@ -19,6 +19,37 @@
         android:textColor="@color/grey"
         />
 
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/radioButtony"
+        android:layout_marginHorizontal="20dp"
+        android:foregroundGravity="top"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:rowCount="1"
+        app:layout_constraintTop_toBottomOf="@id/kwotaE"
+        >
+        <CheckBox
+            android:id="@+id/radioWydatek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wydatek"
+            android:checked="true"
+            android:layout_weight="0.5"
+            android:textSize="18sp"
+            tools:layout_editor_absoluteX="20dp" />
+   <CheckBox
+            android:id="@+id/radioWplyw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wpływ"
+            android:checked="false"
+            android:layout_weight="0.5"
+            android:textSize="18sp"
+            tools:layout_editor_absoluteX="20dp" />
+
+    </RadioGroup>
     <EditText
         android:id="@+id/kwotaE"
         android:layout_width="match_parent"
@@ -44,7 +75,7 @@
         android:textSize="20sp"
         android:textAlignment="center"
         android:gravity="center_horizontal"
-        app:layout_constraintTop_toBottomOf="@id/kwotaE"
+        app:layout_constraintTop_toBottomOf="@id/radioButtony"
 
         />
 

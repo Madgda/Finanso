@@ -16,7 +16,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
 
     private Context context;
     private static final String DATABASE_NAME = "Finanso.db";
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10;
 
     private static final String TABLE_NAME = "Historia";
     private static final String KOL_ID = "IdHistoria";
@@ -25,6 +25,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
     private static final String KOL_SZCZEGOL_OPIS = "Szczegol_opis";
     private static final String KOL_DATA = "Data";
     private static final String KOL_KATEGORIA_ID = "Kategoria";
+    private static final String KOL_CZYWPLYW = "CzyWpływ";
 
     private static final String TABLE_NAME_2 = "Kategorie";
     private static final String KOL2_ID = "IdKategoria";
@@ -47,13 +48,13 @@ public class SqLiteManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String query= "CREATE TABLE " + TABLE_NAME +" ("+ KOL_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " +KOL_KWOTA + " TEXT, " +KOL_OPIS +" TEXT, " +KOL_SZCZEGOL_OPIS +" TEXT, " +KOL_DATA+ " TEXT, " +KOL_KATEGORIA_ID+" INTEGER);";
+        String query= "CREATE TABLE " + TABLE_NAME +" ("+ KOL_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " +KOL_KWOTA + " TEXT, " +KOL_OPIS +" TEXT, " +KOL_SZCZEGOL_OPIS +" TEXT, " +KOL_DATA+ " TEXT, " +KOL_KATEGORIA_ID+" INTEGER, " +KOL_CZYWPLYW+" TEXT);";
         db.execSQL(query);
         String query2= "CREATE TABLE " + TABLE_NAME_2 +" ("+ KOL2_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " +KOL2_KOLOR + " TEXT, " +KOL2_NAZWA +" TEXT, " +KOL2_OPIS +" TEXT);";
         db.execSQL(query2);
         String query3= "CREATE TABLE " + TABLE_NAME_3 +" ("+ KOL3_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " +KOL3_OPIS + " TEXT, " +KOL3_GWARANCJA +" TEXT, " +KOL3_DATA +" TEXT, "+KOL3_ZDJECIE +" TEXT);";
         db.execSQL(query3);
-        String query4= "INSERT INTO "+TABLE_NAME_2+" ("+KOL2_ID+" , "+KOL2_KOLOR+" , "+KOL2_NAZWA+" , "+KOL3_OPIS+") VALUES ('1','#585858','Brak','Brak kategorii');";
+        String query4= "INSERT INTO "+TABLE_NAME_2+" ( "+KOL2_KOLOR+" , "+KOL2_NAZWA+" , "+KOL3_OPIS+") VALUES ('#585858','Brak','Brak kategorii');";
         db.execSQL(query4);
     }
 
@@ -100,7 +101,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
         }
         return cursor;
     }
-    public void addWpis(String kwota, String opis, String szczegol_opis, String data, String kategoria_id) {
+    public void addWpis(String kwota, String opis, String szczegol_opis, String data, String kategoria_id,String czyWpis) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(KOL_KWOTA, kwota);
@@ -108,6 +109,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
         cv.put(KOL_SZCZEGOL_OPIS, szczegol_opis);
         cv.put(KOL_DATA, data);
         cv.put(KOL_KATEGORIA_ID, kategoria_id);
+        cv.put(KOL_CZYWPLYW, czyWpis);
         long result = db.insert(TABLE_NAME, null, cv);
         if (result == -1) {
             Toast.makeText(context, "BŁĄD", Toast.LENGTH_SHORT).show();
@@ -189,7 +191,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
         }
         return result>0;
     }
-    public void updateListData(String row_id, String kwota, String opis, String szczegol_opis, String data, String kategoria_id) {
+    public void updateListData(String row_id, String kwota, String opis, String szczegol_opis, String data, String kategoria_id, String czyWpis) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(KOL_KWOTA, kwota);
@@ -243,5 +245,15 @@ public class SqLiteManager extends SQLiteOpenHelper {
         cv2.put(KOL2_OPIS, "Brak kategorii");
         long result = db2.insert(TABLE_NAME_2, null, cv2);
     }*/
+public Cursor readSumForStatistics(String dataOd, String dataDo) {
+    String query = "SELECT SUM("+KOL_KWOTA+") AS SUMA FROM " + TABLE_NAME+" WHERE "+KOL_KWOTA+" >0 AND "+KOL_DATA+" BETWEEN '"+dataOd+"' AND '"+dataDo+"' UNION SELECT SUM("+KOL_KWOTA+") AS SUMA FROM " + TABLE_NAME+" WHERE "+KOL_KWOTA+" <0.00 AND "+KOL_DATA+" BETWEEN '"+dataOd+"' AND '"+dataDo+"';";
+    SQLiteDatabase db = this.getReadableDatabase();
 
+    Cursor cursor = null;
+    if (db != null) {
+        cursor = db.rawQuery(query, null);
+
+    }
+    return cursor;
+}
 }
