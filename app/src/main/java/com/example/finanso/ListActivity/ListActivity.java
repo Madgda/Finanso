@@ -90,6 +90,7 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
     private ArrayList<String> lista_kategorie_opis;
     private ArrayList<String> kategoriaArray;
     private CheckBox wplywCheck,wydatekCheck;
+    private String czyWplyw;
 
     public ListActivity() {
         myDB = new SqLiteManager(this);
@@ -261,9 +262,9 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
                     String kategoriaDoBazy = kategoriaS.getSelectedItem().toString();
                     int countDot = kategoriaDoBazy.indexOf(".");
                     String czyWplywString="nie";
-                    if(wplywCheck.isChecked()&&!wydatekCheck.isChecked()){
+                    if(wplywCheck.isChecked()){
                         czyWplywString="tak";
-                    } else if(wydatekCheck.isChecked()&&!wydatekCheck.isChecked()){
+                    } else if(wydatekCheck.isChecked()){
                         czyWplywString="nie";
                     }else {
                         czyWplywString="błąd";
@@ -301,9 +302,10 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
                     readAHR.opis = cursor.getString(2);
                     readAHR.szczegol_opis = cursor.getString(3);
                     readAHR.data = cursor.getString(4);
-                    readAHR.kategoria_id = cursor.getString(6);
+                    readAHR.kategoria_id = cursor.getString(7);
                     readAHR.kategoria_nazwa = cursor.getString(9);
                     readAHR.kategoria_kolor = cursor.getString(8);
+                    readAHR.czyWplyw = cursor.getString(6);
                     lista_historia.add(readAHR);
                 }
             }
@@ -339,10 +341,10 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
             }
         }
 
-        public void removeItem ( int position){
+      /*  public void removeItem ( int position){
             lista_historia.remove(position);
             mAdapter.notifyItemRemoved(position);
-        }
+        }*/
         public void buildRecyclerView () {
             mRecyclerView = findViewById(R.id.recycler_view);
             mRecyclerView.setHasFixedSize(true);
@@ -437,7 +439,7 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
                     startActivity(intent);
                /*     zapiszListeDoArray();
                     buildRecyclerView();
-                */    //  Intent intent = new Intent(ListActivity.this, ListActivity.class);
+                */    //  Intent intent = new Intent(ListActivity.this(, ListActivity.class);
                     //    startActivity(intent);
                 /*SqLiteManager myDB=new SqLiteManager(this);
                 myDB.deleteOneRow(rowId);
@@ -461,7 +463,7 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
                 @Override
                 public void onClick(View view) {
                     dialog.dismiss();
-                    createEditRecordDialog(dataEditPopup.id, dataEditPopup.kwota, dataEditPopup.opis, dataEditPopup.szczegol_opis, dataEditPopup.data, dataEditPopup.kategoria_id, dataEditPopup.kategoria_nazwa);
+                    createEditRecordDialog(dataEditPopup.id, dataEditPopup.kwota, dataEditPopup.opis, dataEditPopup.szczegol_opis, dataEditPopup.data, dataEditPopup.kategoria_id, dataEditPopup.kategoria_nazwa,dataEditPopup.czyWplyw);
                 }
             });
 
@@ -470,14 +472,14 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
 
         public void createEditRecordDialog (String rowId, String kwotaValue, String
         opisValue, String szczegolOpisValue, String dataValue, String kategoria_id, String
-        kategoria_nazwa){
+        kategoria_nazwa,String czyWplyw){
             this.rowId = rowId;
+            this.czyWplyw = czyWplyw;
             this.opisValue = opisValue;
             dialogBuild = new AlertDialog.Builder(this);
             LayoutInflater li = LayoutInflater.from(getActivity(this));
             View listEditPopupView = li.inflate(R.layout.popup_lista_edit, null);
-            if (kategoriaArray.get(0) == "0")
-            {}
+
             liczbaE = (EditText) listEditPopupView.findViewById(R.id.kwotaE);
             liczbaE.setText(kwotaValue);
             opisE = (EditText) listEditPopupView.findViewById(R.id.opisE);
@@ -490,9 +492,24 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
             kategoriaS = (Spinner) listEditPopupView.findViewById(R.id.kategoriaS);
              wplywCheck= (CheckBox) listEditPopupView.findViewById(R.id.radioWplyw);
              wydatekCheck= (CheckBox) listEditPopupView.findViewById(R.id.radioWydatek);
+
+             if(czyWplyw.equals("tak")){
+                 wydatekCheck.setChecked(false);
+                 wplywCheck.setChecked(true);
+
+             }  else if(czyWplyw.equals("nie")){
+                 wydatekCheck.setChecked(true);
+                 wplywCheck.setChecked(false);
+
+             }
+             else
+             {
+                 wydatekCheck.setChecked(false);
+                 wplywCheck.setChecked(false);
+             }
             String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
 
-            String kategorieA[] = {"Wybierz kategorię", "Rachunki", "Spożywcze", "Prezenty", "Chemia", "Remont"};
+          //  String kategorieA[] = {"Wybierz kategorię", "Rachunki", "Spożywcze", "Prezenty", "Chemia", "Remont"};
             ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, kategoriaArray);
             spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
             kategoriaS.setAdapter(spinnerArrayAdapter);
@@ -534,9 +551,9 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
                 @Override
                 public void onClick(View view) {
                     String czyWplywString="nie";
-                    if(wplywCheck.isChecked()&&!wydatekCheck.isChecked()){
+                    if(wplywCheck.isChecked()){
                         czyWplywString="tak";
-                    } else if(wydatekCheck.isChecked()&&!wydatekCheck.isChecked()){
+                    } else if(wydatekCheck.isChecked()){
                         czyWplywString="nie";
                     }else {
                         czyWplywString="błąd";
@@ -547,7 +564,7 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
 
                     SqLiteManager myDB = new SqLiteManager(ListActivity.this);
                     if (liczbaE.getText().toString().trim().length() > 0 && opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
-                        myDB.updateListData(rowId, liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), kategoriaDoBazy,czyWplywString.toString().trim());
+                        myDB.updateListData(rowId, liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), kategoriaDoBazy,czyWplywString.trim());
                         dialog.dismiss();
                         mAdapter.notifyDataSetChanged();
                         zapiszListeDoArray();

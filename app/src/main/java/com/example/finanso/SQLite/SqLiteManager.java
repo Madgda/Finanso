@@ -191,7 +191,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
         }
         return result>0;
     }
-    public void updateListData(String row_id, String kwota, String opis, String szczegol_opis, String data, String kategoria_id, String czyWpis) {
+    public void updateListData(String row_id, String kwota, String opis, String szczegol_opis, String data, String kategoria_id, String czyWplyw) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(KOL_KWOTA, kwota);
@@ -199,6 +199,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
         cv.put(KOL_DATA, data);
         cv.put(KOL_SZCZEGOL_OPIS, szczegol_opis);
         cv.put(KOL_KATEGORIA_ID, kategoria_id);
+        cv.put(KOL_CZYWPLYW, czyWplyw);
 
         long result = db.update(TABLE_NAME, cv, KOL_ID + "=" + row_id, null);
         if (result == -1) {

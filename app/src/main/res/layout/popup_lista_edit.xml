@@ -39,6 +39,7 @@
         android:id="@+id/radioButtony"
         android:layout_marginHorizontal="20dp"
         android:foregroundGravity="top"
+        android:checkedButton="@id/radioWydatek"
         android:orientation="horizontal"
         android:layout_marginTop="20dp"
         android:rowCount="1"
@@ -49,7 +50,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Wydatek"
-            android:checked="true"
             android:layout_weight="0.5"
             android:textSize="18sp"
             tools:layout_editor_absoluteX="20dp" />
