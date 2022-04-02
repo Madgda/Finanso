@@ -7,10 +7,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -61,7 +58,7 @@ public class StatystykaActivity  extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private MenuItem dodajLista;
     private PieChart pieChart;
-    private BarChart barChart;
+   // private BarChart barChart;
     public Button dzienButton;
     public Button tydzienButton;
     private Button miesiacButton;
@@ -77,8 +74,13 @@ public class StatystykaActivity  extends AppCompatActivity {
     public SqLiteManager myDB;
     private ArrayList<String> lista_suma;
     private TextView wydatkiText, wplywyText;
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     private static final DecimalFormat df = new DecimalFormat("0.00");
-
+    private ArrayList<String> lista_data,lista_BarChartExpenses;
+    public  ArrayList<BarEntry> rekordyC = new ArrayList<>();
+    public  ArrayList<String> dniWyswietlane= new ArrayList<>();
+    public  BarChart barChart;
+    public float aXisEntries[];
 
 
     @Override
@@ -86,14 +88,12 @@ public class StatystykaActivity  extends AppCompatActivity {
         myDB = new SqLiteManager(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statystyka);
-        String currentDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date());
+        String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
         pieChart = findViewById(R.id.pieChart);
         setupPieChart();
         loadPieChartData();
 
-        barChart = findViewById(R.id.barChart);
-        loadBarChartData();
 
         Toolbar toolbar = findViewById(R.id.toolbar1);
         toolbar.setTitle("Analiza wydatków");
@@ -114,20 +114,25 @@ public class StatystykaActivity  extends AppCompatActivity {
         dataDoEdit= findViewById(R.id.dataDoText);
 
         dataOdEdit.setText(currentDate);
-        SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
         Calendar c = Calendar.getInstance();
         try {
-            c.setTime(sdf1.parse(currentDate));
+            c.setTime(sdf.parse(currentDate));
         } catch (ParseException e) {
             e.printStackTrace();
         }
         c.add(Calendar.DATE, 1);
-        String output = sdf1.format(c.getTime());
+        String output = sdf.format(c.getTime());
         dataDoEdit.setText(output);
         selectButton(dzienButton);
         widok=0;
         //statystyki
-        sumOfExpenses();
+        getIncome();
+        getExpense();
+        barChart = findViewById(R.id.barChart);
+        //barChart.set
+        changeBarChartData();
+      //  loadBarChartData();
+
 
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,10 +141,12 @@ public class StatystykaActivity  extends AppCompatActivity {
                 case 0:
                     naxtOrPreviousDay(1);
                     dayChangeNextDate();
+                    changeBarChartData();
                     break;
                 case 1:
                     nextOrPreviousWeek(1);
                     weekChangeNextDate();
+                    changeBarChartData();
                     break;
                 case 2:
                     nextOrPreviousMonth(1);
@@ -156,7 +163,8 @@ public class StatystykaActivity  extends AppCompatActivity {
 
             }
 
-
+                getIncome();
+                getExpense();
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -166,10 +174,12 @@ public class StatystykaActivity  extends AppCompatActivity {
                 case 0:
                     naxtOrPreviousDay(0);
                     dayChangeNextDate();
+                    changeBarChartData();
                     break;
                 case 1:
                     nextOrPreviousWeek(0);
                     weekChangeNextDate();
+                    changeBarChartData();
                     break;
                 case 2:
                     nextOrPreviousMonth(0);
@@ -186,7 +196,8 @@ public class StatystykaActivity  extends AppCompatActivity {
 
             }
 
-
+                getIncome();
+                getExpense();
             }
         });
 
@@ -197,6 +208,10 @@ public class StatystykaActivity  extends AppCompatActivity {
                 dayChangeNextDate();
                 widok=0;
                 selectButton(dzienButton);
+                getIncome();
+                getExpense();
+                changeBarChartData();
+
             }
 
 
@@ -208,6 +223,10 @@ public class StatystykaActivity  extends AppCompatActivity {
                 weekChangeNextDate();
                 widok=1;
                 selectButton(tydzienButton);
+                getIncome();
+                getExpense();
+                changeBarChartData();
+
             }
         });
         miesiacButton.setOnClickListener(new View.OnClickListener() {
@@ -217,6 +236,8 @@ public class StatystykaActivity  extends AppCompatActivity {
                 monthChangeNextDate();
                 widok=2;
                 selectButton(miesiacButton);
+                getIncome();
+                getExpense();
             }
         });
         kwartalButton.setOnClickListener(new View.OnClickListener() {
@@ -226,6 +247,8 @@ public class StatystykaActivity  extends AppCompatActivity {
                 quarterChangeNextDate();
                 widok=3;
                 selectButton(kwartalButton);
+                getIncome();
+                getExpense();
             }
         });
         rokButton.setOnClickListener(new View.OnClickListener() {
@@ -235,99 +258,184 @@ public class StatystykaActivity  extends AppCompatActivity {
                 yearChangeNextDate();
                 widok=4;
                 selectButton(rokButton);
+                getIncome();
+                getExpense();
             }
         });
     }
 
-    private void sumOfExpenses() {
-        wydatkiText = findViewById(R.id.wartoscWydatki);
-        wplywyText = findViewById(R.id.wartoscWplywy);
-        String dataOd = dataOdEdit.getText().toString();
-        String dataDo = dataDoEdit.getText().toString();
-        lista_suma = new ArrayList<>();
-        myDB = new SqLiteManager(StatystykaActivity.this);
-        Number number = null;
-        Number number2 = null;
 
-        Cursor cursor = myDB.readSumForStatistics(dataOd, dataDo);
+
+    private void getExpense() {
+        String dataOd = dataOdEdit.getText().toString();
+        //String dataDo = dataDoEdit.getText().toString();
+        String dt = dataDoEdit.getText().toString(); // Start date
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(dt));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+                c.add(Calendar.DATE, -1);
+        String dataDo = sdf.format(c.getTime());
+
+        wydatkiText = findViewById(R.id.wartoscWydatki);
+        //lista_suma = new ArrayList<>();
+        myDB = new SqLiteManager(StatystykaActivity.this);
+        lista_suma = new ArrayList<>();
+
+        Cursor cursor = myDB.readSumOfExpensesForStatistics(dataOd,dataDo);
         if (cursor.getCount() == 0) {
             Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
-            wydatkiText.setText("0.00 zł");
-            wplywyText.setText("0.00 zł");
-
         } else {
             while (cursor.moveToNext()) {
-                lista_suma.add(cursor.getString(0));
-                NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
-
-              
-             /*   try {*/
-                 /*   number = format.parse(lista_suma.get(0));
-                    number2 = format.parse(lista_suma.get(1));*/
-
-                    /*double d = number.doubleValue();
-                    df.setRoundingMode(RoundingMode.DOWN);
-                    wydatkiText.setText(df.format(d) + " zł");
-
-                     d = number2.doubleValue();
-                    df.setRoundingMode(RoundingMode.DOWN);
-                    wplywyText.setText(df.format(d) + " zł");*/
-              /*  } catch (ParseException e) {
-                    e.printStackTrace();
+                if(cursor.getString(0)!=null) {
+                    lista_suma.add(cursor.getString(0));
+                }
+                else{
                     wydatkiText.setText("0.00 zł");
-                    wplywyText.setText("0.00 zł");
-                }*/
-
+                }
             }
-
-
+        }
+        if(lista_suma.size()!=0){
+        wydatkiText.setText(lista_suma.get(0)+" zł");
+        }
+        else{
+            wydatkiText.setText("0.00 zł");
         }
     }
-        private void loadBarChartData () {
-            ArrayList<BarEntry> rekordyB = new ArrayList<>();
+    private void getIncome() {
+        String dataOd = dataOdEdit.getText().toString();
+
+        String dt = dataDoEdit.getText().toString(); // Start date
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(dt));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        c.add(Calendar.DATE, -1);
+        String dataDo = sdf.format(c.getTime());
+
+        wplywyText = findViewById(R.id.wartoscWplywy);
+        //lista_suma = new ArrayList<>();
+       myDB = new SqLiteManager(StatystykaActivity.this);
+            lista_suma = new ArrayList<>();
+
+            Cursor cursor = myDB.readSumOfIncomeForStatistics(dataOd,dataDo);
+            if (cursor.getCount() == 0) {
+                Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
+            } else {
+                while (cursor.moveToNext()) {
+                    if(cursor.getString(0)!=null) {
+                        lista_suma.add(cursor.getString(0));
+                    }
+                    else{
+                        wplywyText.setText("0.00 zł");
+                    }
+                }
+            }
+        if(lista_suma.size()!=0){
+            wplywyText.setText(lista_suma.get(0)+" zł");
+        }
+        else{
+            wplywyText.setText("0.00 zł");
+        }
+    }
+
+    private void loadBarChartData () {
+        /*    ArrayList<BarEntry> rekordyB = new ArrayList<>();
             rekordyB.add(new BarEntry(0, 140f));
             rekordyB.add(new BarEntry(1, 420f));
             rekordyB.add(new BarEntry(2, 330f));
-            rekordyB.add(new BarEntry(3, 550f));
-            rekordyB.add(new BarEntry(4, 920f));
+         *//*   rekordyB.add(new BarEntry(3, 550f));*//*
+          *//*  rekordyB.add(new BarEntry(4, 920f));
             rekordyB.add(new BarEntry(5, 160f));
             rekordyB.add(new BarEntry(6, 213f));
-            BarDataSet dataSetB = new BarDataSet(rekordyB, "Suma wydatków");
+            rekordyB.add(new BarEntry(7, 420f));
+            rekordyB.add(new BarEntry(8, 330f));
+            rekordyB.add(new BarEntry(9, 550f));
+            rekordyB.add(new BarEntry(10, 920f));
+            rekordyB.add(new BarEntry(11, 160f));
+            rekordyB.add(new BarEntry(12, 213f));
+            rekordyB.add(new BarEntry(13, 213f));*/
+            /*ArrayList<BarEntry> rekordyA = new ArrayList<>();
+            rekordyA.add(new BarEntry(0,150f));
+            rekordyA.add(new BarEntry(1, 450f));
+            rekordyA.add(new BarEntry(2, 350f));
+            *//*rekordyA.add(new BarEntry(3, 0));*//*
+          *//*  rekordyA.add(new BarEntry(3, 590f));
+            rekordyA.add(new BarEntry(4, 950f));
+            rekordyA.add(new BarEntry(5, 150f));
+            rekordyA.add(new BarEntry(6, 253f));
+            rekordyA.add(new BarEntry(7, 420f));
+            rekordyA.add(new BarEntry(8, 330f));
+            rekordyA.add(new BarEntry(9, 550f));
+            rekordyA.add(new BarEntry(10, 920f));
+            rekordyA.add(new BarEntry(11, 160f));
+            rekordyA.add(new BarEntry(12, 213f));
+            rekordyA.add(new BarEntry(13, 213f));*/
+      /*      BarDataSet dataSetB = new BarDataSet(rekordyB, "Suma wydatków");
+        dataSetB.setColor(getApplicationContext().getResources().getColor(R.color.greyGreen));
 
-            ArrayList<String> dniWyswietlane = new ArrayList<>();
+        BarDataSet dataSetA = new BarDataSet(rekordyA, "Suma wpływów");
+        dataSetA.setColor(getApplicationContext().getResources().getColor(R.color.greyRed));
+*/
+
+        BarDataSet dataSetC = new BarDataSet(rekordyC, "Suma wpływów");
+        dataSetC.setColor(getApplicationContext().getResources().getColor(R.color.LightPink));
+
+
+ //        dniWyswietlane.add("Czw");
+        if(dniWyswietlane.size()==0){
             dniWyswietlane.add("Pon");
-            dniWyswietlane.add("Wt");
-            dniWyswietlane.add("Śr");
-            dniWyswietlane.add("Czw");
-            dniWyswietlane.add("Pt");
-            dniWyswietlane.add("Sb");
-            dniWyswietlane.add("Nd");
+        }
 
-            XAxis xAxis = barChart.getXAxis();
-            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawAxisLine(true);
+        xAxis.setDrawGridLines(false);
+        xAxis.setGranularity(1f);
+       // xAxis.mEntries=new float[]{};
+        aXisEntries=xAxis.mEntries;
 
-            ValueFormatter formatter = new ValueFormatter() {
+        ValueFormatter formatter = new ValueFormatter() {
                 @Override
                 public String getFormattedValue(float value) {
-                    return dniWyswietlane.get((int) value);
+                    if(value>=dniWyswietlane.size()){
+                        return null;
+
+                    }
+                    else {
+                        return dniWyswietlane.get((int) value);
+                    }
                 }
             };
-            xAxis.setGranularity(1f);
-            xAxis.setGranularityEnabled(true);
-            xAxis.setValueFormatter(formatter);
+        xAxis.setGranularityEnabled(true);
+        xAxis.setValueFormatter(formatter);
 
-            dataSetB.setColor(getApplicationContext().getResources().getColor(R.color.BlueDarker));
-            dataSetB.setBarBorderColor(Color.BLUE);
+
+       /*     dataSetB.setBarBorderColor(Color.GREEN);
             dataSetB.setValueTextColor(Color.BLACK);
             dataSetB.setValueTextSize(10f);
             dataSetB.setAxisDependency(YAxis.AxisDependency.LEFT);
-            BarData data = new BarData(dataSetB);
+            dataSetA.setBarBorderColor(Color.RED);
+            dataSetA.setValueTextColor(Color.BLACK);
+            dataSetA.setValueTextSize(10f);
+          dataSetA.setAxisDependency(YAxis.AxisDependency.RIGHT);*/
+        dataSetC.setBarBorderColor(Color.RED);
+            dataSetC.setValueTextColor(Color.BLACK);
+        dataSetC.setValueTextSize(10f);
+        dataSetC.setAxisDependency(YAxis.AxisDependency.RIGHT);
+          //  BarData data = new BarData(dataSetB,dataSetA);
+            BarData data = new BarData(dataSetC);
             data.setBarWidth(0.45f);
+            //data.groupBars(-0.5f, 0.06f, 0.02f);
             barChart.getDescription().setEnabled(false);
             barChart.setData(data);
 
             // barChart.setTouchEnabled(true);
-            //barChart.setDoubleTapToZoomEnabled(true);
+            barChart.setDoubleTapToZoomEnabled(false);
             //     barChart.setDragEnabled(true);
             //   barChart.setScaleEnabled(true);
 
@@ -406,7 +514,6 @@ public class StatystykaActivity  extends AppCompatActivity {
         //way=1 next
         {
             String dt = dataOdEdit.getText().toString(); // Start date
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
             Calendar c = Calendar.getInstance();
             try {
                 c.setTime(sdf.parse(dt));
@@ -425,8 +532,7 @@ public class StatystykaActivity  extends AppCompatActivity {
                 default:
                     break;
             }
-            SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
-            String output = sdf1.format(c.getTime());
+            String output = sdf.format(c.getTime());
             dataOdEdit.setText(output);
         }
 
@@ -435,7 +541,6 @@ public class StatystykaActivity  extends AppCompatActivity {
         //way=1 next
         {
             String dt = dataOdEdit.getText().toString(); // Start date
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
             Calendar c = Calendar.getInstance();
             try {
                 c.setTime(sdf.parse(dt));
@@ -454,8 +559,7 @@ public class StatystykaActivity  extends AppCompatActivity {
                 default:
                     break;
             }
-            SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
-            String output = sdf1.format(c.getTime());
+            String output = sdf.format(c.getTime());
             dataOdEdit.setText(output);
         }
         private void nextOrPreviousMonth (Integer way)
@@ -464,7 +568,6 @@ public class StatystykaActivity  extends AppCompatActivity {
         {
 
             String dt = dataOdEdit.getText().toString(); // Start date
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
             Calendar c = Calendar.getInstance();
             try {
                 c.setTime(sdf.parse(dt));
@@ -483,8 +586,7 @@ public class StatystykaActivity  extends AppCompatActivity {
                 default:
                     break;
             }
-            SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
-            String output = sdf1.format(c.getTime());
+            String output = sdf.format(c.getTime());
             dataOdEdit.setText(output);
         }
         private void nextOrPreviousQuarter (Integer way)
@@ -493,7 +595,6 @@ public class StatystykaActivity  extends AppCompatActivity {
         {
 
             String dt = dataOdEdit.getText().toString(); // Start date
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
             Calendar c = Calendar.getInstance();
             try {
                 c.setTime(sdf.parse(dt));
@@ -512,8 +613,7 @@ public class StatystykaActivity  extends AppCompatActivity {
                 default:
                     break;
             }
-            SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
-            String output = sdf1.format(c.getTime());
+            String output = sdf.format(c.getTime());
             dataOdEdit.setText(output);
         }
         private void nextOrPreviousYear (Integer way)
@@ -522,7 +622,6 @@ public class StatystykaActivity  extends AppCompatActivity {
         {
 
             String dt = dataOdEdit.getText().toString(); // Start date
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
             Calendar c = Calendar.getInstance();
             try {
                 c.setTime(sdf.parse(dt));
@@ -541,14 +640,12 @@ public class StatystykaActivity  extends AppCompatActivity {
                 default:
                     break;
             }
-            SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
-            String output = sdf1.format(c.getTime());
+            String output = sdf.format(c.getTime());
             dataOdEdit.setText(output);
         }
 
         private void dayChangeNextDate () {
             String dt = dataOdEdit.getText().toString(); // Start date
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
             Calendar c = Calendar.getInstance();
             try {
                 c.setTime(sdf.parse(dt));
@@ -556,13 +653,11 @@ public class StatystykaActivity  extends AppCompatActivity {
                 e.printStackTrace();
             }
             c.add(Calendar.DATE, 1);
-            SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
-            String output = sdf1.format(c.getTime());
+            String output = sdf.format(c.getTime());
             dataDoEdit.setText(output);
         }
         private void weekChangeNextDate () {
             String dt = dataOdEdit.getText().toString(); // Start date
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
             Calendar c = Calendar.getInstance();
             try {
                 c.setTime(sdf.parse(dt));
@@ -570,19 +665,17 @@ public class StatystykaActivity  extends AppCompatActivity {
                 e.printStackTrace();
             }
             c.set(Calendar.DAY_OF_WEEK, 2);
-            SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
 
-            String output = sdf1.format(c.getTime());
+            String output = sdf.format(c.getTime());
             dataOdEdit.setText(output);
 
             c.add(Calendar.WEEK_OF_MONTH, 1);
-            output = sdf1.format(c.getTime());
+            output = sdf.format(c.getTime());
             dataDoEdit.setText(output);
         }
 
         private void monthChangeNextDate () {
             String dt = dataOdEdit.getText().toString(); // Start date
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
             Calendar c = Calendar.getInstance();
             try {
                 c.setTime(sdf.parse(dt));
@@ -590,19 +683,17 @@ public class StatystykaActivity  extends AppCompatActivity {
                 e.printStackTrace();
             }
             c.set(Calendar.DAY_OF_MONTH, 1);
-            SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
 
-            String output = sdf1.format(c.getTime());
+            String output = sdf.format(c.getTime());
             dataOdEdit.setText(output);
 
             c.add(Calendar.MONTH, 1);
-            output = sdf1.format(c.getTime());
+            output = sdf.format(c.getTime());
             dataDoEdit.setText(output);
         }
 
         private void quarterChangeNextDate () {
             String dt = dataOdEdit.getText().toString(); // Start date
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
             Calendar c = Calendar.getInstance();
             try {
                 c.setTime(sdf.parse(dt));
@@ -621,17 +712,15 @@ public class StatystykaActivity  extends AppCompatActivity {
             else if (currentMonth >= 10 && currentMonth <= 12)
                 c.set(Calendar.MONTH, 9);
 
-            SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
-            String output = sdf1.format(c.getTime());
+            String output = sdf.format(c.getTime());
             dataOdEdit.setText(output);
 
             c.add(Calendar.MONTH, 3);
-            output = sdf1.format(c.getTime());
+            output = sdf.format(c.getTime());
             dataDoEdit.setText(output);
         }
         private void yearChangeNextDate () {
             String dt = dataOdEdit.getText().toString(); // Start date
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
             Calendar c = Calendar.getInstance();
             try {
                 c.setTime(sdf.parse(dt));
@@ -639,13 +728,12 @@ public class StatystykaActivity  extends AppCompatActivity {
                 e.printStackTrace();
             }
             c.set(Calendar.DAY_OF_YEAR, 1);
-            SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
 
-            String output = sdf1.format(c.getTime());
+            String output = sdf.format(c.getTime());
             dataOdEdit.setText(output);
 
             c.add(Calendar.YEAR, 1);
-            output = sdf1.format(c.getTime());
+            output = sdf.format(c.getTime());
             dataDoEdit.setText(output);
         }
 
@@ -661,10 +749,12 @@ public class StatystykaActivity  extends AppCompatActivity {
             ustawDzisDataMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
-                    String currentDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date());
+                    String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                     dataOdEdit.setText(currentDate);
                     dayChangeNextDate();
                     widok = 0;
+                    getIncome();
+                    getExpense();
                     selectButton(dzienButton);
                     return false;
                 }
@@ -684,13 +774,13 @@ public class StatystykaActivity  extends AppCompatActivity {
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                             if (day < 10 && month < 9) {
-                                dataOdEdit.setText("0" + day + "." + "0" + (month + 1) + "." + year);
+                                dataOdEdit.setText(year + "-0" +(month + 1) + "-0" +day);
                             } else if (day < 10) {
-                                dataOdEdit.setText("0" + day + "." + (month + 1) + "." + year);
+                                dataOdEdit.setText(year + "-" +(month + 1) + "-0" +day);
                             } else if (month < 9) {
-                                dataOdEdit.setText(day + "." + "0" + (month + 1) + "." + year);
+                                dataOdEdit.setText(year + "-0" +(month + 1) + "-" +day);                            } else if (month < 9) {
                             } else {
-                                dataOdEdit.setText(day + "." + (month + 1) + "." + year);
+                                dataOdEdit.setText(year + "-" +(month + 1) + "-" +day);
                             }
                             dayChangeNextDate();
                         }
@@ -723,5 +813,178 @@ public class StatystykaActivity  extends AppCompatActivity {
             }
         }
 
+        private void changeBarChartData(){
+        String dataFind;
+            String dataOd = dataOdEdit.getText().toString();
+            String dataDo = dataDoEdit.getText().toString();
+            //String dataDo = dataDoEdit.getText().toString();
+            //ArrayList<String> dniWyswietlane = new ArrayList<>();
+            dataDo=getPreviousDay(dataDo);
+            dataFind=dataOd;
+            Double suma=0.00;
+            Double kwotaIteracja=0.00;
+            myDB = new SqLiteManager(StatystykaActivity.this);
+            lista_BarChartExpenses = new ArrayList<>();
+            lista_suma = new ArrayList<>();
+            lista_data = new ArrayList<>();
+            lista_BarChartExpenses.clear();
+            rekordyC.clear();
+            dniWyswietlane.clear();
+            //barChart.clearValues();
+            barChart.clear();
+            barChart.notifyDataSetChanged();
+            barChart.invalidate();
+
+            Cursor cursor = myDB.readDataForBarChartStatistics(dataOd,dataDo);
+            aXisEntries=new float[]{};
+
+            switch (widok){
+                case 0:
+                      if (cursor.getCount() == 0) {
+                          Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
+                       //   rekordyC.add(new BarEntry(0,0));
+
+
+                      } else {
+                          while (cursor.moveToNext()) {
+                              if(cursor.getString(0)!=null) {
+                                  lista_suma.add(cursor.getString(0));
+                                   lista_data.add(cursor.getString(1));
+                               }
+                               else{
+                              //    wydatkiText.setText("0.00 zł");
+                              }
+                           }
+                       }
+                          for(int i=0;i<lista_data.size();i++){
+                              String dataT=lista_data.get(i);
+                              if(dataT.equals(dataFind)){
+                                  kwotaIteracja=Double.valueOf(lista_suma.get(i));
+                                  suma= suma+kwotaIteracja;
+                              }
+                          }
+                       rekordyC.add(new BarEntry(0,Float.valueOf(String.valueOf(suma))));
+
+                          String dayOfWeekName= getWeekName(dataOd);
+                    dniWyswietlane.add(dayOfWeekName);
+                    break;
+                case 1:
+                      if (cursor.getCount() == 0) {
+                          Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
+                          rekordyC.add(new BarEntry(0,0));
+                          rekordyC.add(new BarEntry(1,0));
+                          rekordyC.add(new BarEntry(2,0));
+                          rekordyC.add(new BarEntry(3,0));
+                          rekordyC.add(new BarEntry(4,0));
+                          rekordyC.add(new BarEntry(5,0));
+                          rekordyC.add(new BarEntry(6,0));
+                      } else {
+                          while (cursor.moveToNext()) {
+                              if(cursor.getString(0)!=null) {
+                                  lista_suma.add(cursor.getString(0));
+                                   lista_data.add(cursor.getString(1));
+                               }
+                               else{
+                              //    wydatkiText.setText("0.00 zł");
+                              }
+                           }
+                       }
+                      dataDo= getNextDay(dataDo);
+                      Integer iteration=0;
+                            while(!dataFind.equals(dataDo) && iteration<7) {
+                                suma=0.0;
+                                for (int i = 0; i < lista_data.size(); i++) {
+                                    String dataT = lista_data.get(i);
+                                    if (dataT.equals(dataFind)) {
+                                        kwotaIteracja = Double.valueOf(lista_suma.get(i));
+                                        suma =  kwotaIteracja;
+                                    }
+                                }
+                                if (suma.equals(0.00) || suma.equals(0) || suma.equals(0.0)){
+                                    rekordyC.add(new BarEntry(iteration,0));
+                                }
+                                else{
+                                    rekordyC.add(new BarEntry(iteration,Float.valueOf(String.valueOf(suma))));
+                                }
+                                dataFind=getNextDay(dataFind);
+                                iteration++;
+                            }
+                    dniWyswietlane.add("Pon");
+                    dniWyswietlane.add("Wt");
+                    dniWyswietlane.add("Śr");
+                    dniWyswietlane.add("Czw");
+                    dniWyswietlane.add("Pt");
+                    dniWyswietlane.add("Sb");
+                    dniWyswietlane.add("Nd");
+                break;
+
+            }
+            loadBarChartData();
+            barChart.notifyDataSetChanged();
+            barChart.invalidate();
+        }
+
+    private String getWeekName(String dataIn) {
+        Calendar k = Calendar.getInstance();
+        try {
+            //c= sdf.parse(dataIn);
+            k.setTime(sdf.parse(dataIn));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(StatystykaActivity.this, "Błąd daty!", Toast.LENGTH_SHORT).show();
+        }
+        //c=Calendar.getInstance()
+        int dayOfWeek = k.get(Calendar.DAY_OF_WEEK);
+        String dayOfWeekName="";
+        switch(dayOfWeek){
+            case 2:
+                dayOfWeekName="Pn";
+                break;
+            case 3:
+                dayOfWeekName="Wt";
+                break;
+            case 4:
+                dayOfWeekName="Śr";
+                break;
+            case 5:
+                dayOfWeekName="Cz";
+                break;
+            case 6:
+                dayOfWeekName="Pt";
+                break;
+            case 7:
+                dayOfWeekName="Sb";
+                break;
+            case 1:
+                dayOfWeekName="Nd";
+                break;
+        }
+        return dayOfWeekName;
+    }
+
+    private String getNextDay(String dataBefore){
+            String dataAfter="";
+            Calendar c = Calendar.getInstance();
+            try {
+                c.setTime(sdf.parse(dataBefore));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            c.add(Calendar.DATE, 1);
+             dataAfter = sdf.format(c.getTime());
+            return dataAfter;
+        }
+        private String getPreviousDay(String dataBefore){
+            String dataAfter="";
+            Calendar c = Calendar.getInstance();
+            try {
+                c.setTime(sdf.parse(dataBefore));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            c.add(Calendar.DATE, -1);
+             dataAfter = sdf.format(c.getTime());
+            return dataAfter;
+        }
     }
 

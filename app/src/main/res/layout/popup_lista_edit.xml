@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="60dp"
-        android:inputType="numberSigned|numberDecimal"
+        android:inputType="numberDecimal"
         android:hint="Kwota"
         android:textSize="20sp"
         android:textAlignment="center"
@@ -45,7 +45,7 @@
         android:rowCount="1"
         app:layout_constraintTop_toBottomOf="@id/kwotaE"
         >
-        <CheckBox
+        <RadioButton
             android:id="@+id/radioWydatek"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
             android:layout_weight="0.5"
             android:textSize="18sp"
             tools:layout_editor_absoluteX="20dp" />
-        <CheckBox
+        <RadioButton
             android:id="@+id/radioWplyw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

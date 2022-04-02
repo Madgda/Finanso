@@ -102,18 +102,22 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
-        String kwota;
+        String czyWplyw;
 
         ReadAllHistoriaResponse rowRAHR = lista_historia.get(position);
-        kwota= rowRAHR.kwota;
+       // kwota= rowRAHR.kwota;
+        czyWplyw= rowRAHR.czyWplyw;
 
         int priceColor;
-        if(Double.parseDouble(kwota)>=0)
+        if(czyWplyw.equals("tak"))
         {
             priceColor = context.getColor(R.color.greyGreen);
         }
-        else {
+        else if(czyWplyw.equals("nie")){
             priceColor = context.getColor(R.color.greyRed);
+        }
+        else {
+            priceColor = context.getColor(R.color.black);
         }
         listId =rowRAHR.id;
         holder.listaOpisEditText.setText(rowRAHR.opis);

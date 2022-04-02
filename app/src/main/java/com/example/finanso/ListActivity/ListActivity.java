@@ -34,6 +34,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +45,8 @@ import com.example.finanso.R;
 import com.example.finanso.CategoryActivity.ReadAllCategoryResponse;
 import com.example.finanso.SQLite.SqLiteManager;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -89,8 +92,9 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
     private ArrayList<String> lista_kategorie_nazwa;
     private ArrayList<String> lista_kategorie_opis;
     private ArrayList<String> kategoriaArray;
-    private CheckBox wplywCheck,wydatekCheck;
+    private RadioButton wplywCheck,wydatekCheck;
     private String czyWplyw;
+    private static final DecimalFormat df = new DecimalFormat("0.00");
 
     public ListActivity() {
         myDB = new SqLiteManager(this);
@@ -218,9 +222,9 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
             dateE = (EditText) listaPopupView.findViewById(R.id.dataE);
             dodajB = (Button) listaPopupView.findViewById(R.id.dodajB);
             kategoriaS = (Spinner) listaPopupView.findViewById(R.id.kategoriaS);
-            wplywCheck= (CheckBox) listaPopupView.findViewById(R.id.radioWplyw);
-            wydatekCheck= (CheckBox) listaPopupView.findViewById(R.id.radioWydatek);
-            String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+            wplywCheck= (RadioButton) listaPopupView.findViewById(R.id.radioWplyw);
+            wydatekCheck= (RadioButton) listaPopupView.findViewById(R.id.radioWydatek);
+            String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
             //kategorieA=lista_kategorie.nazwa
             //kategoriaS.setPrompt("Wybierz kategorię");
             ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, kategoriaArray);
@@ -248,7 +252,15 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
                     picker = new DatePickerDialog(ListActivity.this, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                            dateE.setText(day + "/" + (month + 1) + "/" + year);
+                            if (day < 10 && month < 9) {
+                                dateE.setText(year + "-0" +(month + 1) + "-0" +day);
+                            } else if (day < 10) {
+                                dateE.setText(year + "-" +(month + 1) + "-0" +day);
+                            } else if (month < 9) {
+                                dateE.setText(year + "-0" +(month + 1) + "-" +day);                            } else if (month < 9) {
+                            } else {
+                                dateE.setText(year + "-" +(month + 1) + "-" +day);
+                            }
                         }
                     }, year, month, day);
                     picker.show();
@@ -269,11 +281,19 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
                     }else {
                         czyWplywString="błąd";
                     }
+                Double w=null;
+                    try {
+                        w = new Double(liczbaE.getText().toString());
+                    } catch (NumberFormatException e) {
+                        w = 0.00; // your default value
+                    }
+                    Double kwotaPoPrzecinku = w.doubleValue();
+                    df.setRoundingMode(RoundingMode.UP);
+
                     kategoriaDoBazy = kategoriaDoBazy.toString().substring(0, countDot).toString();
                     myDB = new SqLiteManager(ListActivity.this);
-                    //  if(liczbaE.getText()<> "" && opisE.getText()<> "" && opisSzczegolE.getText()<> "" && dateE.getText() <> "") {
                     if (liczbaE.getText().toString().trim().length() > 0 && opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
-                        myDB.addWpis(liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), kategoriaDoBazy,czyWplywString.trim());
+                        myDB.addWpis(df.format(kwotaPoPrzecinku).trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), kategoriaDoBazy,czyWplywString.trim());
                         dialog.dismiss();
                         zapiszListeDoArray();
                         buildRecyclerView();
@@ -427,10 +447,6 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
 
 
                     myDB = new SqLiteManager(ListActivity.this);
-                    //  if(liczbaE.getText()<> "" && opisE.getText()<> "" && opisSzczegolE.getText()<> "" && dateE.getText() <> "") {
-             /*   if(liczbaE.getText().toString().trim().length() > 0&& opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
-                    myDB.addWpis(liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), 1);
-             */
                     myDB.deleteOneRowFromList(dataEditPopup.id);
                     dialog.dismiss();
                     mAdapter.notifyDataSetChanged();
@@ -490,8 +506,8 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
             dateE.setText(dataValue);
             zapiszB = (Button) listEditPopupView.findViewById(R.id.zapiszB);
             kategoriaS = (Spinner) listEditPopupView.findViewById(R.id.kategoriaS);
-             wplywCheck= (CheckBox) listEditPopupView.findViewById(R.id.radioWplyw);
-             wydatekCheck= (CheckBox) listEditPopupView.findViewById(R.id.radioWydatek);
+             wplywCheck= (RadioButton) listEditPopupView.findViewById(R.id.radioWplyw);
+             wydatekCheck= (RadioButton) listEditPopupView.findViewById(R.id.radioWydatek);
 
              if(czyWplyw.equals("tak")){
                  wydatekCheck.setChecked(false);
@@ -507,7 +523,7 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
                  wydatekCheck.setChecked(false);
                  wplywCheck.setChecked(false);
              }
-            String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+            String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
           //  String kategorieA[] = {"Wybierz kategorię", "Rachunki", "Spożywcze", "Prezenty", "Chemia", "Remont"};
             ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, kategoriaArray);
@@ -540,7 +556,15 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
                     DatePickerDialog picker = new DatePickerDialog(ListActivity.this, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                            dateE.setText(day + "/" + (month + 1) + "/" + year);
+                            if (day < 10 && month < 9) {
+                                dateE.setText(year + "-0" +(month + 1) + "-0" +day);
+                            } else if (day < 10) {
+                                dateE.setText(year + "-" +(month + 1) + "-0" +day);
+                            } else if (month < 9) {
+                                dateE.setText(year + "-0" +(month + 1) + "-" +day);                            } else if (month < 9) {
+                            } else {
+                                dateE.setText(year + "-" +(month + 1) + "-" +day);
+                            }
                         }
                     }, year, month, day);
                     picker.show();
@@ -558,13 +582,22 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
                     }else {
                         czyWplywString="błąd";
                     }
+                    Double w=null;
+                    try {
+                        w = new Double(liczbaE.getText().toString());
+                    } catch (NumberFormatException e) {
+                        w = 0.00; // your default value
+                    }
+                    Double kwotaPoPrzecinku = w.doubleValue();
+                    df.setRoundingMode(RoundingMode.UP);
+
                     String kategoriaDoBazy = kategoriaS.getSelectedItem().toString();
                     int countDot = kategoriaDoBazy.indexOf(".");
                     kategoriaDoBazy = kategoriaDoBazy.toString().substring(0, countDot).toString();
 
                     SqLiteManager myDB = new SqLiteManager(ListActivity.this);
                     if (liczbaE.getText().toString().trim().length() > 0 && opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
-                        myDB.updateListData(rowId, liczbaE.getText().toString().trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), kategoriaDoBazy,czyWplywString.trim());
+                        myDB.updateListData(rowId, df.format(kwotaPoPrzecinku).trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), kategoriaDoBazy,czyWplywString.trim());
                         dialog.dismiss();
                         mAdapter.notifyDataSetChanged();
                         zapiszListeDoArray();
