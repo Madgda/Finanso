@@ -151,14 +151,17 @@ public class StatystykaActivity  extends AppCompatActivity {
                 case 2:
                     nextOrPreviousMonth(1);
                     monthChangeNextDate();
+                    changeBarChartData();
                     break;
                 case 3:
                     nextOrPreviousQuarter(1);
                     quarterChangeNextDate();
+                    changeBarChartData();
                     break;
                 case 4:
                     nextOrPreviousYear(1);
                     yearChangeNextDate();
+                    changeBarChartData();
                     break;
 
             }
@@ -184,14 +187,17 @@ public class StatystykaActivity  extends AppCompatActivity {
                 case 2:
                     nextOrPreviousMonth(0);
                     monthChangeNextDate();
+                    changeBarChartData();
                     break;
                 case 3:
                     nextOrPreviousQuarter(0);
                     quarterChangeNextDate();
+                    changeBarChartData();
                     break;
                 case 4:
                     nextOrPreviousYear(0);
                     yearChangeNextDate();
+                    changeBarChartData();
                     break;
 
             }
@@ -238,6 +244,7 @@ public class StatystykaActivity  extends AppCompatActivity {
                 selectButton(miesiacButton);
                 getIncome();
                 getExpense();
+                changeBarChartData();
             }
         });
         kwartalButton.setOnClickListener(new View.OnClickListener() {
@@ -249,6 +256,7 @@ public class StatystykaActivity  extends AppCompatActivity {
                 selectButton(kwartalButton);
                 getIncome();
                 getExpense();
+                changeBarChartData();
             }
         });
         rokButton.setOnClickListener(new View.OnClickListener() {
@@ -260,6 +268,7 @@ public class StatystykaActivity  extends AppCompatActivity {
                 selectButton(rokButton);
                 getIncome();
                 getExpense();
+                changeBarChartData();
             }
         });
     }
@@ -411,6 +420,7 @@ public class StatystykaActivity  extends AppCompatActivity {
                     }
                 }
             };
+        xAxis.setTextSize(8f);
         xAxis.setGranularityEnabled(true);
         xAxis.setValueFormatter(formatter);
 
@@ -425,7 +435,7 @@ public class StatystykaActivity  extends AppCompatActivity {
           dataSetA.setAxisDependency(YAxis.AxisDependency.RIGHT);*/
         dataSetC.setBarBorderColor(Color.RED);
             dataSetC.setValueTextColor(Color.BLACK);
-        dataSetC.setValueTextSize(10f);
+        dataSetC.setValueTextSize(13f);
         dataSetC.setAxisDependency(YAxis.AxisDependency.RIGHT);
           //  BarData data = new BarData(dataSetB,dataSetA);
             BarData data = new BarData(dataSetC);
@@ -821,8 +831,13 @@ public class StatystykaActivity  extends AppCompatActivity {
             //ArrayList<String> dniWyswietlane = new ArrayList<>();
             dataDo=getPreviousDay(dataDo);
             dataFind=dataOd;
+            String usedData;
+            Integer iteration;
             Double suma=0.00;
             Double kwotaIteracja=0.00;
+            String dataNextMonth="";
+            String dataNextWeek="";
+            String monthName;
             myDB = new SqLiteManager(StatystykaActivity.this);
             lista_BarChartExpenses = new ArrayList<>();
             lista_suma = new ArrayList<>();
@@ -890,7 +905,7 @@ public class StatystykaActivity  extends AppCompatActivity {
                            }
                        }
                       dataDo= getNextDay(dataDo);
-                      Integer iteration=0;
+                       iteration=0;
                             while(!dataFind.equals(dataDo) && iteration<7) {
                                 suma=0.0;
                                 for (int i = 0; i < lista_data.size(); i++) {
@@ -918,11 +933,334 @@ public class StatystykaActivity  extends AppCompatActivity {
                     dniWyswietlane.add("Nd");
                 break;
 
+                case 2:
+                    //miesiac
+                      if (cursor.getCount() == 0) {
+                          Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
+                          addWeeksLabels();
+                      } else {
+                          while (cursor.moveToNext()) {
+                              if(cursor.getString(0)!=null) {
+                                  lista_suma.add(cursor.getString(0));
+                                   lista_data.add(cursor.getString(1));
+                               }
+                               else{
+                              //    wydatkiText.setText("0.00 zł");
+                              }
+                           }
+                       }
+                     dataDo= getNextDay(dataDo);
+                       iteration=0;
+                      // dataDo= getNextDay(dataDo);
+             //       dataNextWeek=getNextWeek(dataFind);
+
+                    while(!dataFind.equals(dataDo)){
+                    suma=0.0;
+                             /*  if(dataFind!=dataOd) {
+                                  //  dataFind = getNextDay(dataFind);
+                                }*/
+                        for (int j = 0; j < 7 && !dataFind.equals(dataDo); j++) {
+                            for (int i = 0; i < lista_data.size(); i++) {
+                                String dataT = lista_data.get(i);
+                                if (dataT.equals(dataFind)) {
+                                    kwotaIteracja = Double.valueOf(lista_suma.get(i));
+                                    suma = suma + kwotaIteracja;
+                                }
+                            }
+
+                                dataFind = getNextDay(dataFind);
+
+                        }
+
+
+                                if (suma.equals(0.00) || suma.equals(0) || suma.equals(0.0)){
+                                    rekordyC.add(new BarEntry(iteration,0));
+                                }
+                                else{
+                                    rekordyC.add(new BarEntry(iteration,Float.valueOf(String.valueOf(suma))));
+                                }
+                                iteration++;
+
+
+
+
+                    }
+                    addWeeksLabels();
+                     /*usedData=dataOd;
+                     monthName= getMonthName(usedData);
+                    dniWyswietlane.add(monthName);
+
+                    usedData=getNextMonth(usedData);
+                     monthName= getMonthName(usedData);
+                    dniWyswietlane.add(monthName);
+
+                    usedData=getNextMonth(usedData);
+                     monthName= getMonthName(usedData);
+                    dniWyswietlane.add(monthName);*/
+                   // addXMonthNames(3);
+
+
+                    break;
+                    case 3:
+                    //kwartał
+                      if (cursor.getCount() == 0) {
+                          Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
+                          rekordyC.add(new BarEntry(0,0));
+                          rekordyC.add(new BarEntry(1,0));
+                          rekordyC.add(new BarEntry(2,0));
+
+                      } else {
+                          while (cursor.moveToNext()) {
+                              if(cursor.getString(0)!=null) {
+                                  lista_suma.add(cursor.getString(0));
+                                   lista_data.add(cursor.getString(1));
+                               }
+                               else{
+                              //    wydatkiText.setText("0.00 zł");
+                              }
+                           }
+                       }
+                     dataDo= getNextDay(dataDo);
+                       iteration=0;
+                      // dataDo= getNextDay(dataDo);
+                    dataNextMonth=getNextMonth(dataFind);
+
+                    do {
+                                suma=0.0;
+                                if(dataFind!=dataOd) {
+                                  //  dataFind = getNextDay(dataFind);
+                                }
+                        while (!dataFind.equals(dataNextMonth) ){
+                                for (int i = 0; i < lista_data.size(); i++) {
+                                    String dataT = lista_data.get(i);
+                                    if (dataT.equals(dataFind)) {
+                                        kwotaIteracja = Double.valueOf(lista_suma.get(i));
+                                        suma =  suma+kwotaIteracja;
+                                    }
+                                }
+
+                            if(dataFind!=dataDo) {
+                                dataFind = getNextDay(dataFind);
+                            }
+                        }
+
+
+                                if (suma.equals(0.00) || suma.equals(0) || suma.equals(0.0)){
+                                    rekordyC.add(new BarEntry(iteration,0));
+                                }
+                                else{
+                                    rekordyC.add(new BarEntry(iteration,Float.valueOf(String.valueOf(suma))));
+                                }
+                                iteration++;
+                                if(dataNextMonth!=dataDo){
+                             dataNextMonth=getNextMonth(dataNextMonth);}
+
+
+                    }            while(!dataFind.equals(dataDo) );
+
+                     /*usedData=dataOd;
+                     monthName= getMonthName(usedData);
+                    dniWyswietlane.add(monthName);
+
+                    usedData=getNextMonth(usedData);
+                     monthName= getMonthName(usedData);
+                    dniWyswietlane.add(monthName);
+
+                    usedData=getNextMonth(usedData);
+                     monthName= getMonthName(usedData);
+                    dniWyswietlane.add(monthName);*/
+                    addXMonthNames(3);
+
+
+                    break;
+                case 4://rok
+                    //kwartał
+                      if (cursor.getCount() == 0) {
+                          Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
+                          rekordyC.add(new BarEntry(0,0));
+                          rekordyC.add(new BarEntry(1,0));
+                          rekordyC.add(new BarEntry(2,0));
+                          rekordyC.add(new BarEntry(3,0));
+                          rekordyC.add(new BarEntry(4,0));
+                          rekordyC.add(new BarEntry(5,0));
+                          rekordyC.add(new BarEntry(6,0));
+                          rekordyC.add(new BarEntry(7,0));
+                          rekordyC.add(new BarEntry(8,0));
+                          rekordyC.add(new BarEntry(9,0));
+                          rekordyC.add(new BarEntry(10,0));
+                          rekordyC.add(new BarEntry(11,0));
+
+                      } else {
+                          while (cursor.moveToNext()) {
+                              if(cursor.getString(0)!=null) {
+                                  lista_suma.add(cursor.getString(0));
+                                   lista_data.add(cursor.getString(1));
+                               }
+                               else{
+                              //    wydatkiText.setText("0.00 zł");
+                              }
+                           }
+                       }
+                     dataDo= getNextDay(dataDo);
+
+                       iteration=0;
+                      // dataDo= getNextDay(dataDo);
+                    dataNextMonth=getNextMonth(dataFind);
+
+                    do {
+                                suma=0.0;
+                                if(dataFind!=dataOd) {
+                                   // dataFind = getNextDay(dataFind);
+                                }
+                        while (!dataFind.equals(dataNextMonth) ){
+                                for (int i = 0; i < lista_data.size(); i++) {
+                                    String dataT = lista_data.get(i);
+                                    if (dataT.equals(dataFind)) {
+                                        kwotaIteracja = Double.valueOf(lista_suma.get(i));
+                                        suma =  suma+kwotaIteracja;
+                                    }
+                                }
+
+                            if(dataFind!=dataDo) {
+                                dataFind = getNextDay(dataFind);
+                            }
+                        }
+
+
+                                if (suma.equals(0.00) || suma.equals(0) || suma.equals(0.0)){
+                                    rekordyC.add(new BarEntry(iteration,0));
+                                }
+                                else{
+                                    rekordyC.add(new BarEntry(iteration,Float.valueOf(String.valueOf(suma))));
+                                }
+                                iteration++;
+                                if(dataNextMonth!=dataDo){
+                             dataNextMonth=getNextMonth(dataNextMonth);}
+
+
+                    }            while(!dataFind.equals(dataDo) );
+
+                    addXMonthNames(12);
+
+                break;
+
             }
             loadBarChartData();
             barChart.notifyDataSetChanged();
             barChart.invalidate();
         }
+
+
+    private void addXMonthNames(Integer X) {
+            String dataForMonth = dataOdEdit.getText().toString();
+
+            for(Integer i=0;i<X;i++) {
+            String nameOfMonth = getMonthName(dataForMonth);
+            dniWyswietlane.add(nameOfMonth);
+            dataForMonth=getNextMonth(dataForMonth);
+
+        }
+
+        }
+    private void addWeeksLabels() {
+            String dataOd = dataOdEdit.getText().toString();
+            String dataDo = dataDoEdit.getText().toString();
+            String startWeek=dataOd;
+            String endWeek=getNextWeek(dataOd);
+            Integer yearNymberEndWeek=getYearNumber(endWeek);
+            Integer yearNymberDataDo=getYearNumber(dataDo);
+            if( getYearNumber(endWeek)==getYearNumber(dataDo)){//rok aktualny
+            while(getDayOYearNumber(endWeek)<=getDayOYearNumber(dataDo) ){
+                dniWyswietlane.add(getDayOMonthNumber(startWeek)+" - "+getDayOMonthNumber(getPreviousDay(endWeek)));
+                startWeek=endWeek;
+                endWeek=getNextWeek(endWeek);
+            }
+                if(getDayOYearNumber(endWeek)>getDayOYearNumber(dataDo) ){
+                    dniWyswietlane.add(getDayOMonthNumber(startWeek)+" - "+getDayOMonthNumber( getPreviousDay(dataDo)));
+                }
+            }
+            else if(getYearNumber(endWeek)<getYearNumber(dataDo)){  //rok poprzedni
+                while(getDayOYearNumber(endWeek)<=getDayOYearNumber(getPreviousDay(dataDo))+1 ){
+                dniWyswietlane.add(getDayOMonthNumber(startWeek)+" - "+getDayOMonthNumber(getPreviousDay(endWeek)));
+                startWeek=endWeek;
+                endWeek=getNextWeek(endWeek);}
+                if(getDayOYearNumber(endWeek)>getDayOYearNumber(dataDo)+1 ){
+                    dniWyswietlane.add(getDayOMonthNumber(startWeek)+" - "+getDayOMonthNumber( getPreviousDay(dataDo)));
+                }
+            }
+            else if(getYearNumber(endWeek)>getYearNumber(dataDo)){//rok następny
+                while(getDayOYearNumber(endWeek)<=getDayOYearNumber(getPreviousDay(dataDo))+getYearsDays(dataDo) ){
+                    dniWyswietlane.add(getDayOMonthNumber(startWeek)+" - "+getDayOMonthNumber(getPreviousDay(endWeek)));
+                    startWeek=endWeek;
+                    endWeek=getNextWeek(endWeek);}
+                if(getDayOYearNumber(endWeek)>getDayOYearNumber(dataDo)+getYearsDays(dataDo)  ){
+                    dniWyswietlane.add(getDayOMonthNumber(startWeek)+" - "+getDayOMonthNumber( getPreviousDay(dataDo)));
+                }
+            }
+
+
+
+
+        }
+
+    private int getYearsDays(String dataIn) {
+        int yearDays;
+        Calendar c = Calendar.getInstance();
+        try {
+            //c= sdf.parse(dataIn);
+            c.setTime(sdf.parse(dataIn));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(StatystykaActivity.this, "Błąd daty!", Toast.LENGTH_SHORT).show();
+        }
+        c.add(Calendar.YEAR,-1);
+        yearDays= c.getActualMaximum(Calendar.DAY_OF_YEAR);
+
+        return yearDays;
+    }
+
+    private int getDayOMonthNumber(String dataIn){
+        int weekdayNumber;
+            Calendar c = Calendar.getInstance();
+            try {
+                //c= sdf.parse(dataIn);
+                c.setTime(sdf.parse(dataIn));
+            } catch (ParseException e) {
+                e.printStackTrace();
+                Toast.makeText(StatystykaActivity.this, "Błąd daty!", Toast.LENGTH_SHORT).show();
+            }
+           weekdayNumber= c.get(Calendar.DAY_OF_MONTH);
+
+        return weekdayNumber;
+    }        private int getDayOYearNumber(String dataIn){
+        int weekdayNumber;
+            Calendar c = Calendar.getInstance();
+            try {
+                //c= sdf.parse(dataIn);
+                c.setTime(sdf.parse(dataIn));
+            } catch (ParseException e) {
+                e.printStackTrace();
+                Toast.makeText(StatystykaActivity.this, "Błąd daty!", Toast.LENGTH_SHORT).show();
+            }
+           weekdayNumber= c.get(Calendar.DAY_OF_YEAR);
+
+        return weekdayNumber;
+    }
+    private int getYearNumber(String dataIn){
+        int yearNumber;
+        Calendar c = Calendar.getInstance();
+        try {
+            //c= sdf.parse(dataIn);
+            c.setTime(sdf.parse(dataIn));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(StatystykaActivity.this, "Błąd daty!", Toast.LENGTH_SHORT).show();
+        }
+
+        yearNumber= c.get(Calendar.YEAR);
+
+        return yearNumber;
+    }
 
     private String getWeekName(String dataIn) {
         Calendar k = Calendar.getInstance();
@@ -961,6 +1299,58 @@ public class StatystykaActivity  extends AppCompatActivity {
         }
         return dayOfWeekName;
     }
+    private String getMonthName(String dataIn) {
+        Calendar k = Calendar.getInstance();
+        try {
+            //c= sdf.parse(dataIn);
+            k.setTime(sdf.parse(dataIn));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(StatystykaActivity.this, "Błąd daty!", Toast.LENGTH_SHORT).show();
+        }
+        //c=Calendar.getInstance()
+        int whichMonth = k.get(Calendar.MONTH);
+        String whichMonthName="";
+        switch(whichMonth){
+            case 0:
+                whichMonthName="Sty";
+                break;
+            case 1:
+                whichMonthName="Lut";
+                break;
+            case 2:
+                whichMonthName="Mar";
+                break;
+            case 3:
+                whichMonthName="Kwi";
+                break;
+            case 4:
+                whichMonthName="Maj";
+                break;
+            case 5:
+                whichMonthName="Cze";
+                break;
+            case 6:
+                whichMonthName="Lip";
+                break;
+            case 7:
+                whichMonthName="Sie";
+                break;
+            case 8:
+                whichMonthName="Wrz";
+                break;
+            case 9:
+                whichMonthName="Paź";
+                break;
+            case 10:
+                whichMonthName="List";
+                break;
+            case 11:
+                whichMonthName="Gru";
+                break;
+        }
+        return whichMonthName;
+    }
 
     private String getNextDay(String dataBefore){
             String dataAfter="";
@@ -986,5 +1376,42 @@ public class StatystykaActivity  extends AppCompatActivity {
              dataAfter = sdf.format(c.getTime());
             return dataAfter;
         }
+        private String getNextMonth(String dataBefore){
+            String dataAfter="";
+            Calendar c = Calendar.getInstance();
+            try {
+                c.setTime(sdf.parse(dataBefore));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            c.add(Calendar.MONTH, 1);
+             dataAfter = sdf.format(c.getTime());
+            return dataAfter;
+        }
+        private String getPreviousMonth(String dataBefore){
+            String dataAfter="";
+            Calendar c = Calendar.getInstance();
+            try {
+                c.setTime(sdf.parse(dataBefore));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            c.add(Calendar.MONTH, -1);
+             dataAfter = sdf.format(c.getTime());
+            return dataAfter;
+        }
+
+    private String getNextWeek(String dataBefore) {
+        String dataAfter="";
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(dataBefore));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        c.add(Calendar.WEEK_OF_MONTH, 1);
+        dataAfter = sdf.format(c.getTime());
+        return dataAfter;
+    }
     }
 
