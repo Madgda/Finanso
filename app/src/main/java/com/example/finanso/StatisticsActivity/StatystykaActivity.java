@@ -1180,11 +1180,11 @@ public class StatystykaActivity  extends AppCompatActivity {
                 }
             }
             else if(getYearNumber(endWeek)<getYearNumber(dataDo)){  //rok poprzedni
-                while(getDayOYearNumber(endWeek)<=getDayOYearNumber(getPreviousDay(dataDo))+1 ){
+                while((getDayOYearNumber(endWeek)<=getDayOYearNumber(getPreviousDay(dataDo))+1) && getDayOYearNumber(endWeek)>getDayOYearNumber(dataOd)){
                 dniWyswietlane.add(getDayOMonthNumber(startWeek)+" - "+getDayOMonthNumber(getPreviousDay(endWeek)));
                 startWeek=endWeek;
                 endWeek=getNextWeek(endWeek);}
-                if(getDayOYearNumber(endWeek)>getDayOYearNumber(dataDo)+1 ){
+                if(getDayOYearNumber(endWeek)>getDayOYearNumber(dataDo) ){
                     dniWyswietlane.add(getDayOMonthNumber(startWeek)+" - "+getDayOMonthNumber( getPreviousDay(dataDo)));
                 }
             }
