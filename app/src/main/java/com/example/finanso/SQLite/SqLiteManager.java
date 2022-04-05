@@ -277,69 +277,26 @@ public Cursor readSumOfExpensesForStatistics(String dataOd, String dataDo) {
     }
     return cursor;
 }
-public Cursor readExpenseDataForBarChartStatistics(String dataOd, String dataDo,@NonNull Integer type) {
-    String query="";
-    switch (type) {//0-day, 1-week, 2-month, 3-quarter, 4-year
-        case 0:
-         query = "SELECT SUM(" + KOL_KWOTA + ") AS SUMA FROM " + TABLE_NAME +
-                " WHERE " + KOL_CZYWPLYW + " ='nie' AND " + KOL_DATA + " BETWEEN '" + dataOd +
-                "' AND '" + dataDo + "';";
-        break;
-        case 1:
-            Calendar c = Calendar.getInstance();
-            try {
-                c.setTime(sdf.parse(dataOd));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            c.add(Calendar.DATE, 1);
-            String output = sdf.format(c.getTime());
 
-            query = "SELECT SUM(" + KOL_KWOTA + ") AS SUMA FROM " + TABLE_NAME +
-                    " WHERE " + KOL_CZYWPLYW + " ='nie' AND " + KOL_DATA + "='" + dataOd + //first day
-                    "' UNION SELECT SUM(" + KOL_KWOTA + ") AS SUMA FROM " + TABLE_NAME +
-            " WHERE " + KOL_CZYWPLYW + " ='nie' AND " + KOL_DATA + "='" + sdf.format(c.getTime()) ;//second day
-                    c.add(Calendar.DATE, 1);
-                    query=query.concat("' UNION SELECT SUM(" + KOL_KWOTA + ") AS SUMA FROM " + TABLE_NAME +
-                            " WHERE " + KOL_CZYWPLYW + " ='nie' AND " + KOL_DATA + "='" + sdf.format(c.getTime()) +//third day
-                            "'");
-                    c.add(Calendar.DATE, 1);
-                    query=query.concat(" UNION SELECT SUM(" + KOL_KWOTA + ") AS SUMA FROM " + TABLE_NAME +
-                            " WHERE " + KOL_CZYWPLYW + " ='nie' AND " + KOL_DATA + "='" + sdf.format(c.getTime()) +//fourth day
-                            "'");
-            c.add(Calendar.DATE, 1);
-            query=query.concat(" UNION SELECT SUM(" + KOL_KWOTA + ") AS SUMA FROM " + TABLE_NAME +
-                            " WHERE " + KOL_CZYWPLYW + " ='nie' AND " + KOL_DATA + "='" + sdf.format(c.getTime()) +//fifth day
-                            "'");
-            c.add(Calendar.DATE, 1);
-            query=query.concat(" UNION SELECT SUM(" + KOL_KWOTA + ") AS SUMA FROM " + TABLE_NAME +
-                            " WHERE " + KOL_CZYWPLYW + " ='nie' AND " + KOL_DATA + "='" + sdf.format(c.getTime()) +//sixth day
-                            "'");
-            c.add(Calendar.DATE, 1);
-            query=query.concat(" UNION SELECT SUM(" + KOL_KWOTA + ") AS SUMA FROM " + TABLE_NAME +
-                            " WHERE " + KOL_CZYWPLYW + " ='nie' AND " + KOL_DATA + "='" + sdf.format(c.getTime()) +//seventh day
-                            "';");
-    break;
-        default:
-            query = "SELECT SUM(" + KOL_KWOTA + ") AS SUMA FROM " + TABLE_NAME +
-                    " WHERE " + KOL_CZYWPLYW + " ='nie' AND " + KOL_DATA + " BETWEEN '" + dataOd +
-                    "' AND '" + dataDo + "';";
-            break;
-    }
-    SQLiteDatabase db = this.getReadableDatabase();
-
-    Cursor cursor = null;
-    if (db != null) {
-        cursor = db.rawQuery(query, null);
-
-    }
-    return cursor;
-}
-
-    public Cursor readDataForBarChartStatistics(String dataOd, String dataDo){
+    public Cursor readExpensesDataForBarChartStatistics(String dataOd, String dataDo){
 
              String   query = "SELECT sum("+KOL_KWOTA+"),"+KOL_DATA+" FROM " + TABLE_NAME +
                         " WHERE " + KOL_CZYWPLYW + " ='nie' AND " + KOL_DATA + " BETWEEN '" + dataOd +
+                        "' AND '" + dataDo + "' GROUP BY "+KOL_DATA+";";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        if (db != null) {
+            cursor = db.rawQuery(query, null);
+
+        }
+        return cursor;
+    }
+    public Cursor readIncomeDataForBarChartStatistics(String dataOd, String dataDo){
+
+             String   query = "SELECT sum("+KOL_KWOTA+"),"+KOL_DATA+" FROM " + TABLE_NAME +
+                        " WHERE " + KOL_CZYWPLYW + " ='tak' AND " + KOL_DATA + " BETWEEN '" + dataOd +
                         "' AND '" + dataDo + "' GROUP BY "+KOL_DATA+";";
 
         SQLiteDatabase db = this.getReadableDatabase();

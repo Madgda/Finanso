@@ -77,7 +77,8 @@ public class StatystykaActivity  extends AppCompatActivity {
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     private static final DecimalFormat df = new DecimalFormat("0.00");
     private ArrayList<String> lista_data,lista_BarChartExpenses;
-    public  ArrayList<BarEntry> rekordyC = new ArrayList<>();
+    public  ArrayList<BarEntry> rekordyB = new ArrayList<>();
+    public  ArrayList<BarEntry> rekordyA = new ArrayList<>();
     public  ArrayList<String> dniWyswietlane= new ArrayList<>();
     public  BarChart barChart;
     public float aXisEntries[];
@@ -295,7 +296,7 @@ public class StatystykaActivity  extends AppCompatActivity {
 
         Cursor cursor = myDB.readSumOfExpensesForStatistics(dataOd,dataDo);
         if (cursor.getCount() == 0) {
-            Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
         } else {
             while (cursor.moveToNext()) {
                 if(cursor.getString(0)!=null) {
@@ -333,7 +334,7 @@ public class StatystykaActivity  extends AppCompatActivity {
 
             Cursor cursor = myDB.readSumOfIncomeForStatistics(dataOd,dataDo);
             if (cursor.getCount() == 0) {
-                Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
+           //     Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
             } else {
                 while (cursor.moveToNext()) {
                     if(cursor.getString(0)!=null) {
@@ -353,59 +354,19 @@ public class StatystykaActivity  extends AppCompatActivity {
     }
 
     private void loadBarChartData () {
-        /*    ArrayList<BarEntry> rekordyB = new ArrayList<>();
-            rekordyB.add(new BarEntry(0, 140f));
-            rekordyB.add(new BarEntry(1, 420f));
-            rekordyB.add(new BarEntry(2, 330f));
-         *//*   rekordyB.add(new BarEntry(3, 550f));*//*
-          *//*  rekordyB.add(new BarEntry(4, 920f));
-            rekordyB.add(new BarEntry(5, 160f));
-            rekordyB.add(new BarEntry(6, 213f));
-            rekordyB.add(new BarEntry(7, 420f));
-            rekordyB.add(new BarEntry(8, 330f));
-            rekordyB.add(new BarEntry(9, 550f));
-            rekordyB.add(new BarEntry(10, 920f));
-            rekordyB.add(new BarEntry(11, 160f));
-            rekordyB.add(new BarEntry(12, 213f));
-            rekordyB.add(new BarEntry(13, 213f));*/
-            /*ArrayList<BarEntry> rekordyA = new ArrayList<>();
-            rekordyA.add(new BarEntry(0,150f));
-            rekordyA.add(new BarEntry(1, 450f));
-            rekordyA.add(new BarEntry(2, 350f));
-            *//*rekordyA.add(new BarEntry(3, 0));*//*
-          *//*  rekordyA.add(new BarEntry(3, 590f));
-            rekordyA.add(new BarEntry(4, 950f));
-            rekordyA.add(new BarEntry(5, 150f));
-            rekordyA.add(new BarEntry(6, 253f));
-            rekordyA.add(new BarEntry(7, 420f));
-            rekordyA.add(new BarEntry(8, 330f));
-            rekordyA.add(new BarEntry(9, 550f));
-            rekordyA.add(new BarEntry(10, 920f));
-            rekordyA.add(new BarEntry(11, 160f));
-            rekordyA.add(new BarEntry(12, 213f));
-            rekordyA.add(new BarEntry(13, 213f));*/
-      /*      BarDataSet dataSetB = new BarDataSet(rekordyB, "Suma wydatków");
+        BarDataSet dataSetB = new BarDataSet(rekordyB, "Wpływy");
+        BarDataSet dataSetA = new BarDataSet(rekordyA, "Wydatki");
         dataSetB.setColor(getApplicationContext().getResources().getColor(R.color.greyGreen));
+       dataSetA.setColor(getApplicationContext().getResources().getColor(R.color.greyRed));
 
-        BarDataSet dataSetA = new BarDataSet(rekordyA, "Suma wpływów");
-        dataSetA.setColor(getApplicationContext().getResources().getColor(R.color.greyRed));
-*/
-
-        BarDataSet dataSetC = new BarDataSet(rekordyC, "Suma wpływów");
-        dataSetC.setColor(getApplicationContext().getResources().getColor(R.color.LightPink));
-
-
- //        dniWyswietlane.add("Czw");
         if(dniWyswietlane.size()==0){
             dniWyswietlane.add("Pon");
         }
-
         XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawAxisLine(true);
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1f);
-       // xAxis.mEntries=new float[]{};
         aXisEntries=xAxis.mEntries;
 
         ValueFormatter formatter = new ValueFormatter() {
@@ -424,40 +385,26 @@ public class StatystykaActivity  extends AppCompatActivity {
         xAxis.setGranularityEnabled(true);
         xAxis.setValueFormatter(formatter);
 
-
-       /*     dataSetB.setBarBorderColor(Color.GREEN);
-            dataSetB.setValueTextColor(Color.BLACK);
-            dataSetB.setValueTextSize(10f);
-            dataSetB.setAxisDependency(YAxis.AxisDependency.LEFT);
-            dataSetA.setBarBorderColor(Color.RED);
             dataSetA.setValueTextColor(Color.BLACK);
-            dataSetA.setValueTextSize(10f);
-          dataSetA.setAxisDependency(YAxis.AxisDependency.RIGHT);*/
-        dataSetC.setBarBorderColor(Color.RED);
-            dataSetC.setValueTextColor(Color.BLACK);
-        dataSetC.setValueTextSize(13f);
-        dataSetC.setAxisDependency(YAxis.AxisDependency.RIGHT);
-          //  BarData data = new BarData(dataSetB,dataSetA);
-            BarData data = new BarData(dataSetC);
-            data.setBarWidth(0.45f);
-            //data.groupBars(-0.5f, 0.06f, 0.02f);
+            dataSetB.setValueTextColor(Color.BLACK);
+        dataSetA.setValueTextSize(13f);
+        dataSetB.setValueTextSize(13f);
+        dataSetA.setDrawValues(false);
+        dataSetB.setDrawValues(false);
+        dataSetA.setAxisDependency(YAxis.AxisDependency.RIGHT);
+        dataSetB.setAxisDependency(YAxis.AxisDependency.RIGHT);
+            BarData data = new BarData(dataSetB,dataSetA);
+      //      BarData data = new BarData(dataSetC);
+            data.setBarWidth(0.48f);
+            data.groupBars(-0.5f, 0.05f, 0.00f);
             barChart.getDescription().setEnabled(false);
             barChart.setData(data);
-
-            // barChart.setTouchEnabled(true);
             barChart.setDoubleTapToZoomEnabled(false);
-            //     barChart.setDragEnabled(true);
-            //   barChart.setScaleEnabled(true);
-
-
-            //barChart.animateY(1400, Easing.EaseInOutQuad);
         }
         private void setupPieChart () {
             pieChart.setDrawHoleEnabled(false);
             pieChart.setUsePercentValues(true);
             pieChart.setEntryLabelColor(Color.BLACK);
-            //pieChart.setCenterText("TOP 6 KATEGORII");
-            //pieChart.setCenterTextSize(10);
             pieChart.getDescription().setEnabled(true);
             pieChart.getDescription().setTextColor(Color.BLACK);
             Legend l = pieChart.getLegend();
@@ -477,12 +424,12 @@ public class StatystykaActivity  extends AppCompatActivity {
         }
         private void loadPieChartData () {
             ArrayList<PieEntry> rekordyP = new ArrayList<>();
-            rekordyP.add(new PieEntry(0.3f, "Spożywcze"));
-            rekordyP.add(new PieEntry(0.35f, "Rachunki"));
+            rekordyP.add(new PieEntry(0.25f, "Spożywcze"));
+            rekordyP.add(new PieEntry(0.3f, "Rachunki"));
             rekordyP.add(new PieEntry(0.1f, "Prezenty"));
             rekordyP.add(new PieEntry(0.1f, "Chemia"));
             rekordyP.add(new PieEntry(0.1f, "Remont"));
-            rekordyP.add(new PieEntry(0.15f, "Inne"));
+            rekordyP.add(new PieEntry(0.1f, "Inne"));
 
             ArrayList<Integer> colors = new ArrayList<>();
             for (int color : ColorTemplate.MATERIAL_COLORS) {
@@ -763,9 +710,8 @@ public class StatystykaActivity  extends AppCompatActivity {
                     dataOdEdit.setText(currentDate);
                     dayChangeNextDate();
                     widok = 0;
-                    getIncome();
-                    getExpense();
                     selectButton(dzienButton);
+                    changeBarChartData();
                     return false;
                 }
             });
@@ -827,8 +773,6 @@ public class StatystykaActivity  extends AppCompatActivity {
         String dataFind;
             String dataOd = dataOdEdit.getText().toString();
             String dataDo = dataDoEdit.getText().toString();
-            //String dataDo = dataDoEdit.getText().toString();
-            //ArrayList<String> dniWyswietlane = new ArrayList<>();
             dataDo=getPreviousDay(dataDo);
             dataFind=dataOd;
             String usedData;
@@ -843,87 +787,28 @@ public class StatystykaActivity  extends AppCompatActivity {
             lista_suma = new ArrayList<>();
             lista_data = new ArrayList<>();
             lista_BarChartExpenses.clear();
-            rekordyC.clear();
+            rekordyA.clear();
+            rekordyB.clear();
             dniWyswietlane.clear();
             //barChart.clearValues();
             barChart.clear();
             barChart.notifyDataSetChanged();
             barChart.invalidate();
 
-            Cursor cursor = myDB.readDataForBarChartStatistics(dataOd,dataDo);
+        //    Cursor cursorE = myDB.readExpensesDataForBarChartStatistics(dataOd,dataDo);
+        //    Cursor cursorI = myDB.readIncomeDataForBarChartStatistics(dataOd,dataDo);
             aXisEntries=new float[]{};
 
             switch (widok){
-                case 0:
-                      if (cursor.getCount() == 0) {
-                          Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
-                       //   rekordyC.add(new BarEntry(0,0));
-
-
-                      } else {
-                          while (cursor.moveToNext()) {
-                              if(cursor.getString(0)!=null) {
-                                  lista_suma.add(cursor.getString(0));
-                                   lista_data.add(cursor.getString(1));
-                               }
-                               else{
-                              //    wydatkiText.setText("0.00 zł");
-                              }
-                           }
-                       }
-                          for(int i=0;i<lista_data.size();i++){
-                              String dataT=lista_data.get(i);
-                              if(dataT.equals(dataFind)){
-                                  kwotaIteracja=Double.valueOf(lista_suma.get(i));
-                                  suma= suma+kwotaIteracja;
-                              }
-                          }
-                       rekordyC.add(new BarEntry(0,Float.valueOf(String.valueOf(suma))));
-
+                case 0://dzień
+                            dayBarChartExpenses(dataOd,dataDo);
+                            dayBarChartIncomes(dataOd,dataDo);
                           String dayOfWeekName= getWeekName(dataOd);
                     dniWyswietlane.add(dayOfWeekName);
                     break;
-                case 1:
-                      if (cursor.getCount() == 0) {
-                          Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
-                          rekordyC.add(new BarEntry(0,0));
-                          rekordyC.add(new BarEntry(1,0));
-                          rekordyC.add(new BarEntry(2,0));
-                          rekordyC.add(new BarEntry(3,0));
-                          rekordyC.add(new BarEntry(4,0));
-                          rekordyC.add(new BarEntry(5,0));
-                          rekordyC.add(new BarEntry(6,0));
-                      } else {
-                          while (cursor.moveToNext()) {
-                              if(cursor.getString(0)!=null) {
-                                  lista_suma.add(cursor.getString(0));
-                                   lista_data.add(cursor.getString(1));
-                               }
-                               else{
-                              //    wydatkiText.setText("0.00 zł");
-                              }
-                           }
-                       }
-                      dataDo= getNextDay(dataDo);
-                       iteration=0;
-                            while(!dataFind.equals(dataDo) && iteration<7) {
-                                suma=0.0;
-                                for (int i = 0; i < lista_data.size(); i++) {
-                                    String dataT = lista_data.get(i);
-                                    if (dataT.equals(dataFind)) {
-                                        kwotaIteracja = Double.valueOf(lista_suma.get(i));
-                                        suma =  kwotaIteracja;
-                                    }
-                                }
-                                if (suma.equals(0.00) || suma.equals(0) || suma.equals(0.0)){
-                                    rekordyC.add(new BarEntry(iteration,0));
-                                }
-                                else{
-                                    rekordyC.add(new BarEntry(iteration,Float.valueOf(String.valueOf(suma))));
-                                }
-                                dataFind=getNextDay(dataFind);
-                                iteration++;
-                            }
+                case 1://tydzień
+                        weekBarChartExpenses(dataOd, dataDo);
+                        weekBarChartIncomes(dataOd, dataDo);
                     dniWyswietlane.add("Pon");
                     dniWyswietlane.add("Wt");
                     dniWyswietlane.add("Śr");
@@ -933,213 +818,22 @@ public class StatystykaActivity  extends AppCompatActivity {
                     dniWyswietlane.add("Nd");
                 break;
 
-                case 2:
-                    //miesiac
-                      if (cursor.getCount() == 0) {
-                          Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
-                          addWeeksLabels();
-                      } else {
-                          while (cursor.moveToNext()) {
-                              if(cursor.getString(0)!=null) {
-                                  lista_suma.add(cursor.getString(0));
-                                   lista_data.add(cursor.getString(1));
-                               }
-                               else{
-                              //    wydatkiText.setText("0.00 zł");
-                              }
-                           }
-                       }
-                     dataDo= getNextDay(dataDo);
-                       iteration=0;
-                      // dataDo= getNextDay(dataDo);
-             //       dataNextWeek=getNextWeek(dataFind);
-
-                    while(!dataFind.equals(dataDo)){
-                    suma=0.0;
-                             /*  if(dataFind!=dataOd) {
-                                  //  dataFind = getNextDay(dataFind);
-                                }*/
-                        for (int j = 0; j < 7 && !dataFind.equals(dataDo); j++) {
-                            for (int i = 0; i < lista_data.size(); i++) {
-                                String dataT = lista_data.get(i);
-                                if (dataT.equals(dataFind)) {
-                                    kwotaIteracja = Double.valueOf(lista_suma.get(i));
-                                    suma = suma + kwotaIteracja;
-                                }
-                            }
-
-                                dataFind = getNextDay(dataFind);
-
-                        }
-
-
-                                if (suma.equals(0.00) || suma.equals(0) || suma.equals(0.0)){
-                                    rekordyC.add(new BarEntry(iteration,0));
-                                }
-                                else{
-                                    rekordyC.add(new BarEntry(iteration,Float.valueOf(String.valueOf(suma))));
-                                }
-                                iteration++;
-
-
-
-
-                    }
+                case 2://miesiac
+                    monthBarChartExpenses(dataOd, dataDo);
+                    monthBarChartIncomes(dataOd, dataDo);
                     addWeeksLabels();
-                     /*usedData=dataOd;
-                     monthName= getMonthName(usedData);
-                    dniWyswietlane.add(monthName);
-
-                    usedData=getNextMonth(usedData);
-                     monthName= getMonthName(usedData);
-                    dniWyswietlane.add(monthName);
-
-                    usedData=getNextMonth(usedData);
-                     monthName= getMonthName(usedData);
-                    dniWyswietlane.add(monthName);*/
-                   // addXMonthNames(3);
-
-
                     break;
-                    case 3:
-                    //kwartał
-                      if (cursor.getCount() == 0) {
-                          Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
-                          rekordyC.add(new BarEntry(0,0));
-                          rekordyC.add(new BarEntry(1,0));
-                          rekordyC.add(new BarEntry(2,0));
 
-                      } else {
-                          while (cursor.moveToNext()) {
-                              if(cursor.getString(0)!=null) {
-                                  lista_suma.add(cursor.getString(0));
-                                   lista_data.add(cursor.getString(1));
-                               }
-                               else{
-                              //    wydatkiText.setText("0.00 zł");
-                              }
-                           }
-                       }
-                     dataDo= getNextDay(dataDo);
-                       iteration=0;
-                      // dataDo= getNextDay(dataDo);
-                    dataNextMonth=getNextMonth(dataFind);
-
-                    do {
-                                suma=0.0;
-                                if(dataFind!=dataOd) {
-                                  //  dataFind = getNextDay(dataFind);
-                                }
-                        while (!dataFind.equals(dataNextMonth) ){
-                                for (int i = 0; i < lista_data.size(); i++) {
-                                    String dataT = lista_data.get(i);
-                                    if (dataT.equals(dataFind)) {
-                                        kwotaIteracja = Double.valueOf(lista_suma.get(i));
-                                        suma =  suma+kwotaIteracja;
-                                    }
-                                }
-
-                            if(dataFind!=dataDo) {
-                                dataFind = getNextDay(dataFind);
-                            }
-                        }
-
-
-                                if (suma.equals(0.00) || suma.equals(0) || suma.equals(0.0)){
-                                    rekordyC.add(new BarEntry(iteration,0));
-                                }
-                                else{
-                                    rekordyC.add(new BarEntry(iteration,Float.valueOf(String.valueOf(suma))));
-                                }
-                                iteration++;
-                                if(dataNextMonth!=dataDo){
-                             dataNextMonth=getNextMonth(dataNextMonth);}
-
-
-                    }            while(!dataFind.equals(dataDo) );
-
-                     /*usedData=dataOd;
-                     monthName= getMonthName(usedData);
-                    dniWyswietlane.add(monthName);
-
-                    usedData=getNextMonth(usedData);
-                     monthName= getMonthName(usedData);
-                    dniWyswietlane.add(monthName);
-
-                    usedData=getNextMonth(usedData);
-                     monthName= getMonthName(usedData);
-                    dniWyswietlane.add(monthName);*/
+                case 3://kwartał
+                        quarterBarChartExpenses(dataOd, dataDo);
+                        quarterBarChartIncomes(dataOd, dataDo);
                     addXMonthNames(3);
 
 
                     break;
                 case 4://rok
-                    //kwartał
-                      if (cursor.getCount() == 0) {
-                          Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
-                          rekordyC.add(new BarEntry(0,0));
-                          rekordyC.add(new BarEntry(1,0));
-                          rekordyC.add(new BarEntry(2,0));
-                          rekordyC.add(new BarEntry(3,0));
-                          rekordyC.add(new BarEntry(4,0));
-                          rekordyC.add(new BarEntry(5,0));
-                          rekordyC.add(new BarEntry(6,0));
-                          rekordyC.add(new BarEntry(7,0));
-                          rekordyC.add(new BarEntry(8,0));
-                          rekordyC.add(new BarEntry(9,0));
-                          rekordyC.add(new BarEntry(10,0));
-                          rekordyC.add(new BarEntry(11,0));
-
-                      } else {
-                          while (cursor.moveToNext()) {
-                              if(cursor.getString(0)!=null) {
-                                  lista_suma.add(cursor.getString(0));
-                                   lista_data.add(cursor.getString(1));
-                               }
-                               else{
-                              //    wydatkiText.setText("0.00 zł");
-                              }
-                           }
-                       }
-                     dataDo= getNextDay(dataDo);
-
-                       iteration=0;
-                      // dataDo= getNextDay(dataDo);
-                    dataNextMonth=getNextMonth(dataFind);
-
-                    do {
-                                suma=0.0;
-                                if(dataFind!=dataOd) {
-                                   // dataFind = getNextDay(dataFind);
-                                }
-                        while (!dataFind.equals(dataNextMonth) ){
-                                for (int i = 0; i < lista_data.size(); i++) {
-                                    String dataT = lista_data.get(i);
-                                    if (dataT.equals(dataFind)) {
-                                        kwotaIteracja = Double.valueOf(lista_suma.get(i));
-                                        suma =  suma+kwotaIteracja;
-                                    }
-                                }
-
-                            if(dataFind!=dataDo) {
-                                dataFind = getNextDay(dataFind);
-                            }
-                        }
-
-
-                                if (suma.equals(0.00) || suma.equals(0) || suma.equals(0.0)){
-                                    rekordyC.add(new BarEntry(iteration,0));
-                                }
-                                else{
-                                    rekordyC.add(new BarEntry(iteration,Float.valueOf(String.valueOf(suma))));
-                                }
-                                iteration++;
-                                if(dataNextMonth!=dataDo){
-                             dataNextMonth=getNextMonth(dataNextMonth);}
-
-
-                    }            while(!dataFind.equals(dataDo) );
-
+                    yearBarChartExpenses(dataOd,dataDo);
+                    yearBarChartIncomes(dataOd,dataDo);
                     addXMonthNames(12);
 
                 break;
@@ -1149,6 +843,573 @@ public class StatystykaActivity  extends AppCompatActivity {
             barChart.notifyDataSetChanged();
             barChart.invalidate();
         }
+
+    private void yearBarChartExpenses(String dataOd, String dataDo) {
+        Cursor cursorE = myDB.readExpensesDataForBarChartStatistics(dataOd,dataDo);
+        String dataFind=dataOd;
+        String dataNextMonth;
+        Double suma=0.00;
+        Double kwotaIteracja=0.00;
+        Integer iteration;
+        lista_suma = new ArrayList<>();
+        lista_data = new ArrayList<>();
+
+        if (cursorE.getCount() == 0) {
+           // Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
+            rekordyA.add(new BarEntry(0,0));
+            rekordyA.add(new BarEntry(1,0));
+            rekordyA.add(new BarEntry(2,0));
+            rekordyA.add(new BarEntry(3,0));
+            rekordyA.add(new BarEntry(4,0));
+            rekordyA.add(new BarEntry(5,0));
+            rekordyA.add(new BarEntry(6,0));
+            rekordyA.add(new BarEntry(7,0));
+            rekordyA.add(new BarEntry(8,0));
+            rekordyA.add(new BarEntry(9,0));
+            rekordyA.add(new BarEntry(10,0));
+            rekordyA.add(new BarEntry(11,0));
+
+        } else {
+            while (cursorE.moveToNext()) {
+                if(cursorE.getString(0)!=null) {
+                    lista_suma.add(cursorE.getString(0));
+                    lista_data.add(cursorE.getString(1));
+                }
+                else{
+                    //    wydatkiText.setText("0.00 zł");
+                }
+            }
+        }
+        dataDo= getNextDay(dataDo);
+
+        iteration=0;
+        // dataDo= getNextDay(dataDo);
+        dataNextMonth=getNextMonth(dataFind);
+
+        do {
+            suma=0.0;
+            if(dataFind!=dataOd) {
+                // dataFind = getNextDay(dataFind);
+            }
+            while (!dataFind.equals(dataNextMonth) ){
+                for (int i = 0; i < lista_data.size(); i++) {
+                    String dataT = lista_data.get(i);
+                    if (dataT.equals(dataFind)) {
+                        kwotaIteracja = Double.valueOf(lista_suma.get(i));
+                        suma =  suma+kwotaIteracja;
+                    }
+                }
+
+                if(dataFind!=dataDo) {
+                    dataFind = getNextDay(dataFind);
+                }
+            }
+
+
+            if (suma.equals(0.00) || suma.equals(0) || suma.equals(0.0)){
+                rekordyA.add(new BarEntry(iteration,0));
+            }
+            else{
+                rekordyA.add(new BarEntry(iteration,Float.valueOf(String.valueOf(suma))));
+            }
+            iteration++;
+            if(dataNextMonth!=dataDo){
+                dataNextMonth=getNextMonth(dataNextMonth);}
+
+
+        }            while(!dataFind.equals(dataDo) );
+    }
+private void yearBarChartIncomes(String dataOd, String dataDo) {
+        Cursor cursorE = myDB.readIncomeDataForBarChartStatistics(dataOd,dataDo);
+        String dataFind=dataOd;
+        String dataNextMonth;
+        Double suma=0.00;
+        Double kwotaIteracja=0.00;
+        Integer iteration;
+    lista_suma = new ArrayList<>();
+    lista_data = new ArrayList<>();
+
+        if (cursorE.getCount() == 0) {
+          //  Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
+            rekordyB.add(new BarEntry(0,0));
+            rekordyB.add(new BarEntry(1,0));
+            rekordyB.add(new BarEntry(2,0));
+            rekordyB.add(new BarEntry(3,0));
+            rekordyB.add(new BarEntry(4,0));
+            rekordyB.add(new BarEntry(5,0));
+            rekordyB.add(new BarEntry(6,0));
+            rekordyB.add(new BarEntry(7,0));
+            rekordyB.add(new BarEntry(8,0));
+            rekordyB.add(new BarEntry(9,0));
+            rekordyB.add(new BarEntry(10,0));
+            rekordyB.add(new BarEntry(11,0));
+
+        } else {
+            while (cursorE.moveToNext()) {
+                if(cursorE.getString(0)!=null) {
+                    lista_suma.add(cursorE.getString(0));
+                    lista_data.add(cursorE.getString(1));
+                }
+                else{
+                    //    wydatkiText.setText("0.00 zł");
+                }
+            }
+        }
+        dataDo= getNextDay(dataDo);
+
+        iteration=0;
+        // dataDo= getNextDay(dataDo);
+        dataNextMonth=getNextMonth(dataFind);
+
+        do {
+            suma=0.0;
+            if(dataFind!=dataOd) {
+                // dataFind = getNextDay(dataFind);
+            }
+            while (!dataFind.equals(dataNextMonth) ){
+                for (int i = 0; i < lista_data.size(); i++) {
+                    String dataT = lista_data.get(i);
+                    if (dataT.equals(dataFind)) {
+                        kwotaIteracja = Double.valueOf(lista_suma.get(i));
+                        suma =  suma+kwotaIteracja;
+                    }
+                }
+
+                if(dataFind!=dataDo) {
+                    dataFind = getNextDay(dataFind);
+                }
+            }
+
+
+            if (suma.equals(0.00) || suma.equals(0) || suma.equals(0.0)){
+                rekordyB.add(new BarEntry(iteration,0));
+            }
+            else{
+                rekordyB.add(new BarEntry(iteration,Float.valueOf(String.valueOf(suma))));
+            }
+            iteration++;
+            if(dataNextMonth!=dataDo){
+                dataNextMonth=getNextMonth(dataNextMonth);}
+
+
+        }            while(!dataFind.equals(dataDo) );
+    }
+
+    private void quarterBarChartExpenses(String dataOd, String dataDo) {
+        Cursor cursorE = myDB.readExpensesDataForBarChartStatistics(dataOd,dataDo);
+        String dataFind=dataOd;
+        String dataNextMonth;
+        Double suma=0.00;
+        Double kwotaIteracja=0.00;
+        Integer iteration;
+        lista_suma = new ArrayList<>();
+        lista_data = new ArrayList<>();
+
+        if (cursorE.getCount() == 0) {
+          //  Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
+            rekordyA.add(new BarEntry(0,0));
+            rekordyA.add(new BarEntry(1,0));
+            rekordyA.add(new BarEntry(2,0));
+
+        } else {
+            while (cursorE.moveToNext()) {
+                if(cursorE.getString(0)!=null) {
+                    lista_suma.add(cursorE.getString(0));
+                    lista_data.add(cursorE.getString(1));
+                }
+                else{
+                    //    wydatkiText.setText("0.00 zł");
+                }
+            }
+        }
+        dataDo= getNextDay(dataDo);
+        iteration=0;
+        // dataDo= getNextDay(dataDo);
+        dataNextMonth=getNextMonth(dataFind);
+
+        do {
+            suma=0.0;
+            if(dataFind!=dataOd) {
+                //  dataFind = getNextDay(dataFind);
+            }
+            while (!dataFind.equals(dataNextMonth) ){
+                for (int i = 0; i < lista_data.size(); i++) {
+                    String dataT = lista_data.get(i);
+                    if (dataT.equals(dataFind)) {
+                        kwotaIteracja = Double.valueOf(lista_suma.get(i));
+                        suma =  suma+kwotaIteracja;
+                    }
+                }
+
+                if(dataFind!=dataDo) {
+                    dataFind = getNextDay(dataFind);
+                }
+            }
+
+
+            if (suma.equals(0.00) || suma.equals(0) || suma.equals(0.0)){
+                rekordyA.add(new BarEntry(iteration,0));
+            }
+            else{
+                rekordyA.add(new BarEntry(iteration,Float.valueOf(String.valueOf(suma))));
+            }
+            iteration++;
+            if(dataNextMonth!=dataDo){
+                dataNextMonth=getNextMonth(dataNextMonth);}
+
+
+        }            while(!dataFind.equals(dataDo) );
+
+    }  private void quarterBarChartIncomes(String dataOd, String dataDo) {
+        Cursor cursorE = myDB.readIncomeDataForBarChartStatistics(dataOd,dataDo);
+        String dataFind=dataOd;
+        String dataNextMonth;
+        Double suma=0.00;
+        Double kwotaIteracja=0.00;
+        Integer iteration;
+        lista_suma = new ArrayList<>();
+        lista_data = new ArrayList<>();
+
+        if (cursorE.getCount() == 0) {
+          //  Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
+            rekordyB.add(new BarEntry(0,0));
+            rekordyB.add(new BarEntry(1,0));
+            rekordyB.add(new BarEntry(2,0));
+
+        } else {
+            while (cursorE.moveToNext()) {
+                if(cursorE.getString(0)!=null) {
+                    lista_suma.add(cursorE.getString(0));
+                    lista_data.add(cursorE.getString(1));
+                }
+                else{
+                    //    wydatkiText.setText("0.00 zł");
+                }
+            }
+        }
+        dataDo= getNextDay(dataDo);
+        iteration=0;
+        // dataDo= getNextDay(dataDo);
+        dataNextMonth=getNextMonth(dataFind);
+
+        do {
+            suma=0.0;
+            if(dataFind!=dataOd) {
+                //  dataFind = getNextDay(dataFind);
+            }
+            while (!dataFind.equals(dataNextMonth) ){
+                for (int i = 0; i < lista_data.size(); i++) {
+                    String dataT = lista_data.get(i);
+                    if (dataT.equals(dataFind)) {
+                        kwotaIteracja = Double.valueOf(lista_suma.get(i));
+                        suma =  suma+kwotaIteracja;
+                    }
+                }
+
+                if(dataFind!=dataDo) {
+                    dataFind = getNextDay(dataFind);
+                }
+            }
+
+
+            if (suma.equals(0.00) || suma.equals(0) || suma.equals(0.0)){
+                rekordyB.add(new BarEntry(iteration,0));
+            }
+            else{
+                rekordyB.add(new BarEntry(iteration,Float.valueOf(String.valueOf(suma))));
+            }
+            iteration++;
+            if(dataNextMonth!=dataDo){
+                dataNextMonth=getNextMonth(dataNextMonth);}
+
+
+        }            while(!dataFind.equals(dataDo) );
+
+    }
+
+    private void monthBarChartExpenses(String dataOd, String dataDo) {
+        Cursor cursorE = myDB.readExpensesDataForBarChartStatistics(dataOd,dataDo);
+        String dataFind=dataOd;
+        Double suma=0.00;
+        Double kwotaIteracja=0.00;
+        Integer iteration;
+        lista_suma = new ArrayList<>();
+        lista_data = new ArrayList<>();
+
+        if (cursorE.getCount() == 0) {
+           // Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
+            addWeeksLabels();
+        } else {
+            while (cursorE.moveToNext()) {
+                if(cursorE.getString(0)!=null) {
+                    lista_suma.add(cursorE.getString(0));
+                    lista_data.add(cursorE.getString(1));
+                }
+                else{
+                    //    wydatkiText.setText("0.00 zł");
+                }
+            }
+        }
+        dataDo= getNextDay(dataDo);
+        iteration=0;
+        // dataDo= getNextDay(dataDo);
+        //       dataNextWeek=getNextWeek(dataFind);
+
+        while(!dataFind.equals(dataDo)){
+            suma=0.0;
+                             /*  if(dataFind!=dataOd) {
+                                  //  dataFind = getNextDay(dataFind);
+                                }*/
+            for (int j = 0; j < 7 && !dataFind.equals(dataDo); j++) {
+                for (int i = 0; i < lista_data.size(); i++) {
+                    String dataT = lista_data.get(i);
+                    if (dataT.equals(dataFind)) {
+                        kwotaIteracja = Double.valueOf(lista_suma.get(i));
+                        suma = suma + kwotaIteracja;
+                    }
+                }
+
+                dataFind = getNextDay(dataFind);
+
+            }
+
+
+            if (suma.equals(0.00) || suma.equals(0) || suma.equals(0.0)){
+                rekordyA.add(new BarEntry(iteration,0));
+            }
+            else{
+                rekordyA.add(new BarEntry(iteration,Float.valueOf(String.valueOf(suma))));
+            }
+            iteration++;
+
+
+
+
+        }
+    }
+  private void monthBarChartIncomes(String dataOd, String dataDo) {
+        Cursor cursorE = myDB.readIncomeDataForBarChartStatistics(dataOd,dataDo);
+        String dataFind=dataOd;
+        Double suma=0.00;
+        Double kwotaIteracja=0.00;
+        Integer iteration;
+      lista_suma = new ArrayList<>();
+      lista_data = new ArrayList<>();
+
+        if (cursorE.getCount() == 0) {
+        //    Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
+            addWeeksLabels();
+        } else {
+            while (cursorE.moveToNext()) {
+                if(cursorE.getString(0)!=null) {
+                    lista_suma.add(cursorE.getString(0));
+                    lista_data.add(cursorE.getString(1));
+                }
+                else{
+                }
+            }
+        }
+        dataDo= getNextDay(dataDo);
+        iteration=0;
+        while(!dataFind.equals(dataDo)){
+            suma=0.0;
+            for (int j = 0; j < 7 && !dataFind.equals(dataDo); j++) {
+                for (int i = 0; i < lista_data.size(); i++) {
+                    String dataT = lista_data.get(i);
+                    if (dataT.equals(dataFind)) {
+                        kwotaIteracja = Double.valueOf(lista_suma.get(i));
+                        suma = suma + kwotaIteracja;
+                    }
+                }
+
+                dataFind = getNextDay(dataFind);
+
+            }
+
+
+            if (suma.equals(0.00) || suma.equals(0) || suma.equals(0.0)){
+                rekordyB.add(new BarEntry(iteration,0));
+            }
+            else{
+                rekordyB.add(new BarEntry(iteration,Float.valueOf(String.valueOf(suma))));
+            }
+            iteration++;
+
+
+
+
+        }
+    }
+
+    private void weekBarChartExpenses(String dataOd, String dataDo) {
+        Cursor cursorE = myDB.readExpensesDataForBarChartStatistics(dataOd,dataDo);
+        String dataFind=dataOd;
+        Double suma=0.00;
+        Double kwotaIteracja=0.00;
+        lista_suma = new ArrayList<>();
+        lista_data = new ArrayList<>();
+
+        if (cursorE.getCount() == 0) {
+            //Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
+            rekordyA.add(new BarEntry(0,0));
+            rekordyA.add(new BarEntry(1,0));
+            rekordyA.add(new BarEntry(2,0));
+            rekordyA.add(new BarEntry(3,0));
+            rekordyA.add(new BarEntry(4,0));
+            rekordyA.add(new BarEntry(5,0));
+            rekordyA.add(new BarEntry(6,0));
+        } else {
+            while (cursorE.moveToNext()) {
+                if(cursorE.getString(0)!=null) {
+                    lista_suma.add(cursorE.getString(0));
+                    lista_data.add(cursorE.getString(1));
+                }
+                else{
+                    //    wydatkiText.setText("0.00 zł");
+                }
+            }
+        }
+        dataDo= getNextDay(dataDo);
+        Integer iteration;
+        iteration=0;
+        while(!dataFind.equals(dataDo) && iteration<7) {
+            suma=0.0;
+            for (int i = 0; i < lista_data.size(); i++) {
+                String dataT = lista_data.get(i);
+                if (dataT.equals(dataFind)) {
+                    kwotaIteracja = Double.valueOf(lista_suma.get(i));
+                    suma =  kwotaIteracja;
+                }
+            }
+            if (suma.equals(0.00) || suma.equals(0) || suma.equals(0.0)){
+                rekordyA.add(new BarEntry(iteration,0));
+            }
+            else{
+                rekordyA.add(new BarEntry(iteration,Float.valueOf(String.valueOf(suma))));
+            }
+            dataFind=getNextDay(dataFind);
+            iteration++;
+        }
+    }
+    private void weekBarChartIncomes(String dataOd, String dataDo) {
+        Cursor cursorE = myDB.readIncomeDataForBarChartStatistics(dataOd,dataDo);
+        String dataFind=dataOd;
+        Double suma=0.00;
+        Double kwotaIteracja=0.00;
+        lista_suma = new ArrayList<>();
+        lista_data = new ArrayList<>();
+
+        if (cursorE.getCount() == 0) {
+           // Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
+            rekordyB.add(new BarEntry(0,0));
+            rekordyB.add(new BarEntry(1,0));
+            rekordyB.add(new BarEntry(2,0));
+            rekordyB.add(new BarEntry(3,0));
+            rekordyB.add(new BarEntry(4,0));
+            rekordyB.add(new BarEntry(5,0));
+            rekordyB.add(new BarEntry(6,0));
+        } else {
+            while (cursorE.moveToNext()) {
+                if(cursorE.getString(0)!=null) {
+                    lista_suma.add(cursorE.getString(0));
+                    lista_data.add(cursorE.getString(1));
+                }
+                else{
+                    //    wydatkiText.setText("0.00 zł");
+                }
+            }
+        }
+        dataDo= getNextDay(dataDo);
+        Integer iteration;
+        iteration=0;
+        while(!dataFind.equals(dataDo) && iteration<7) {
+            suma=0.0;
+            for (int i = 0; i < lista_data.size(); i++) {
+                String dataT = lista_data.get(i);
+                if (dataT.equals(dataFind)) {
+                    kwotaIteracja = Double.valueOf(lista_suma.get(i));
+                    suma =  kwotaIteracja;
+                }
+            }
+            if (suma.equals(0.00) || suma.equals(0) || suma.equals(0.0)){
+                rekordyB.add(new BarEntry(iteration,0));
+            }
+            else{
+                rekordyB.add(new BarEntry(iteration,Float.valueOf(String.valueOf(suma))));
+            }
+            dataFind=getNextDay(dataFind);
+            iteration++;
+        }
+    }
+
+    private void dayBarChartExpenses(String dataOd,String dataDo) {
+        Cursor cursorE = myDB.readExpensesDataForBarChartStatistics(dataOd,dataDo);
+        String dataFind=dataOd;
+        Double suma=0.00;
+        Double kwotaIteracja=0.00;
+        lista_suma = new ArrayList<>();
+        lista_data = new ArrayList<>();
+
+        if (cursorE.getCount() == 0) {
+           // Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
+            //   rekordyC.add(new BarEntry(0,0));
+
+
+        } else {
+            while (cursorE.moveToNext()) {
+                if(cursorE.getString(0)!=null) {
+                    lista_suma.add(cursorE.getString(0));
+                    lista_data.add(cursorE.getString(1));
+                }
+                else{
+                    //    wydatkiText.setText("0.00 zł");
+                }
+            }
+        }
+        for(int i=0;i<lista_data.size();i++){
+            String dataT=lista_data.get(i);
+            if(dataT.equals(dataFind)){
+                kwotaIteracja=Double.valueOf(lista_suma.get(i));
+                suma= suma+kwotaIteracja;
+            }
+        }
+        rekordyA.add(new BarEntry(0,Float.valueOf(String.valueOf(suma))));
+
+    }
+    private void dayBarChartIncomes(String dataOd,String dataDo) {
+        Cursor cursorE = myDB.readIncomeDataForBarChartStatistics(dataOd,dataDo);
+        String dataFind=dataOd;
+        Double suma=0.00;
+        Double kwotaIteracja=0.00;
+        lista_suma = new ArrayList<>();
+        lista_data = new ArrayList<>();
+
+        if (cursorE.getCount() == 0) {
+           // Toast.makeText(StatystykaActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
+            //   rekordyC.add(new BarEntry(0,0));
+
+
+        } else {
+            while (cursorE.moveToNext()) {
+                if(cursorE.getString(0)!=null) {
+                    lista_suma.add(cursorE.getString(0));
+                    lista_data.add(cursorE.getString(1));
+                }
+                else{
+                    //    wydatkiText.setText("0.00 zł");
+                }
+            }
+        }
+        for(int i=0;i<lista_data.size();i++){
+            String dataT=lista_data.get(i);
+            if(dataT.equals(dataFind)){
+                kwotaIteracja=Double.valueOf(lista_suma.get(i));
+                suma= suma+kwotaIteracja;
+            }
+        }
+        rekordyB.add(new BarEntry(0,Float.valueOf(String.valueOf(suma))));
+
+    }
 
 
     private void addXMonthNames(Integer X) {
