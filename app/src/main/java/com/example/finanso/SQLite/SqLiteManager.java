@@ -307,6 +307,21 @@ public Cursor readSumOfExpensesForStatistics(String dataOd, String dataDo) {
 
         }
         return cursor;
+    } public Cursor readDataForPieChartStatistics(String dataOd, String dataDo){
+
+        String query = "SELECT "+TABLE_NAME_2+"."+KOL2_NAZWA+", SUM("+TABLE_NAME+"."+KOL_KWOTA+") FROM " + TABLE_NAME + " INNER JOIN "
+                + TABLE_NAME_2 + " ON " + TABLE_NAME + "." + KOL_KATEGORIA_ID + " = "
+                + TABLE_NAME_2 + "." + KOL2_ID+" WHERE "+ TABLE_NAME+"."+KOL_DATA + " BETWEEN '" + dataOd +
+                "' AND '" + dataDo + "' GROUP BY "+TABLE_NAME_2+"."+KOL2_NAZWA+" ORDER BY SUM("+TABLE_NAME+"."+KOL_KWOTA+") DESC LIMIT 6;";
+        /* " WHERE " +TABLE_NAME+"."+ KOL_CZYWPLYW + " ='tak' AND " +*/
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        if (db != null) {
+            cursor = db.rawQuery(query, null);
+
+        }
+        return cursor;
     }
 
 }

@@ -73,12 +73,14 @@ public class StatystykaActivity  extends AppCompatActivity {
     private MenuItem ustawDzisDataMenuItem;
     public SqLiteManager myDB;
     private ArrayList<String> lista_suma;
+    private ArrayList<String> lista_kategoria;
     private TextView wydatkiText, wplywyText;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     private static final DecimalFormat df = new DecimalFormat("0.00");
     private ArrayList<String> lista_data,lista_BarChartExpenses;
     public  ArrayList<BarEntry> rekordyB = new ArrayList<>();
     public  ArrayList<BarEntry> rekordyA = new ArrayList<>();
+    public  ArrayList<PieEntry> rekordyP = new ArrayList<>();
     public  ArrayList<String> dniWyswietlane= new ArrayList<>();
     public  BarChart barChart;
     public float aXisEntries[];
@@ -132,7 +134,8 @@ public class StatystykaActivity  extends AppCompatActivity {
         barChart = findViewById(R.id.barChart);
         //barChart.set
         changeBarChartData();
-      //  loadBarChartData();
+        changePieChartData();
+        //  loadBarChartData();
 
 
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -143,26 +146,31 @@ public class StatystykaActivity  extends AppCompatActivity {
                     naxtOrPreviousDay(1);
                     dayChangeNextDate();
                     changeBarChartData();
+                    changePieChartData();
                     break;
                 case 1:
                     nextOrPreviousWeek(1);
                     weekChangeNextDate();
                     changeBarChartData();
+                    changePieChartData();
                     break;
                 case 2:
                     nextOrPreviousMonth(1);
                     monthChangeNextDate();
                     changeBarChartData();
+                    changePieChartData();
                     break;
                 case 3:
                     nextOrPreviousQuarter(1);
                     quarterChangeNextDate();
                     changeBarChartData();
+                    changePieChartData();
                     break;
                 case 4:
                     nextOrPreviousYear(1);
                     yearChangeNextDate();
                     changeBarChartData();
+                    changePieChartData();
                     break;
 
             }
@@ -179,26 +187,31 @@ public class StatystykaActivity  extends AppCompatActivity {
                     naxtOrPreviousDay(0);
                     dayChangeNextDate();
                     changeBarChartData();
+                    changePieChartData();
                     break;
                 case 1:
                     nextOrPreviousWeek(0);
                     weekChangeNextDate();
                     changeBarChartData();
+                    changePieChartData();
                     break;
                 case 2:
                     nextOrPreviousMonth(0);
                     monthChangeNextDate();
                     changeBarChartData();
+                    changePieChartData();
                     break;
                 case 3:
                     nextOrPreviousQuarter(0);
                     quarterChangeNextDate();
                     changeBarChartData();
+                    changePieChartData();
                     break;
                 case 4:
                     nextOrPreviousYear(0);
                     yearChangeNextDate();
                     changeBarChartData();
+                    changePieChartData();
                     break;
 
             }
@@ -218,6 +231,7 @@ public class StatystykaActivity  extends AppCompatActivity {
                 getIncome();
                 getExpense();
                 changeBarChartData();
+                changePieChartData();
 
             }
 
@@ -233,6 +247,7 @@ public class StatystykaActivity  extends AppCompatActivity {
                 getIncome();
                 getExpense();
                 changeBarChartData();
+                changePieChartData();
 
             }
         });
@@ -246,6 +261,7 @@ public class StatystykaActivity  extends AppCompatActivity {
                 getIncome();
                 getExpense();
                 changeBarChartData();
+                changePieChartData();
             }
         });
         kwartalButton.setOnClickListener(new View.OnClickListener() {
@@ -258,6 +274,7 @@ public class StatystykaActivity  extends AppCompatActivity {
                 getIncome();
                 getExpense();
                 changeBarChartData();
+                changePieChartData();
             }
         });
         rokButton.setOnClickListener(new View.OnClickListener() {
@@ -270,6 +287,7 @@ public class StatystykaActivity  extends AppCompatActivity {
                 getIncome();
                 getExpense();
                 changeBarChartData();
+                changePieChartData();
             }
         });
     }
@@ -405,8 +423,8 @@ public class StatystykaActivity  extends AppCompatActivity {
             pieChart.setDrawHoleEnabled(false);
             pieChart.setUsePercentValues(true);
             pieChart.setEntryLabelColor(Color.BLACK);
-            pieChart.getDescription().setEnabled(true);
-            pieChart.getDescription().setTextColor(Color.BLACK);
+            pieChart.getDescription().setEnabled(false);
+            //pieChart.getDescription().setTextColor(Color.BLACK);
             Legend l = pieChart.getLegend();
             l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
             l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
@@ -423,14 +441,14 @@ public class StatystykaActivity  extends AppCompatActivity {
 
         }
         private void loadPieChartData () {
-            ArrayList<PieEntry> rekordyP = new ArrayList<>();
-            rekordyP.add(new PieEntry(0.25f, "Spożywcze"));
+          //  ArrayList<PieEntry> rekordyP = new ArrayList<>();
+         /*   rekordyP.add(new PieEntry(0.25f, "Spożywcze"));
             rekordyP.add(new PieEntry(0.3f, "Rachunki"));
             rekordyP.add(new PieEntry(0.1f, "Prezenty"));
             rekordyP.add(new PieEntry(0.1f, "Chemia"));
             rekordyP.add(new PieEntry(0.1f, "Remont"));
             rekordyP.add(new PieEntry(0.1f, "Inne"));
-
+*/
             ArrayList<Integer> colors = new ArrayList<>();
             for (int color : ColorTemplate.MATERIAL_COLORS) {
                 colors.add(color);
@@ -439,11 +457,11 @@ public class StatystykaActivity  extends AppCompatActivity {
             for (int color : ColorTemplate.VORDIPLOM_COLORS) {
                 colors.add(color);
             }
-            PieDataSet dataSet = new PieDataSet(rekordyP, "Kategoria");
+            PieDataSet dataSet = new PieDataSet(rekordyP, "Top 6 Kategorii");
             dataSet.setColors(colors);
 
             PieData data = new PieData(dataSet);
-            data.setDrawValues(true);
+            data.setDrawValues(false);
             data.setValueFormatter(new PercentFormatter(pieChart));
             data.setValueTextSize(8f);
             data.setValueTextColor(Color.GRAY);
@@ -712,6 +730,8 @@ public class StatystykaActivity  extends AppCompatActivity {
                     widok = 0;
                     selectButton(dzienButton);
                     changeBarChartData();
+                    changePieChartData();
+
                     return false;
                 }
             });
@@ -790,13 +810,9 @@ public class StatystykaActivity  extends AppCompatActivity {
             rekordyA.clear();
             rekordyB.clear();
             dniWyswietlane.clear();
-            //barChart.clearValues();
             barChart.clear();
             barChart.notifyDataSetChanged();
             barChart.invalidate();
-
-        //    Cursor cursorE = myDB.readExpensesDataForBarChartStatistics(dataOd,dataDo);
-        //    Cursor cursorI = myDB.readIncomeDataForBarChartStatistics(dataOd,dataDo);
             aXisEntries=new float[]{};
 
             switch (widok){
@@ -842,6 +858,58 @@ public class StatystykaActivity  extends AppCompatActivity {
             loadBarChartData();
             barChart.notifyDataSetChanged();
             barChart.invalidate();
+        }
+        private void changePieChartData(){
+
+            String dataOd = dataOdEdit.getText().toString();
+            String dataDo = dataDoEdit.getText().toString();
+            lista_suma = new ArrayList<>();
+            lista_kategoria = new ArrayList<>();
+            rekordyP.clear();
+            pieChart.clearValues();
+            pieChart.clear();
+            pieChart.notifyDataSetChanged();
+            pieChart.invalidate();
+            myDB = new SqLiteManager(StatystykaActivity.this);
+           Cursor cursor = myDB.readDataForPieChartStatistics(dataOd,dataDo);
+
+            String dataFind=dataOd;
+            Double sumaKategoria=0.00;
+            Double sumaAllKategorie=0.00;
+            Double kwotaIteracja=0.00;
+            lista_kategoria = new ArrayList<>();
+            lista_suma = new ArrayList<>();
+
+            if (cursor.getCount() == 0)
+            {
+            }
+            else {
+                while (cursor.moveToNext()) {
+                    if(cursor.getString(0)!=null) {
+                        lista_kategoria.add(cursor.getString(0));
+                        lista_suma.add(cursor.getString(1));
+                    }
+                    else{
+                    }
+                }
+            }
+            for(int i=0;i<lista_kategoria.size();i++){
+                    kwotaIteracja=Double.valueOf(lista_suma.get(i));
+                    sumaAllKategorie= sumaAllKategorie+kwotaIteracja;
+            }
+            for(int i=0;i<lista_kategoria.size();i++){
+                    kwotaIteracja=Double.valueOf(lista_suma.get(i));
+                    Float procent= (kwotaIteracja.floatValue()/sumaAllKategorie.floatValue());
+                rekordyP.add(new PieEntry(procent,lista_kategoria.get(i)));
+
+            }
+            if(lista_kategoria.size()==0){
+                rekordyP.add(new PieEntry(1,"Brak danych na wybrany okres czasu"));
+            }
+
+            loadPieChartData();
+            pieChart.notifyDataSetChanged();
+            pieChart.invalidate();
         }
 
     private void yearBarChartExpenses(String dataOd, String dataDo) {
