@@ -127,7 +127,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
         getOnBackPressedDispatcher().addCallback(this, callback);
 */
         Toolbar toolbar = findViewById(R.id.toolbar1);
-        toolbar.setTitle("Finanso");
+        toolbar.setTitle("Twoje paragony");
         setSupportActionBar(toolbar);
         dodajParagonButtonOnClick();
 
@@ -162,9 +162,9 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
         drawer = findViewById(R.id.drawer_layout_list);
 
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+   /*     ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        toggle.syncState();*/
     }
     private void filter(String text) {
         ArrayList<ReadAllReceiptResponse> filteredList = new ArrayList<>();
@@ -634,7 +634,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
 
         Cursor cursor = myDB.readAllParagony();
         if (cursor.getCount() == 0) {
-            Toast.makeText(ParagonyActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(ParagonyActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
         } else {
             while (cursor.moveToNext()) {
                 ReadAllReceiptResponse readARR = new ReadAllReceiptResponse();

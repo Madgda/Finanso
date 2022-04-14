@@ -133,7 +133,7 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
 
 
         Toolbar toolbar = findViewById(R.id.toolbar1);
-        toolbar.setTitle("Finanso");
+        toolbar.setTitle("Historia transakcji");
         setSupportActionBar(toolbar);
 
         EditText editText = findViewById((R.id.loopaView));
@@ -155,9 +155,9 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
 
         drawer = findViewById(R.id.drawer_layout_list);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+    /*    ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        toggle.syncState();*/
     }
 
 
@@ -177,15 +177,15 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
         //
 
 
-        @Override
+ /*       @Override
         public boolean onCreateOptionsMenu (Menu menu){
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.menu_toolbar_lista, menu);
-            menu.findItem(R.id.item2).setTitle(Html.fromHtml("<font color='#000000'>wyszukaj daty</font>"));
+          *//*  menu.findItem(R.id.item2).setTitle(Html.fromHtml("<font color='#000000'>wyszukaj daty</font>"));
             menu.findItem(R.id.item3).setTitle(Html.fromHtml("<font color='#000000'>sortuj wg </font>"));
-            menu.findItem(R.id.item4).setTitle(Html.fromHtml("<font color='#000000'>pokaż</font>"));
+            menu.findItem(R.id.item4).setTitle(Html.fromHtml("<font color='#000000'>pokaż</font>"));*//*
 
-        /*
+        *//*
         menu.getItem(R.id.menuDodajLista).setOnMenuItemClickListener(new View.OnClickListener(){
 
             @Override
@@ -193,10 +193,10 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
                 createNewDialog();
             }
         });
-*/
+*//*
             return true;
         }
-
+*/
 
         @Override
         public boolean onOptionsItemSelected (MenuItem item){
@@ -313,7 +313,7 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
 
             Cursor cursor = myDB.readAllHistoryWithKategorie();
             if (cursor.getCount() == 0) {
-                Toast.makeText(ListActivity.instance, "Brak danych.", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(ListActivity.instance, "Brak danych.", Toast.LENGTH_SHORT).show();
             } else {
                 while (cursor.moveToNext()) {
                     ReadAllHistoriaResponse readAHR = new ReadAllHistoriaResponse();
@@ -342,7 +342,7 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
 
             Cursor cursor = myDB.readAllKategorie();
             if (cursor.getCount() == 0) {
-                Toast.makeText(ListActivity.instance, "Brak danych.", Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(ListActivity.instance, "Brak danych.", Toast.LENGTH_SHORT).show();
             } else {
                 while (cursor.moveToNext()) {
               /*  ReadAllCategoryResponse readACR = new ReadAllCategoryResponse();

@@ -208,9 +208,9 @@ public class SqLiteManager extends SQLiteOpenHelper {
 
         long result = db.update(TABLE_NAME, cv, KOL_ID + "=" + row_id, null);
         if (result == -1) {
-            Toast.makeText(context, "Błąd!!", Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(context, "Błąd!!", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, "POPRAWNIE ZEDYTOWANO!", Toast.LENGTH_SHORT).show();
+      //      Toast.makeText(context, "POPRAWNIE ZEDYTOWANO!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -223,9 +223,9 @@ public class SqLiteManager extends SQLiteOpenHelper {
 
         long result = db.update(TABLE_NAME_2, cv, KOL2_ID + "=" + row_id, null);
         if (result == -1) {
-            Toast.makeText(context, "Błąd!!", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(context, "Błąd!!", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, "POPRAWNIE ZEDYTOWANO!", Toast.LENGTH_SHORT).show();
+         //   Toast.makeText(context, "POPRAWNIE ZEDYTOWANO!", Toast.LENGTH_SHORT).show();
         }
     }
     public void updateReceiptData(String row_id, String opis, String gwarancja, String data) {
@@ -237,9 +237,9 @@ public class SqLiteManager extends SQLiteOpenHelper {
 
         long result = db.update(TABLE_NAME_3, cv, KOL3_ID + "=" + row_id, null);
         if (result == -1) {
-            Toast.makeText(context, "Błąd!!", Toast.LENGTH_SHORT).show();
+         //   Toast.makeText(context, "Błąd!!", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, "POPRAWNIE ZEDYTOWANO!", Toast.LENGTH_SHORT).show();
+      //      Toast.makeText(context, "POPRAWNIE ZEDYTOWANO!", Toast.LENGTH_SHORT).show();
         }
     }
 /*    public void addKategoriaZero() {

@@ -106,14 +106,14 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
 
 
         Toolbar toolbar = findViewById(R.id.toolbarCategory);
-        toolbar.setTitle("Finanso");
+        toolbar.setTitle("Ustawienia kategorii");
         setSupportActionBar(toolbar);
 
         drawer = findViewById(R.id.drawer_layout_list);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+    /*    ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        toggle.syncState();*/
     }
 /*
 
@@ -134,6 +134,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
 
 
 
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater=getMenuInflater();
@@ -142,7 +143,8 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
         menu.findItem(R.id.item3).setTitle(Html.fromHtml("<font color='#000000'>sortuj wg </font>"));
         menu.findItem(R.id.item4).setTitle(Html.fromHtml("<font color='#000000'>pokaż</font>"));
 
-        /*
+        */
+/*
         menu.getItem(R.id.menuDodajLista).setOnMenuItemClickListener(new View.OnClickListener(){
 
             @Override
@@ -150,9 +152,11 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
                 createNewDialog();
             }
         });
-*/
+*//*
+
         return true;
     }
+*/
 
 
 
@@ -236,7 +240,7 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
 
         Cursor cursor = myDB.readAllKategorie();
         if(cursor.getCount()==0){
-            Toast.makeText(CategoryActivity.this,"Brak danych.",Toast.LENGTH_SHORT).show();
+      //      Toast.makeText(CategoryActivity.this,"Brak danych.",Toast.LENGTH_SHORT).show();
         }else{
             while(cursor.moveToNext()){
                 ReadAllCategoryResponse readAHR = new ReadAllCategoryResponse();

@@ -38,7 +38,7 @@ private int czyPopupDodaje ;
         setContentView(R.layout.activity_main);
 
         plusPrzyciskAkcja();
-        toolbarSet();
+       toolbarSet();
         buttonListClick();
         buttonKategorieClick();
         buttonParagonyClick();
@@ -101,16 +101,16 @@ private int czyPopupDodaje ;
         }
 
 
-    private void toolbarSet() {
+   private void toolbarSet() {
 //toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        drawer = findViewById(R.id.drawer_layout);
+       Toolbar toolbar = findViewById(R.id.toolbar);
+       setSupportActionBar(toolbar);
+       drawer = findViewById(R.id.drawer_layout);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-    }
+     /*  ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+       drawer.addDrawerListener(toggle);
+       toggle.syncState();*/
+   }
 
     public void plusPrzyciskAkcja() {
 
@@ -128,7 +128,7 @@ private int czyPopupDodaje ;
 
     }
 
-    @Override
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.opcje_menu,menu);
@@ -139,14 +139,14 @@ private int czyPopupDodaje ;
 
         return true;
     }
-
-   public void onBackPress (){
+*/
+/*   public void onBackPress (){
        if(drawer.isDrawerOpen(GravityCompat.START)){
            drawer.closeDrawer(GravityCompat.START);
        }
        else{
            super.onBackPressed();
        }
-   }
+   }*/
 
 }
