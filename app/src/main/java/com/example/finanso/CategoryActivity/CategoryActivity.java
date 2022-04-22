@@ -9,8 +9,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.Html;
+import android.view.MenuItem;
+import android.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,17 +22,16 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.app.ActionBarDrawerToggle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.finanso.ListActivity.ListActivity;
 import com.example.finanso.MainActivity.MainActivity;
-import com.example.finanso.R;
 import com.example.finanso.SQLite.SqLiteManager;
+import com.example.finanso.R;
 
 import java.util.ArrayList;
 
@@ -134,29 +133,31 @@ public class CategoryActivity extends AppCompatActivity implements CategoryAdapt
 
 
 
-/*
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.menu_toolbar_kategorie,menu);
-        menu.findItem(R.id.item2).setTitle(Html.fromHtml("<font color='#000000'>wyszukaj daty</font>"));
-        menu.findItem(R.id.item3).setTitle(Html.fromHtml("<font color='#000000'>sortuj wg </font>"));
+     /*   menu.findItem(R.id.item3).setTitle(Html.fromHtml("<font color='#000000'>sortuj wg </font>"));
         menu.findItem(R.id.item4).setTitle(Html.fromHtml("<font color='#000000'>pokaż</font>"));
+        menu.findItem(R.id.item2).setTitle(Html.fromHtml("<font color='#000000'>wyszukaj daty</font>"));
+*/
+      //  menu.getItem(R.id.menuDodajKategorie)
 
-        */
 /*
-        menu.getItem(R.id.menuDodajLista).setOnMenuItemClickListener(new View.OnClickListener(){
+        menu.getItem(R.id.menuDodajKategorie).setOnMenuItemClickListener(new View.OnClickListener(){
 
             @Override
-            public void onClick(View view) {
+            public void  onClick(View view) {
                 createNewDialog();
             }
         });
-*//*
+
+*/
 
         return true;
     }
-*/
+
 
 
 

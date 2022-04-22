@@ -1,21 +1,16 @@
 package com.example.finanso.MainActivity;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.text.Html;
-import android.view.MenuInflater;
 import android.widget.Button;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 
 

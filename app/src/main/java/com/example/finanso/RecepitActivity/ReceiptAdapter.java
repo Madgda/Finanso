@@ -1,18 +1,15 @@
 package com.example.finanso.RecepitActivity;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResult;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.finanso.ListActivity.ReadAllHistoriaResponse;
 import com.example.finanso.R;
 
 import java.util.ArrayList;

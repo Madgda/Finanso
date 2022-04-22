@@ -8,14 +8,14 @@
     android:fitsSystemWindows="true"
     app:itemTextColor="@color/black"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    tools:context=".CategoryActivity.CategoryActivity"
+    tools:context="com.example.finanso.CategoryActivity.CategoryActivity"
     >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/Blue"
-        tools:context=".ListActivity.ListActivity">
+        tools:context="com.example.finanso.ListActivity.ListActivity">
         <GridLayout
             android:id="@+id/menuListPas"
             android:layout_width="match_parent"

@@ -7,12 +7,13 @@ android {
     }
 }
 android {
-    compileSdkVersion 30
+
+    compileSdk 30
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.example.finanso"
-        minSdkVersion 23
+        minSdk 23
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -29,6 +30,10 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    dependenciesInfo {
+        includeInApk false
+        includeInBundle false
     }
 }
 

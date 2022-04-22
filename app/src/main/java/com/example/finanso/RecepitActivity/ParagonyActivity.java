@@ -24,7 +24,6 @@ import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,13 +35,11 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -52,10 +49,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.finanso.ListActivity.ReadAllHistoriaResponse;
-import com.example.finanso.R;
 import com.example.finanso.SQLite.SqLiteManager;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.finanso.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -103,6 +98,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
     private ImageView imageParagon;
     private boolean boolFoto;
     private View parent;
+    private TextView textViewPopupParagony;
 
     public ParagonyActivity() {
         myDB = new SqLiteManager(this);
@@ -179,6 +175,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
         }
     }
 
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -188,6 +185,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
         menu.findItem(R.id.item4).setTitle(Html.fromHtml("<font color='#000000'>pokaż</font>"));
         return true;
     }
+*/
 
 
     private void dodajParagonButtonOnClick() {
@@ -202,7 +200,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
         });
     }
 
-    @Override
+/*    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
@@ -216,7 +214,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
                 return super.onOptionsItemSelected(item);
 
         }
-    }
+    }*/
  /*   private void createDialogImage(String imageUrl) {
         File imgFile = new File(imageUrl);
         View view = View.inflate(this,R.layout.popup_show_image,null);
@@ -467,6 +465,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
         dialogBuild = new AlertDialog.Builder(this);
         final View paragonyView = getLayoutInflater().inflate(R.layout.popup_paragony, null);
         buttoPrzejdzDoZdjecia = (Button) paragonyView.findViewById(R.id.wyswietlZdjecieButton);
+        textViewPopupParagony =  (TextView) paragonyView.findViewById(R.id.testPopupParagon);
         opisParagony = (EditText) paragonyView.findViewById(R.id.OpisPopupParagony);
         opisParagony.setText(opis);
         radioBurronGwarancja = (CheckBox) paragonyView.findViewById(R.id.radioZGwarancja);
@@ -490,6 +489,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
             ///storage/emulated/0/picture/170322204240.jpg
             dodajZdjecieParagonu.setVisibility(View.GONE);
             buttoPrzejdzDoZdjecia.setVisibility(View.VISIBLE);
+            textViewPopupParagony.setText("Szczegóły paragonu:");
         }
         dodajWpisParagonu = (Button) paragonyView.findViewById(R.id.dodajB);
 
@@ -704,7 +704,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
         }
     }
     else{
-        displayMessage(getBaseContext(),"Brak uprawnienia do robienia zdjęć");
+   //     displayMessage(getBaseContext(),"Brak uprawnienia do robienia zdjęć");
     }
 
     }

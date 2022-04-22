@@ -6,7 +6,6 @@ import static android.media.CamcorderProfile.get;
 import static com.google.android.material.internal.ContextUtils.getActivity;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,9 +17,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
-import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -31,7 +28,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -39,11 +35,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.finanso.CategoryActivity.CategoryActivity;
-import com.example.finanso.MainActivity.MainActivity;
-import com.example.finanso.R;
 import com.example.finanso.CategoryActivity.ReadAllCategoryResponse;
+import com.example.finanso.MainActivity.MainActivity;
 import com.example.finanso.SQLite.SqLiteManager;
+import com.example.finanso.R;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -177,26 +172,25 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
         //
 
 
- /*       @Override
+       @Override
         public boolean onCreateOptionsMenu (Menu menu){
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.menu_toolbar_lista, menu);
-          *//*  menu.findItem(R.id.item2).setTitle(Html.fromHtml("<font color='#000000'>wyszukaj daty</font>"));
-            menu.findItem(R.id.item3).setTitle(Html.fromHtml("<font color='#000000'>sortuj wg </font>"));
-            menu.findItem(R.id.item4).setTitle(Html.fromHtml("<font color='#000000'>pokaż</font>"));*//*
 
-        *//*
-        menu.getItem(R.id.menuDodajLista).setOnMenuItemClickListener(new View.OnClickListener(){
+            /* menu.findItem(R.id.item3).setTitle(Html.fromHtml("<font color='#000000'>sortuj wg </font>"));
+           menu.findItem(R.id.item2).setTitle(Html.fromHtml("<font color='#000000'>wyszukaj daty</font>"));
+           menu.findItem(R.id.item4).setTitle(Html.fromHtml("<font color='#000000'>pokaż</font>"));*//*
+           */ /*
+           menu.getItem(R.id.menuDodajLista).setOnMenuItemClickListener(new View.OnClickListener(){
 
-            @Override
-            public void onClick(View view) {
-                createNewDialog();
-            }
-        });
-*//*
-            return true;
+               @Override
+               public void onClick(View view) {
+                   createNewDialog();
+               }
+           });*/
+           return true;
         }
-*/
+
 
         @Override
         public boolean onOptionsItemSelected (MenuItem item){
@@ -292,15 +286,14 @@ public class ListActivity extends AppCompatActivity implements ListAdapter.Onlis
 
                     kategoriaDoBazy = kategoriaDoBazy.toString().substring(0, countDot).toString();
                     myDB = new SqLiteManager(ListActivity.this);
-                    if (liczbaE.getText().toString().trim().length() > 0 && opisE.getText().toString().trim().length() > 0 && opisSzczegolE.getText().toString().trim().length() > 0 && dateE.getText().toString().trim().length() > 0) {
+                    if (liczbaE.getText().toString().trim().length() > 0 && opisE.getText().toString().trim().length() > 0  && dateE.getText().toString().trim().length() > 0) {
                         myDB.addWpis(df.format(kwotaPoPrzecinku).trim(), opisE.getText().toString().trim(), opisSzczegolE.getText().toString().trim(), dateE.getText().toString().trim(), kategoriaDoBazy,czyWplywString.trim());
                         dialog.dismiss();
                         zapiszListeDoArray();
                         buildRecyclerView();
                         //  Intent intent = new Intent(ListActivity.this, ListActivity.class);
                         //    startActivity(intent);
-                    } else {
-                        Toast.makeText(ListActivity.this, "BŁĄD", Toast.LENGTH_SHORT).show();
+                    } else { Toast.makeText(ListActivity.this, "Proszę uzupełnić wymagane pola: kwota, opis, data", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
