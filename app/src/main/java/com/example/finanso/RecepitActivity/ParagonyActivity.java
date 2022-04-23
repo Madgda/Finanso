@@ -1,6 +1,7 @@
 package com.example.finanso.RecepitActivity;
 
 
+import static android.text.format.DateFormat.*;
 import static com.google.android.material.internal.ContextUtils.getActivity;
 
 import android.Manifest;
@@ -86,12 +87,12 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
     public int czyPopupDodaj;
     String gwarancja = "nie";
     private String zdjecieS;
-    private String kategorieA[] = {"Wybierz kategorię", "Rachunki", "Spożywcze", "Prezenty", "Chemia", "Remont"};
+    private final String[] kategorieA = {"Wybierz kategorię", "Rachunki", "Spożywcze", "Prezenty", "Chemia", "Remont"};
     private ImageButton dodajZdjecieParagonu;
     private Button dodajWpisParagonu;
     private boolean photoFile;
     public Uri imageUri = null;
-    private Uri image_uri = null;
+    private final Uri image_uri = null;
     private Button dodajUprawnienieZdjeciaParagonu;
     private int position;
     private String imageUrl;
@@ -191,12 +192,9 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
     private void dodajParagonButtonOnClick() {
 //kliknięcie przycisku paragony
         Button dodajParagonButton = (Button) findViewById(R.id.dodajParagon);
-        dodajParagonButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-             //   boolFoto=false;
-                createNewDialog();
-            }
+        dodajParagonButton.setOnClickListener(v -> {
+         //   boolFoto=false;
+            createNewDialog();
         });
     }
 
@@ -265,12 +263,7 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
 
 
 
-        imageParagon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
+        imageParagon.setOnClickListener(view -> dialog.dismiss());
 
     }
 
@@ -288,26 +281,20 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
 
         dataEditPopup = lista_paragony.get(position);
 
-        buttonListDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                myDB=new SqLiteManager(ParagonyActivity.this);
-                myDB.deleteOneRowFromReceipt(dataEditPopup.id);
-                dialog.dismiss();
-                mAdapter.notifyDataSetChanged();
-                finish();
-                Intent intent = new Intent(ParagonyActivity.this, ParagonyActivity.class);
-                startActivity(intent);
-            }
+        buttonListDelete.setOnClickListener(view -> {
+            myDB=new SqLiteManager(ParagonyActivity.this);
+            myDB.deleteOneRowFromReceipt(dataEditPopup.id);
+            dialog.dismiss();
+            mAdapter.notifyDataSetChanged();
+            finish();
+            Intent intent = new Intent(ParagonyActivity.this, ParagonyActivity.class);
+            startActivity(intent);
         });
 
 
-        buttonListEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                createNewDialogEdit(dataEditPopup.id, dataEditPopup.opis, dataEditPopup.czygwarancja, dataEditPopup.data, dataEditPopup.zdjecie);
-            }
+        buttonListEdit.setOnClickListener(view -> {
+            dialog.dismiss();
+            createNewDialogEdit(dataEditPopup.id, dataEditPopup.opis, dataEditPopup.czygwarancja, dataEditPopup.data, dataEditPopup.zdjecie);
         });
 
     }
@@ -317,7 +304,6 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
         // final View paragonyImageView = getLayoutInflater().inflate(R.layout.popup_show_image, null);
         imagePath = new File(imagesFolder + "/" + image_name);
         String zdjecieURL;
-        zdjecieURL = imagePath.toString();
         if (ContextCompat.checkSelfPermission(ParagonyActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(ParagonyActivity.this, new String[]{
                     Manifest.permission.CAMERA
@@ -348,110 +334,92 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
 
         dateE.setInputType(InputType.TYPE_NULL);
 
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                boolFoto = false;
+        dialog.setOnDismissListener(dialogInterface -> boolFoto = false);
+
+
+        radioBurronGwarancja.setOnClickListener(view -> {
+            if (radioBurronGwarancja.isChecked()) {
+                dateE.setVisibility(View.VISIBLE);
+            } else {
+                dateE.setVisibility(View.INVISIBLE);
             }
         });
 
+        dateE.setOnClickListener(view -> {
+            final Calendar kalendarz = Calendar.getInstance();
+            int day = kalendarz.get(Calendar.DAY_OF_MONTH);
+            int month = kalendarz.get(Calendar.MONTH);
+            int year = kalendarz.get(Calendar.YEAR);
 
-        radioBurronGwarancja.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (radioBurronGwarancja.isChecked()) {
-                    dateE.setVisibility(View.VISIBLE);
-                } else {
-                    dateE.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
-
-        dateE.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Calendar kalendarz = Calendar.getInstance();
-                int day = kalendarz.get(Calendar.DAY_OF_MONTH);
-                int month = kalendarz.get(Calendar.MONTH);
-                int year = kalendarz.get(Calendar.YEAR);
-
-                Locale locale = getResources().getConfiguration().locale;
-                Locale.setDefault(locale);
-                picker = new DatePickerDialog(ParagonyActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        dateE.setText(day + "/" + (month + 1) + "/" + year);
-                    }
-                }, year, month, day);
-                picker.show();
-            }
+            Locale locale = getResources().getConfiguration().locale;
+            Locale.setDefault(locale);
+            picker = new DatePickerDialog(ParagonyActivity.this,
+                    (datePicker, year1, month1, day1) -> dateE.setText(day1 + "/" + (month1 + 1) + "/" + year1),
+                    year,
+                    month,
+                    day);
+            picker.show();
         });
 
 
-        dodajZdjecieParagonu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    imagePath = openCamera();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
+        dodajZdjecieParagonu.setOnClickListener(view -> {
+            try {
+                imagePath = openCamera();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
         });
 
-        dodajWpisParagonu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (radioBurronGwarancja.isChecked()) {
-                    gwarancja = "tak";
-                } else if (!radioBurronGwarancja.isChecked()) {
-                    gwarancja = "nie";
-                    Date d = new Date();
-                    dateE.setText(DateFormat.format("MMMM d, yyyy ", d.getTime()));
-                } else {
-                    gwarancja = "error";
-                    Date d = new Date();
-                    dateE.setText(DateFormat.format("MMMM d, yyyy ", d.getTime()));
-                }
+        dodajWpisParagonu.setOnClickListener(view -> {
+            if (radioBurronGwarancja.isChecked()) {
+                gwarancja = "tak";
+            } else if (!radioBurronGwarancja.isChecked()) {
+                gwarancja = "nie";
+                Date d = new Date();
+                dateE.setText(format("MMMM d, yyyy ", d.getTime()));
+            } else {
+                gwarancja = "error";
+                Date d = new Date();
+                dateE.setText(format("MMMM d, yyyy ", d.getTime()));
+            }
 
+            zdjecieS = "";
+
+            if (gwarancja.equals("nie")) {
+                dataPopup = "";
+            } else if (gwarancja.equals("tak")) {
+                dataPopup = dateE.getText().toString().trim();
+            } else {
+                dataPopup = currentDate;
+            }
+
+
+            if (imagePath == null) {
                 zdjecieS = "";
-
-                if (gwarancja.equals("nie")) {
-                    dataPopup = "";
-                } else if (gwarancja.equals("tak")) {
-                    dataPopup = dateE.getText().toString().trim();
-                } else {
-                    dataPopup = currentDate;
-                }
-
-
-                if (imagePath == null) {
-                    zdjecieS = "";
-                } else {
-                    zdjecieS = String.valueOf(imagePath);
-                }
-
-
-                SqLiteManager myDBKat = new SqLiteManager(ParagonyActivity.this);
-
-                if (opisParagony.getText().toString().trim().length() == 0) {
-                    Toast.makeText(ParagonyActivity.this, "Nieprawidłowy opis", Toast.LENGTH_SHORT).show();
-
-                } else if (imagesFolder + "/" + image_name == "null/null"||!boolFoto) {
-                    Toast.makeText(ParagonyActivity.this, "Dodaj zdjęcie", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    myDBKat.addParagon(opisParagony.getText().toString().trim(), gwarancja.trim(), dataPopup.trim(), zdjecieS.trim());
-                    dialog.dismiss();
-                    zapiszParagonDoArray();
-                    buildRecyclerView();
-                    imagesFolder = null;
-                    image_name = null;
-                    dialog.dismiss();
-                }
-                imagePath = null;
+            } else {
+                zdjecieS = String.valueOf(imagePath);
             }
+
+
+            SqLiteManager myDBKat = new SqLiteManager(ParagonyActivity.this);
+
+            if (opisParagony.getText().toString().trim().length() == 0) {
+                Toast.makeText(ParagonyActivity.this, "Nieprawidłowy opis", Toast.LENGTH_SHORT).show();
+
+            } else if ((imagesFolder + "/" + image_name).equals("null/null") ||!boolFoto) {
+                Toast.makeText(ParagonyActivity.this, "Dodaj zdjęcie", Toast.LENGTH_SHORT).show();
+
+            } else {
+                myDBKat.addParagon(opisParagony.getText().toString().trim(), gwarancja.trim(), dataPopup.trim(), zdjecieS.trim());
+                dialog.dismiss();
+                zapiszParagonDoArray();
+                buildRecyclerView();
+                imagesFolder = null;
+                image_name = null;
+                dialog.dismiss();
+            }
+            imagePath = null;
         });
 
     }
@@ -512,118 +480,99 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
         }
 
 
-        radioBurronGwarancja.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (radioBurronGwarancja.isChecked()) {
-                    dateE.setVisibility(View.VISIBLE);
-                } else {
-                    dateE.setVisibility(View.INVISIBLE);
-                }
+        radioBurronGwarancja.setOnClickListener(view -> {
+            if (radioBurronGwarancja.isChecked()) {
+                dateE.setVisibility(View.VISIBLE);
+            } else {
+                dateE.setVisibility(View.INVISIBLE);
             }
         });
 
 
-        dateE.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Calendar kalendarz = Calendar.getInstance();
-                int day = kalendarz.get(Calendar.DAY_OF_MONTH);
-                int month = kalendarz.get(Calendar.MONTH);
-                int year = kalendarz.get(Calendar.YEAR);
+        dateE.setOnClickListener(view -> {
+            final Calendar kalendarz = Calendar.getInstance();
+            int day = kalendarz.get(Calendar.DAY_OF_MONTH);
+            int month = kalendarz.get(Calendar.MONTH);
+            int year = kalendarz.get(Calendar.YEAR);
 
-                Locale locale = getResources().getConfiguration().locale;
-                Locale.setDefault(locale);
-                picker = new DatePickerDialog(ParagonyActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        dateE.setText(day + "/" + (month + 1) + "/" + year);
-                    }
-                }, year, month, day);
-                picker.show();
-            }
+            Locale locale = getResources().getConfiguration().locale;
+            Locale.setDefault(locale);
+            picker = new DatePickerDialog(ParagonyActivity.this, (datePicker, year1, month1, day1) -> dateE.setText(day1 + "/" + (month1 + 1) + "/" + year1), year, month, day);
+            picker.show();
         });
 
 
-        dodajZdjecieParagonu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (ContextCompat.checkSelfPermission(ParagonyActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(ParagonyActivity.this, new String[]{
-                            Manifest.permission.CAMERA
-                    }, 100);
-                }
-                if (ContextCompat.checkSelfPermission(ParagonyActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(ParagonyActivity.this, new String[]{
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    }, 101);
-                }
-                try {
-                    imagePath = openCamera();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
+        dodajZdjecieParagonu.setOnClickListener(view -> {
+            if (ContextCompat.checkSelfPermission(ParagonyActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(ParagonyActivity.this, new String[]{
+                        Manifest.permission.CAMERA
+                }, 100);
             }
+            if (ContextCompat.checkSelfPermission(ParagonyActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(ParagonyActivity.this, new String[]{
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                }, 101);
+            }
+            try {
+                imagePath = openCamera();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         });
-        buttoPrzejdzDoZdjecia.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createDialogImage(zdjecie);
+        buttoPrzejdzDoZdjecia.setOnClickListener(view -> {
+            dialog.dismiss();
+            createDialogImage(zdjecie);
 
-            }
         });
 
-        dodajWpisParagonu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (radioBurronGwarancja.isChecked()) {
-                    gwarancja = "tak";
-                } else if (!radioBurronGwarancja.isChecked()) {
-                    gwarancja = "nie";
-                    Date d = new Date();
-                    dateE.setText(DateFormat.format("MMMM d, yyyy ", d.getTime()));
-                } else {
-                    gwarancja = "error";
-                    Date d = new Date();
-                    dateE.setText(DateFormat.format("MMMM d, yyyy ", d.getTime()));
-                }
+        dodajWpisParagonu.setOnClickListener(view -> {
+            if (radioBurronGwarancja.isChecked()) {
+                gwarancja = "tak";
+            } else if (!radioBurronGwarancja.isChecked()) {
+                gwarancja = "nie";
+                Date d = new Date();
+                dateE.setText(format("MMMM d, yyyy ", d.getTime()));
+            } else {
+                gwarancja = "error";
+                Date d = new Date();
+                dateE.setText(format("MMMM d, yyyy ", d.getTime()));
+            }
 
+            zdjecieS = "";
+            if (imagePath == null) {
                 zdjecieS = "";
-                if (imagePath == null) {
-                    zdjecieS = "";
-                } else {
-                    zdjecieS = String.valueOf(imagePath);
-                }
-                SqLiteManager myDBKat = new SqLiteManager(ParagonyActivity.this);
+            } else {
+                zdjecieS = String.valueOf(imagePath);
+            }
+            SqLiteManager myDBKat = new SqLiteManager(ParagonyActivity.this);
 
-                if (gwarancja.equals("nie")) {
-                    dataPopup = "";
-                } else if (gwarancja.equals("tak")) {
-                    dataPopup = dateE.getText().toString().trim();
-                } else {
-                    dataPopup = currentDate.toString();
-
-                }
-
-                if ((opisParagony.getText().toString().trim().length() == 0||!boolFoto)&&zdjecieURL.equals("null/null")) {
-                    Toast.makeText(ParagonyActivity.this, "Dodaj zdjęcie", Toast.LENGTH_SHORT).show();
-                }
-             /*   else if (zdjecieURL.equals("null/null")) {
-                    Toast.makeText(ParagonyActivity.this, "Dodaj zdjęcie", Toast.LENGTH_SHORT).show();
-
-                } */else {
-
-                    myDBKat.updateReceiptData(id.trim(), opisParagony.getText().toString().trim(), gwarancja.trim(), dataPopup.trim());
-                    dialog.dismiss();
-                    zapiszParagonDoArray();
-                    buildRecyclerView();
-                    imagesFolder = null;
-                    image_name = null;
-                    dialog.dismiss();
-                }
+            if (gwarancja.equals("nie")) {
+                dataPopup = "";
+            } else if (gwarancja.equals("tak")) {
+                dataPopup = dateE.getText().toString().trim();
+            } else {
+                dataPopup = currentDate;
 
             }
+
+            if ((opisParagony.getText().toString().trim().length() == 0||!boolFoto)&&zdjecieURL.equals("null/null")) {
+                Toast.makeText(ParagonyActivity.this, "Dodaj zdjęcie", Toast.LENGTH_SHORT).show();
+            }
+         /*   else if (zdjecieURL.equals("null/null")) {
+                Toast.makeText(ParagonyActivity.this, "Dodaj zdjęcie", Toast.LENGTH_SHORT).show();
+
+            } */else {
+
+                myDBKat.updateReceiptData(id.trim(), opisParagony.getText().toString().trim(), gwarancja.trim(), dataPopup.trim());
+                dialog.dismiss();
+                zapiszParagonDoArray();
+                buildRecyclerView();
+                imagesFolder = null;
+                image_name = null;
+                dialog.dismiss();
+            }
+
         });
 
     }
@@ -633,9 +582,8 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
         lista_paragony = new ArrayList<>();
 
         Cursor cursor = myDB.readAllParagony();
-        if (cursor.getCount() == 0) {
-           // Toast.makeText(ParagonyActivity.this, "Brak danych.", Toast.LENGTH_SHORT).show();
-        } else {
+        if (cursor.getCount() != 0) {
+
             while (cursor.moveToNext()) {
                 ReadAllReceiptResponse readARR = new ReadAllReceiptResponse();
                 readARR.id = cursor.getString(0);
@@ -675,44 +623,24 @@ public class ParagonyActivity  extends AppCompatActivity implements ReceiptAdapt
         Uri outputUri = Uri.fromFile(new File(imagesFolder + "/" + image_name));
         intent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
 
-        if (!imagesFolder.exists()) {
+      /*  if (!imagesFolder.exists()) {
             imagesFolder.mkdirs();
-        }
+        }*/
         imageUri = Uri.fromFile(File.createTempFile("myImages", image_name));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        } else {
+    /*    } else {
             List<ResolveInfo> resInfoList = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
             for (ResolveInfo resolveInfo : resInfoList) {
                 String packageName = resolveInfo.activityInfo.packageName;
                 grantUriPermission(packageName, outputUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            }
-        }
+            }*/
         startActivityIfNeeded(intent, 1888);
         imagePath = new File(imagesFolder + "/" + image_name);
         return imagePath;
     }
 
 
-//TODO
-    @Override
 
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    if(requestCode==100){
-        if(grantResults.length>0&&grantResults[0] ==PackageManager.PERMISSION_GRANTED &&grantResults[1] ==PackageManager.PERMISSION_GRANTED){
-        }
-    }
-    else{
-   //     displayMessage(getBaseContext(),"Brak uprawnienia do robienia zdjęć");
-    }
-
-    }
-
-    private void displayMessage(Context context, String message)
-    {
-        Toast.makeText(context,message,Toast.LENGTH_LONG).show();
-    }
 
     @Override
     public void onLongClick(int position) {

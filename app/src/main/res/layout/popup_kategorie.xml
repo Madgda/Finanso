@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -9,14 +8,15 @@
     android:backgroundTint="@android:color/transparent">
 
     <TextView
+        android:id="@+id/kategoriaOpisText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        android:textSize="22dp"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:textAlignment="center"
         android:gravity="center_horizontal"
-        android:text="Dodaj katorie:"
+        android:text="@string/dodaj_kategorie"
         android:textColor="@color/grey"
         />
 
@@ -27,13 +27,14 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="60dp"
         android:inputType="text"
-        android:hint="Nazwa"
+        android:hint="@string/nazwa"
         android:textSize="20sp"
         android:textAlignment="center"
         android:gravity="center_horizontal"
         android:maxLength="30"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:autofillHints="" />
     <EditText
         android:id="@+id/OpisPopupKategorie"
         android:layout_width="match_parent"
@@ -41,13 +42,13 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="30dp"
         android:inputType="text"
-        android:hint="Opis"
+        android:hint="@string/opis"
         android:textSize="20sp"
         android:maxLength="50"
         android:textAlignment="center"
         android:gravity="center_horizontal"
         app:layout_constraintTop_toBottomOf="@id/NazwaPopupKategorie"
- />
+        android:autofillHints="" />
     <ImageButton
         android:id="@+id/kolorKategorieButton"
         android:layout_width="match_parent"
@@ -60,7 +61,7 @@
         android:layout_marginTop="30dp"
         android:src="@drawable/color_picker_icon"
         app:layout_constraintTop_toBottomOf="@id/OpisPopupKategorie"
-        />
+        android:contentDescription="@string/color" />
 
 
 
@@ -88,7 +89,7 @@
         android:layout_marginBottom="10dp"
         android:paddingVertical="15dp"
         android:backgroundTint="@color/BlueDarker"
-        android:text="Dodaj"
+        android:text="@string/dodaj"
         android:textSize="23sp"
         android:textColor="@color/white"
         android:textStyle="bold"

@@ -14,8 +14,6 @@
         android:textColor="@color/white"
         android:layout_marginTop="16dp"
         android:textSize="22sp"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@id/buttonMenu"
         android:layout_height="wrap_content"
         />
 

@@ -28,4 +28,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="finanso">Finanso</string>
     <string name="_1_z_3">1 z 3</string>
+    <string name="dodaj_kategorie">Dodaj kategorię:</string>
+    <string name="nazwa">Nazwa</string>
+    <string name="opis">Opis</string>
+    <string name="dodaj">Dodaj</string>
+    <string name="color">color</string>
 </resources>
