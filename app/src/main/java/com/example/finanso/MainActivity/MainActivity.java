@@ -9,6 +9,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.os.Bundle;
 import android.view.View;
@@ -26,6 +27,7 @@ private DrawerLayout drawer;
 private FloatingActionButton actionButton;
 private int czyPopupDodaje ;
     public static final String CZY_POPUP_LISTA="com.example.application.example.CZY_POPUP_LISTA";
+    private MenuItem instrukcjaObslugi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,9 +104,6 @@ private int czyPopupDodaje ;
        setSupportActionBar(toolbar);
        drawer = findViewById(R.id.drawer_layout);
 
-     /*  ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-       drawer.addDrawerListener(toggle);
-       toggle.syncState();*/
    }
 
     public void plusPrzyciskAkcja() {
@@ -123,25 +122,5 @@ private int czyPopupDodaje ;
 
     }
 
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater inflater=getMenuInflater();
-        inflater.inflate(R.menu.opcje_menu,menu);
-        menu.findItem(R.id.item2).setTitle(Html.fromHtml("<font color='#000000'>wyszukaj daty</font>"));
-        menu.findItem(R.id.item3).setTitle(Html.fromHtml("<font color='#000000'>sortuj wg </font>"));
-        menu.findItem(R.id.item4).setTitle(Html.fromHtml("<font color='#000000'>pokaż</font>"));
-        menu.findItem(R.id.item5).setTitle(Html.fromHtml("<font color='#000000'>ceny miedzy</font>"));
-
-        return true;
-    }
-*/
-/*   public void onBackPress (){
-       if(drawer.isDrawerOpen(GravityCompat.START)){
-           drawer.closeDrawer(GravityCompat.START);
-       }
-       else{
-           super.onBackPressed();
-       }
-   }*/
 
 }

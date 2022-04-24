@@ -168,7 +168,7 @@ public class SqLiteManager extends SQLiteOpenHelper {
         this.close();
         SQLiteDatabase db =this.getWritableDatabase();
 
-        long result =  db.delete(TABLE_NAME_3,KOL2_ID +"=" + row_id,null);
+        long result =  db.delete(TABLE_NAME_3,KOL3_ID +"=" + row_id,null);
 
         return result>0;
     }
