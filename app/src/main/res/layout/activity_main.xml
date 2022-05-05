@@ -6,136 +6,131 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.finanso.MainActivity.MainActivity"
-    android:screenOrientation="portrait" >
-
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:background="@color/Blue"
-    android:layout_height="match_parent"
+    android:screenOrientation="portrait"
     tools:context="com.example.finanso.MainActivity.MainActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/Blue"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark">
-
-
-    </androidx.appcompat.widget.Toolbar>
-<!--
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
--->
-    <GridLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="80dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="@dimen/marginesDash"
-        android:layout_marginRight="@dimen/marginesDash"
-        android:minHeight="500dp"
-        android:alignmentMode="alignBounds"
-        android:layout_centerHorizontal="true"
-        android:columnCount="2"
-        android:layout_below="@+id/toolbar">
+        android:background="@color/Blue"
+        tools:context="com.example.finanso.MainActivity.MainActivity">
 
-        <Button
-            android:id="@+id/imageButton1"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:paddingBottom="0dp"
-            android:paddingLeft="@dimen/smol_margin"
-            android:paddingRight="@dimen/fab_margin"
-            android:layout_marginRight="@dimen/smol_margin"
-            android:paddingTop="@dimen/margin30"
-            android:clickable="true"
-            android:text="Przeglądaj historię"
-            android:textColor="@color/black"
-            android:backgroundTint="@color/white"
-            android:minHeight="250dp"
-            android:drawableTop="@mipmap/analiza_lista_warstwa"
-            />
-        <Button
-            android:id="@+id/imageButton2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:paddingBottom="0dp"
-            android:paddingLeft="@dimen/smol_margin"
-            android:paddingRight="@dimen/fab_margin"
-            android:paddingTop="@dimen/margin30"
-            android:clickable="true"
-            android:layout_marginLeft="@dimen/smol_margin"
-            android:text="Analiza wydatków"
-            android:textColor="@color/black"
-            android:minHeight="250dp"
-            android:backgroundTint="@color/white"
-            android:drawableTop="@mipmap/statistics_icon_full"
-            />
-        <Button
-            android:id="@+id/imageButton4"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:paddingBottom="0dp"
-            android:paddingLeft="@dimen/smol_margin"
-            android:paddingRight="@dimen/fab_margin"
-            android:paddingTop="@dimen/margin30"
-            android:clickable="true"
-            android:minHeight="250dp"
-            android:layout_marginRight="@dimen/smol_margin"
-            android:text="Twoje Paragony"
-            android:textColor="@color/black"
-            android:backgroundTint="@color/white"
-            android:drawableTop="@mipmap/document_file_full"
-            />
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/Blue"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark">
 
-        <Button
-            android:id="@+id/imageButton3"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_row="0"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:minHeight="250dp"
-            android:layout_marginLeft="@dimen/smol_margin"
-            android:backgroundTint="@color/white"
-            android:clickable="true"
-            android:drawableTop="@mipmap/setting_icon_full"
-            android:paddingLeft="@dimen/smol_margin"
-            android:paddingTop="@dimen/margin30"
-            android:paddingRight="@dimen/fab_margin"
-            android:paddingBottom="0dp"
-            android:text="Ustawienia kategorii"
-            android:textColor="@color/black" />
 
-    </GridLayout>
+        </androidx.appcompat.widget.Toolbar>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/plusB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:backgroundTint="@color/PastelBlue"
-        android:src="@drawable/plus"
-        app:borderWidth="0dp"
-        app:tint="@color/black" />
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/marginesDash"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="@dimen/marginesDash"
+            android:layout_marginBottom="80dp"
+            android:alignmentMode="alignBounds"
+            android:columnCount="2"
+            android:minHeight="500dp">
 
-</RelativeLayout>
+            <Button
+                android:id="@+id/imageButton1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_marginRight="@dimen/smol_margin"
+                android:backgroundTint="@color/white"
+                android:clickable="true"
+                android:drawableTop="@mipmap/analiza_lista_warstwa"
+                android:minHeight="250dp"
+                android:paddingLeft="@dimen/smol_margin"
+                android:paddingTop="@dimen/margin30"
+                android:paddingRight="@dimen/fab_margin"
+                android:paddingBottom="0dp"
+                android:text="Przeglądaj historię"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/imageButton2"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_marginLeft="@dimen/smol_margin"
+                android:backgroundTint="@color/white"
+                android:clickable="true"
+                android:drawableTop="@mipmap/statistics_icon_full"
+                android:minHeight="250dp"
+                android:paddingLeft="@dimen/smol_margin"
+                android:paddingTop="@dimen/margin30"
+                android:paddingRight="@dimen/fab_margin"
+                android:paddingBottom="0dp"
+                android:text="Analiza wydatków"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/imageButton4"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_marginRight="@dimen/smol_margin"
+                android:backgroundTint="@color/white"
+                android:clickable="true"
+                android:drawableTop="@mipmap/document_file_full"
+                android:minHeight="250dp"
+                android:paddingLeft="@dimen/smol_margin"
+                android:paddingTop="@dimen/margin30"
+                android:paddingRight="@dimen/fab_margin"
+                android:paddingBottom="0dp"
+                android:text="Twoje Paragony"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/imageButton3"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_row="0"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_marginLeft="@dimen/smol_margin"
+                android:backgroundTint="@color/white"
+                android:clickable="true"
+                android:drawableTop="@mipmap/setting_icon_full"
+                android:minHeight="250dp"
+                android:paddingLeft="@dimen/smol_margin"
+                android:paddingTop="@dimen/margin30"
+                android:paddingRight="@dimen/fab_margin"
+                android:paddingBottom="0dp"
+                android:text="Ustawienia kategorii"
+                android:textColor="@color/black" />
+
+        </GridLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/plusB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@color/PastelBlue"
+            android:src="@drawable/plus"
+            app:borderWidth="0dp"
+            app:tint="@color/black" />
+
+    </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
@@ -143,8 +138,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:menu="@menu/lista_menu"
-        app:headerLayout="@layout/nav_header" />
-
-
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/lista_menu" />
 </androidx.drawerlayout.widget.DrawerLayout>

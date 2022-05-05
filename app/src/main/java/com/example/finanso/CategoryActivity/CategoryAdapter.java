@@ -1,5 +1,6 @@
 package com.example.finanso.CategoryActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -15,33 +16,33 @@ import com.example.finanso.R;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("UnnecessaryLocalVariable")
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
     Context context;
-    private ArrayList<ReadAllCategoryResponse> lista_kategoria;
-    private int layoutExample;
-    private String listId;
-    private OnCategoryClickListener mOnCategoryClickListener;
+    private final ArrayList<ReadAllCategoryResponse> lista_kategoria;
+    private final int layoutExample;
+    private final OnCategoryClickListener mOnCategoryClickListener;
 
     public interface OnCategoryClickListener {
         void onLongClick(int position);
+
         void onItemClick(int position);
     }
 
-    public  class CategoryViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener{
-        private RelativeLayout categoryRelativeLayoutPozycja;
-        private TextView categoryIdEditText;
-        private TextView categorySzczegolEditText;
-        private TextView categoryOpisEditText;
+    public class CategoryViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
+        private final RelativeLayout categoryRelativeLayoutPozycja;
+        private final TextView categoryIdEditText;
+        private final TextView categorySzczegolEditText;
+        private final TextView categoryOpisEditText;
 
         OnCategoryClickListener onCategoryClickListener;
 
-        public CategoryViewHolder(@NonNull View itemView, OnCategoryClickListener onCategoryClickListener) {
+        public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
-            // mImageView=itemView.findViewById(R.id.imageView);
-            categoryRelativeLayoutPozycja =itemView.findViewById(R.id.pozycjaLinia);
-            categoryIdEditText =itemView.findViewById(R.id.textViewIdRekord);
-            categoryOpisEditText =itemView.findViewById(R.id.textViewOpisRekord);
-            categorySzczegolEditText =itemView.findViewById(R.id.textSzczegolOpisRekord);
+            categoryRelativeLayoutPozycja = itemView.findViewById(R.id.pozycjaLinia);
+            categoryIdEditText = itemView.findViewById(R.id.textViewIdRekord);
+            categoryOpisEditText = itemView.findViewById(R.id.textViewOpisRekord);
+            categorySzczegolEditText = itemView.findViewById(R.id.textSzczegolOpisRekord);
             this.onCategoryClickListener = mOnCategoryClickListener;
             itemView.setOnLongClickListener(this);
             itemView.setOnClickListener(this);
@@ -60,30 +61,31 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             onCategoryClickListener.onItemClick(getAdapterPosition());
         }
     }
-    public CategoryAdapter(Context context, ArrayList <ReadAllCategoryResponse> lista_kategoria, OnCategoryClickListener onCategoryClickListener){
-        this.context =context;
+
+    public CategoryAdapter(Context context, ArrayList<ReadAllCategoryResponse> lista_kategoria, OnCategoryClickListener onCategoryClickListener) {
+        this.context = context;
         this.mOnCategoryClickListener = onCategoryClickListener;
         this.lista_kategoria = lista_kategoria;
-                layoutExample = R.layout.adapter_item_kategorie;
+        layoutExample = R.layout.adapter_item_kategorie;
 
     }
 
     @NonNull
     @Override
     public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(layoutExample,parent,false);
-        CategoryViewHolder cvh = new CategoryViewHolder(v, mOnCategoryClickListener);
+        View v = LayoutInflater.from(parent.getContext()).inflate(layoutExample, parent, false);
+        CategoryViewHolder cvh = new CategoryViewHolder(v);
 
 
         return cvh;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
 
         ReadAllCategoryResponse rowRACR = lista_kategoria.get(position);
-        listId =rowRACR.id;
-       holder.categoryIdEditText.setText(rowRACR.id+ ".");
+        holder.categoryIdEditText.setText(rowRACR.id + ".");
         holder.categorySzczegolEditText.setText(rowRACR.opis);
         holder.categoryOpisEditText.setText(rowRACR.nazwa);
         holder.categoryRelativeLayoutPozycja.setBackgroundColor(Color.parseColor(rowRACR.kolor));
@@ -93,13 +95,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public int getItemCount() {
         return lista_kategoria.size();
     }
-/*
-
-    public void filterList(ArrayList<ReadAllHistoriaResponse>filteredList){
-        lista_kategoria =filteredList;
-        notifyDataSetChanged();
-    }
-*/
 
 
 }

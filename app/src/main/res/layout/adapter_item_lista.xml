@@ -8,8 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:padding="10dp"
-        >
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/textViewIdRekord"
@@ -23,27 +22,27 @@
             android:textColor="@color/black"
             android:textSize="26sp" />
 
-<!--
-        <TextView
-            android:id="@+id/textViewZlWRekord"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/textViewCenaRekord"
-            android:paddingTop="5dp"
-            android:text="zł"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
--->
-<!--
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_centerVertical="true"
-            android:background="@color/Blue"
-            android:padding="2dp" />-->
+        <!--
+                <TextView
+                    android:id="@+id/textViewZlWRekord"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@id/textViewCenaRekord"
+                    android:paddingTop="5dp"
+                    android:text="zł"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+        -->
+        <!--
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_centerVertical="true"
+                    android:background="@color/Blue"
+                    android:padding="2dp" />-->
         <!-- android:foreground="@drawable/home"-->
 
 
@@ -72,16 +71,16 @@
             android:textColor="@color/Blue"
             android:textSize="15sp" />
 
-       <!-- <TextView
-            android:id="@+id/textViewInfoKlikAdapter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:text="Przytrzymaj by usunąć lub edytować"
-            android:textColor="@color/grey"
-            android:textSize="15sp" />
-            -->
+        <!-- <TextView
+             android:id="@+id/textViewInfoKlikAdapter"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_alignParentLeft="true"
+             android:layout_alignParentBottom="true"
+             android:text="Przytrzymaj by usunąć lub edytować"
+             android:textColor="@color/grey"
+             android:textSize="15sp" />
+             -->
 
         <TextView
             android:id="@+id/textViewSzczegolRekord"

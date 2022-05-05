@@ -8,8 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:padding="10dp"
-        >
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/textViewIdRekord"
@@ -42,10 +41,7 @@
             android:layout_centerHorizontal="true"
             android:text="Line 2"
             android:textColor="@color/BlueDarkest"
-            android:textSize="17sp"
-           />
-
-
+            android:textSize="17sp" />
 
     </RelativeLayout>
 

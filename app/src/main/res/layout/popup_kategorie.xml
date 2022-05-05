@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme.Finanso.NoActionBar"
-    android:backgroundTint="@android:color/transparent">
+    android:backgroundTint="@android:color/transparent"
+    android:orientation="vertical"
+    android:theme="@style/Theme.Finanso.NoActionBar">
 
     <TextView
         android:id="@+id/kategoriaOpisText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textAlignment="center"
         android:gravity="center_horizontal"
         android:text="@string/dodaj_kategorie"
+        android:textAlignment="center"
         android:textColor="@color/grey"
-        />
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/NazwaPopupKategorie"
@@ -26,43 +25,44 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="60dp"
-        android:inputType="text"
-        android:hint="@string/nazwa"
-        android:textSize="20sp"
-        android:textAlignment="center"
+        android:autofillHints=""
         android:gravity="center_horizontal"
+        android:hint="@string/nazwa"
+        android:inputType="text"
         android:maxLength="30"
+        android:textAlignment="center"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:autofillHints="" />
+        app:layout_constraintTop_toTopOf="parent" />
+
     <EditText
         android:id="@+id/OpisPopupKategorie"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="30dp"
-        android:inputType="text"
+        android:autofillHints=""
+        android:gravity="center_horizontal"
         android:hint="@string/opis"
-        android:textSize="20sp"
+        android:inputType="text"
         android:maxLength="50"
         android:textAlignment="center"
-        android:gravity="center_horizontal"
-        app:layout_constraintTop_toBottomOf="@id/NazwaPopupKategorie"
-        android:autofillHints="" />
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/NazwaPopupKategorie" />
+
     <ImageButton
         android:id="@+id/kolorKategorieButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:paddingBottom="-20dp"
-        android:background="@color/BlueLight"
-        app:tint="@color/black"
         android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/BlueLight"
+        android:contentDescription="@string/color"
+        android:paddingBottom="-20dp"
         android:src="@drawable/color_picker_icon"
         app:layout_constraintTop_toBottomOf="@id/OpisPopupKategorie"
-        android:contentDescription="@string/color" />
-
+        app:tint="@color/black" />
 
 
     <!--<EditText
@@ -87,15 +87,15 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
-        android:paddingVertical="15dp"
         android:backgroundTint="@color/BlueDarker"
+        android:paddingVertical="15dp"
         android:text="@string/dodaj"
-        android:textSize="23sp"
         android:textColor="@color/white"
+        android:textSize="23sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/kolorKategorieButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/kolorKategorieButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

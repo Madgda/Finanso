@@ -8,8 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:background="@color/white"
-        android:padding="10dp"
-        >
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/textViewIdRekord"
@@ -20,19 +19,6 @@
             android:text="1"
             android:textColor="@color/white"
             android:textSize="26sp" />
-
-
-
-        <!--
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_centerVertical="true"
-                    android:background="@color/Blue"
-                    android:padding="2dp" />-->
-        <!-- android:foreground="@drawable/home"-->
-
 
         <TextView
             android:id="@+id/textViewOpisRekord"
@@ -56,12 +42,13 @@
             android:text="Line 2"
             android:textColor="@color/grey"
             android:textSize="15sp" />
+
         <View
             android:layout_width="match_parent"
+            android:layout_height="1dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="0dp"
-            android:background="@color/grey"
-            android:layout_height="1dp"/>
+            android:background="@color/grey" />
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

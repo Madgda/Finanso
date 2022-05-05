@@ -6,16 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    app:itemTextColor="@color/black"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    tools:context="com.example.finanso.CategoryActivity.CategoryActivity"
-    >
+    app:itemTextColor="@color/black"
+    tools:context="com.example.finanso.CategoryActivity.CategoryActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/Blue"
         tools:context="com.example.finanso.ListActivity.ListActivity">
+
         <GridLayout
             android:id="@+id/menuListPas"
             android:layout_width="match_parent"
@@ -32,25 +32,24 @@
                 android:background="@color/Blue"
                 android:elevation="4dp"
                 android:textAlignment="gravity"
-                app:itemTextColor="@color/black"
-                />
+                app:itemTextColor="@color/black" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/grey" />
+
             <TextView
                 android:id="@+id/infoShowHelpOnClickCategory"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@color/white"
-                android:textAlignment="center"
-                android:textStyle="bold|italic"
-                android:textColor="@color/darkestGrey"
-                android:text="Przytrzymaj jedną z pozycji by usunąć lub edytować"
                 android:padding="10dp"
-                android:visibility="gone"
-                />
+                android:text="Przytrzymaj jedną z pozycji by usunąć lub edytować"
+                android:textAlignment="center"
+                android:textColor="@color/darkestGrey"
+                android:textStyle="bold|italic"
+                android:visibility="gone" />
         </GridLayout>
 
 
@@ -66,24 +65,6 @@
             android:padding="2dp"
             android:scrollbars="vertical" />
 
-        <!--
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/plusL"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="@dimen/marginesPlus"
-            android:layout_marginTop="@dimen/marginesPlus"
-            android:layout_marginEnd="@dimen/marginesPlus"
-            android:layout_marginBottom="@dimen/marginesPlus"
-            android:backgroundTint="@color/PastelBlue"
-            android:src="@drawable/plus"
-            app:borderWidth="0dp"
-            app:tint="@color/black"
-            />
-    -->
-
     </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
@@ -92,8 +73,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:menu="@menu/lista_menu"
-        app:headerLayout="@layout/nav_header" />
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/lista_menu" />
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

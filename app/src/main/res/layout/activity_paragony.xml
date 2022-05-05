@@ -6,24 +6,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    app:itemTextColor="@color/black"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    tools:context="com.example.finanso.RecepitActivity.ParagonyActivity"
-    >
+    app:itemTextColor="@color/black"
+    tools:context="com.example.finanso.RecepitActivity.ParagonyActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
         tools:context="com.example.finanso.ListActivity.ListActivity">
+
         <GridLayout
             android:id="@+id/menuListPas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:columnCount="1"
-            android:focusableInTouchMode="true"
             android:focusable="true"
+            android:focusableInTouchMode="true"
             android:foregroundGravity="top"
             android:rowCount="2">
 
@@ -34,8 +34,7 @@
                 android:background="@color/Blue"
                 android:elevation="4dp"
                 android:textAlignment="gravity"
-                app:itemTextColor="@color/black"
-                />
+                app:itemTextColor="@color/black" />
 
 
             <EditText
@@ -49,12 +48,11 @@
                 android:inputType="textNoSuggestions"
                 android:padding="10dp"
                 android:textColor="@color/grey"></EditText>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/grey" />
-
-
         </GridLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -69,48 +67,18 @@
             android:padding="2dp"
             android:scrollbars="vertical" />
 
-      <!--  an
-        android:layout_above="@+id/przyciski"
-        android:layout_below="@+id/menuListPas"
-        android:layout_marginTop="0dp"
-        android:background="@color/white"
-        android:backgroundTint="@color/white"
-        android:padding="2dp"
-        android:scrollbars="vertical"
-        -->
-        <!--
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/plusL"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="@dimen/marginesPlus"
-            android:layout_marginTop="@dimen/marginesPlus"
-            android:layout_marginEnd="@dimen/marginesPlus"
-            android:layout_marginBottom="@dimen/marginesPlus"
-            android:backgroundTint="@color/PastelBlue"
-            android:src="@drawable/plus"
-            app:borderWidth="0dp"
-            app:tint="@color/black"
-            />
-    -->
-
         <Button
             android:id="@+id/dodajParagon"
             android:layout_width="match_parent"
             android:layout_height="75dp"
             android:layout_alignParentBottom="true"
+            android:layout_marginBottom="-10dp"
             android:backgroundTint="@color/BlueDarker"
             android:clickable="true"
             android:focusable="true"
             android:text="Dodaj paragon"
-            android:layout_marginBottom="-10dp"
             android:textColor="@color/white" />
     </RelativeLayout>
-
-
-
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
@@ -118,8 +86,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:menu="@menu/lista_menu"
-        app:headerLayout="@layout/nav_header" />
-
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/lista_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
